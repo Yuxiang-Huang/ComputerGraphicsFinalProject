@@ -40,12 +40,12 @@ public class SolarSystem{
 
         Planet Moon = new Planet(radius * 0.3, Earth.size + 0.1 * dist, year / 3, year / 3, new Color (192, 192, 192), createRGBMap("moon.jpg", steps));
 
-        //start gif
-        BufferedImage firstImage = s.getimg();
-        ImageOutputStream output =
-        new FileImageOutputStream(new File("SolarSystemResize.gif"));
-        GifSequenceWriter writer =
-        new GifSequenceWriter(output, firstImage.getType(), 100, false);
+        // //start gif
+        // BufferedImage firstImage = s.getimg();
+        // ImageOutputStream output =
+        // new FileImageOutputStream(new File("SolarSystemResize.gif"));
+        // GifSequenceWriter writer =
+        // new GifSequenceWriter(output, firstImage.getType(), 100, false);
 
         //set up the world at the center
         Matrix transform = new Matrix();
@@ -55,7 +55,7 @@ public class SolarSystem{
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
-        for (double i = 0; i < year * 6; i ++){
+        //for (double i = 0; i < year * 6; i ++){
             //clear
             s.clearScreen();
 
@@ -69,51 +69,8 @@ public class SolarSystem{
                 p.update();
             }
 
-            //SCALE
-
-            //translate to Earth
-            tmp = new Matrix(Matrix.TRANSLATE, -planets.get(3).x, -planets.get(3).y, 0);
-            tmp.mult(csystems.peek());
-            csystems.push(tmp.copy());
-
-            //double ratio = 1;
-
-            double scalefactor = 0.01;
-
-            double startFactor = 0.8;
-
-            //figure out scale ratio
-            if (i < year * 3){
-                tmp = new Matrix(Matrix.SCALE, startFactor + scalefactor * i, startFactor + scalefactor * i, 1);
-                // ratio *= (1 + 3.0 * i / year / 3);
-                // ratio *= (year * 3 - i) / (year * 3);
-                System.out.println(startFactor + scalefactor * i);
-            } else{
-                tmp = new Matrix(Matrix.SCALE, startFactor + scalefactor * (360 - i),
-                startFactor + scalefactor * (360 - i), 1);
-                // ratio *= 1 + 3.0 * (1 - ((i - year * 3) / year / 3));
-                // ratio *= (year * 6 - i) / (year * 3);
-                System.out.println(startFactor + scalefactor * (360 - i));
-            }
-
-            //move back the right amount
-            // Matrix tmp2 = new Matrix(Matrix.TRANSLATE, planets.get(3).x * (year * 3 - i) / year / 3, 
-            // planets.get(3).y * (year * 3 - i) / year / 3, 0);
-
-            // System.out.println(planets.get(3).x * (year * 3 - i) / year / 3);
-
-            // tmp2.mult(csystems.peek());
-            // csystems.pop();
-            // csystems.push(tmp2.copy());
-
-            // //scale
-            tmp.mult(csystems.peek());
-            csystems.pop();
-            csystems.push(tmp.copy());
-
             tmp = new Matrix(Matrix.ROTATE, -Math.PI/4, 'X');
             tmp.mult(csystems.peek());
-            csystems.pop();
             csystems.push(tmp.copy());
 
             for (int j = 0; j < planets.size(); j ++){
@@ -194,22 +151,24 @@ public class SolarSystem{
                 csystems.pop();
             }   
             //finish this frame
-            writer.writeToSequence(s.getimg());
+            //writer.writeToSequence(s.getimg());
             csystems.pop();
-        }
+        //}
 
-        //display animation
-        URL url = SolarSystem.class.getResource("SolarSystemResize.gif");
-        Icon icon = new ImageIcon(url);
-        JLabel label = new JLabel(icon);
-        JFrame f = new JFrame("Animation");
-        f.getContentPane().add(label);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.pack();
-        f.setLocationRelativeTo(null);
-        f.setVisible(true);
-        writer.close();
-        output.close();
+        s.display();
+
+        // //display animation
+        // URL url = SolarSystem.class.getResource("SolarSystemResize.gif");
+        // Icon icon = new ImageIcon(url);
+        // JLabel label = new JLabel(icon);
+        // JFrame f = new JFrame("Animation");
+        // f.getContentPane().add(label);
+        // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // f.pack();
+        // f.setLocationRelativeTo(null);
+        // f.setVisible(true);
+        // writer.close();
+        // output.close();
     }
 
     public static int[][] createRGBMap(String name, int steps) throws IOException{
