@@ -21,28 +21,28 @@ public class EdgeMatrix extends Matrix {
   }//addCircle
 
 
-  // public void addCurve( double x0, double y0,
-  //                        double x1, double y1,
-  //                        double x2, double y2,
-  //                        double x3, double y3,
-  //                        double step, int curveType ) {
+  public void addCurve( double x0, double y0,
+                         double x1, double y1,
+                         double x2, double y2,
+                         double x3, double y3,
+                         double step, int curveType ) {
 
-  //   double t, x, y;
-  //   Matrix xcoefs = new Matrix(curveType, x0, x1, x2, x3);
-  //   Matrix ycoefs = new Matrix(curveType, y0, y1, y2, y3);
+    double t, x, y;
+    Matrix xcoefs = new Matrix(curveType, x0, x1, x2, x3);
+    Matrix ycoefs = new Matrix(curveType, y0, y1, y2, y3);
 
-  //   double[] xm = xcoefs.get(0);
-  //   double[] ym = ycoefs.get(0);
+    double[] xm = xcoefs.get(0);
+    double[] ym = ycoefs.get(0);
 
-  //   for (t=step; t <= 1.000001; t+= step) {
+    for (t=step; t <= 1.000001; t+= step) {
 
-  //     x = xm[0]*t*t*t + xm[1]*t*t+ xm[2]*t + xm[3];
-  //     y = ym[0]*t*t*t + ym[1]*t*t+ ym[2]*t + ym[3];
-  //     addEdge(x0, y0, 0, x, y, 0);
-  //     x0 = x;
-  //     y0 = y;
-  //   }
-  //}//addCurve
+      x = xm[0]*t*t*t + xm[1]*t*t+ xm[2]*t + xm[3];
+      y = ym[0]*t*t*t + ym[1]*t*t+ ym[2]*t + ym[3];
+      addEdge(x0, y0, 0, x, y, 0);
+      x0 = x;
+      y0 = y;
+    }
+  }//addCurve
 
   public void addEdge(double x0, double y0, double z0,
                       double x1, double y1, double z1) {

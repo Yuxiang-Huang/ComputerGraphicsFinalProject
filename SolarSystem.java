@@ -20,11 +20,11 @@ public class SolarSystem{
 
         //theta
         double sunTheta = 0;
-        double mercuryTheta = 0;
-        double venusTheta = 0;
-        double earthTheta = 0;
-        double marsTheta = 0;
-        double moonThta = Math.PI/2;
+        double mercuryTheta = -Math.PI / 4;
+        double venusTheta = Math.PI * 2 / 3;
+        double earthTheta = -Math.PI / 3;
+        double marsTheta = Math.PI / 3;
+        double moonTheta = Math.PI * 3 / 4;
 
         int[][] background = createRGBMap("background.jpg", Screen.XRES);
 
@@ -46,7 +46,7 @@ public class SolarSystem{
         Planet Mars = new Planet(radius * 0.532, dist * 1.52, year * 2, day * 1.03, new Color (255, 0, 0), createRGBMap("mars.jpg", steps), marsTheta);
         planets.add(Mars);
 
-        Planet Moon = new Planet(radius * 0.3, Earth.size + 0.1 * dist, year / 3, year / 3, new Color (192, 192, 192), createRGBMap("moon.jpg", steps), moonThta);
+        Planet Moon = new Planet(radius * 0.25, Earth.size + 15, year / 3, year / 3, new Color (192, 192, 192), createRGBMap("moon.jpg", steps), moonTheta);
 
         // //start gif
         // BufferedImage firstImage = s.getimg();
@@ -119,8 +119,9 @@ public class SolarSystem{
                 csystems.pop();
                 csystems.push(tmp.copy());
 
+                //draw
                 PolygonMatrix polys = new PolygonMatrix();
-                polys.addSphere(0, 0, 0, p.size * csystems.peek().get(3)[2] / 250, steps);
+                polys.addSphere(0, 0, 0, p.size, steps);
                 polys.mult(csystems.peek());
 
                 polys.drawPolygons(s, p.rgb, steps);
@@ -137,28 +138,32 @@ public class SolarSystem{
 
                     //orbit
                     edges = new EdgeMatrix();
-                    edges.addCircle(0, 0, 0, Moon.radius * csystems.peek().get(3)[2] / 250, 0.01);
+                    edges.addCircle(0, 0, 0, Moon.radius, 0.01);
                     edges.mult(csystems.peek());
                     edges.drawEdges(s, Moon.c);
 
                     //new world
                     csystems.push(csystems.peek());
 
-                    tmp = new Matrix(Matrix.TRANSLATE, Moon.x * csystems.peek().get(3)[2] / 250, Moon.y * csystems.peek().get(3)[2] / 250, 0);
+                    //translate to moon
+                    tmp = new Matrix(Matrix.TRANSLATE, Moon.x, Moon.y, 0);
                     tmp.mult(csystems.peek());
                     csystems.pop();
                     csystems.push(tmp.copy());
 
+                    //self rotate
                     tmp = new Matrix(Matrix.ROTATE, Moon.selfRotate, 'Z');
                     tmp.mult(csystems.peek());
                     csystems.pop();
                     csystems.push(tmp.copy());
 
+                    //fix y
                     tmp = new Matrix(Matrix.ROTATE, Math.PI/2, 'Y');
                     tmp.mult(csystems.peek());
                     csystems.pop();
                     csystems.push(tmp.copy());
 
+                    //draw
                     polys = new PolygonMatrix();
                     polys.addSphere(0, 0, 0, Moon.size * csystems.peek().get(3)[2] / 250, steps);
                     polys.mult(csystems.peek());
