@@ -140,76 +140,146 @@ public class PolygonMatrix extends Matrix {
     }
   }//addTorus
 
-  private Matrix generateCurve(double cx, double cy, double cz,
-                               double r0, double r1, int steps ) {
+  // private Matrix generateCurve(double x0, double y0,
+  // double x1, double y1,
+  // double x2, double y2,
+  // double x3, double y3, int curveType,
+  // double radius, int steps ) {
+
+  //   Matrix points = new Matrix();
+  //   int circle, curve, curve_start, curve_stop, circ_start, circ_stop;
+  //   double t, x, y, z;
+
+  //   curve_start = 0;
+  //   curve_stop = steps;
+  //   circ_start = 0;
+  //   circ_stop = steps;
+
+  //   //curve stuff
+  //   Matrix xcoefs = new Matrix(curveType, x0, x1, x2, x3);
+  //   Matrix ycoefs = new Matrix(curveType, y0, y1, y2, y3);
+  //   double[] xm = xcoefs.get(0);
+  //   double[] ym = ycoefs.get(0);
+
+  //   //for every points on curve
+  //   for (curve = curve_start; curve < curve_stop; curve++) {
+  //     x = xm[0]*t*t*t + xm[1]*t*t+ xm[2]*t + xm[3];
+  //     y = ym[0]*t*t*t + ym[1]*t*t+ ym[2]*t + ym[3];
+
+  //     //draw a circle
+  //     for(circle = circ_start; circle < circ_stop; circle++){
+  //       addEdge(x0, y0, 0, x, y, 0);
+  //       points.addColumn(x, y, z);
+  //     }
+  //   }
+  //   return points;
+  // }
+
+  // public void addCurve( double cx, double cy, double cz,
+  //                       double r0, double r1, int steps ) {
+
+  //   Matrix points = generateCurve(cx, cy, cz, r0, r1, steps);
+  //   int p0, p1, p2, p3, lat, longt;
+  //   int latStop, longStop, latStart, longStart;
+  //   latStart = 0;
+  //   latStop = steps;
+  //   longStart = 0;
+  //   longStop = steps;
+
+  //   for ( lat = latStart; lat < latStop; lat++ ) {
+  //     for ( longt = longStart; longt < longStop; longt++ ) {
+
+  //       p0 = lat * steps + longt;
+  //       if (longt == steps - 1)
+  //         p1 = p0 - longt;
+  //       else
+  //         p1 = p0 + 1;
+  //       p2 = (p1 + steps) % (steps * steps);
+  //       p3 = (p0 + steps) % (steps * steps);
+
+  //       double[] point0 = points.get(p0);
+  //       double[] point1 = points.get(p1);
+  //       double[] point2 = points.get(p2);
+  //       double[] point3 = points.get(p3);
+
+  //       addPolygon(point0[0], point0[1], point0[2],
+  //                  point3[0], point3[1], point3[2],
+  //                  point2[0], point2[1], point2[2]);
+  //       addPolygon(point0[0], point0[1], point0[2],
+  //                  point2[0], point2[1], point2[2],
+  //                  point1[0], point1[1], point1[2]);
+
+  //     }
+  //   }
+  // }
+
+  private Matrix generateCylinder(double x0, double y0, double y1, double z0;
+  double r, int steps ) {
+
+    //assume x0 == x1
 
     Matrix points = new Matrix();
-    int circle, rotation, rot_start, rot_stop, circ_start, circ_stop;
-    double x, y, z, rot, circ;
+    double t, x, y, z;
 
-    rot_start = 0;
-    rot_stop = steps;
-    circ_start = 0;
-    circ_stop = steps;
+    //for every y value of points on line
+    for (y = y0; y < y1; y++) {
+      //draw a circle
+      for(int circle = 0; circle <= steps; circle++){
+        double circ = (double)circle / steps;
 
-    for (rotation = rot_start; rotation < rot_stop; rotation++) {
-      rot = (double)rotation / steps;
-
-      for(circle = circ_start; circle < circ_stop; circle++){
-        circ = (double)circle / steps;
-
-        x = Math.cos(2*Math.PI * rot) *
-          (r0 * Math.cos(2*Math.PI * circ) + r1) + cx;
-        y = r0 * Math.sin(2*Math.PI * circ) + cy;
-        z = -1*Math.sin(2*Math.PI * rot) *
-          (r0 * Math.cos(2*Math.PI * circ) + r1) + cz;
-
-        /* printf("rotation: %d\tcircle: %d\n", rotation, circle); */
-        /* printf("rot: %lf\tcirc: %lf\n", rot, circ); */
-        /* printf("sphere point: (%0.2f, %0.2f, %0.2f)\n\n", x, y, z); */
+        x = r * Math.cos(Math.PI * circ) + x0;
+        z = r * Math.sin(Math.PI * circ) + z0;
+        
         points.addColumn(x, y, z);
       }
     }
     return points;
-  }//generateTorus
+  }
 
-  public void addCurve( double cx, double cy, double cz,
-                        double r0, double r1, int steps ) {
+  public void addCylinder( double x0, double y0, double y1, double z0;
+  double r, int steps ) {
 
-    Matrix points = generateCurve(cx, cy, cz, r0, r1, steps);
-    int p0, p1, p2, p3, lat, longt;
-    int latStop, longStop, latStart, longStart;
-    latStart = 0;
-    latStop = steps;
-    longStart = 0;
-    longStop = steps;
+    Matrix points = generateCylinder(cx, cy, cz, r0, r1, steps);
 
-    for ( lat = latStart; lat < latStop; lat++ ) {
-      for ( longt = longStart; longt < longStop; longt++ ) {
-
-        p0 = lat * steps + longt;
-        if (longt == steps - 1)
-          p1 = p0 - longt;
-        else
-          p1 = p0 + 1;
-        p2 = (p1 + steps) % (steps * steps);
-        p3 = (p0 + steps) % (steps * steps);
-
-        double[] point0 = points.get(p0);
-        double[] point1 = points.get(p1);
-        double[] point2 = points.get(p2);
-        double[] point3 = points.get(p3);
-
-        addPolygon(point0[0], point0[1], point0[2],
-                   point3[0], point3[1], point3[2],
-                   point2[0], point2[1], point2[2]);
-        addPolygon(point0[0], point0[1], point0[2],
-                   point2[0], point2[1], point2[2],
-                   point1[0], point1[1], point1[2]);
-
-      }
+    for (double[] arr : points.m){
+      addEdge(arr[0], arr[1], arr[2], arr[0]+1, arr[1], arr[2]);
     }
-  }//addTorus
+    
+    // int p0, p1, p2, p3, lat, longt;
+    // int latStop, longStop, latStart, longStart;
+    // latStart = 0;
+    // latStop = steps;
+    // longStart = 0;
+    // longStop = steps;
+
+    // for ( lat = latStart; lat < latStop; lat++ ) {
+    //   for ( longt = longStart; longt < longStop; longt++ ) {
+
+    //     p0 = lat * steps + longt;
+    //     if (longt == steps - 1)
+    //       p1 = p0 - longt;
+    //     else
+    //       p1 = p0 + 1;
+    //     p2 = (p1 + steps) % (steps * steps);
+    //     p3 = (p0 + steps) % (steps * steps);
+
+    //     double[] point0 = points.get(p0);
+    //     double[] point1 = points.get(p1);
+    //     double[] point2 = points.get(p2);
+    //     double[] point3 = points.get(p3);
+
+    //     addPolygon(point0[0], point0[1], point0[2],
+    //                point3[0], point3[1], point3[2],
+    //                point2[0], point2[1], point2[2]);
+    //     addPolygon(point0[0], point0[1], point0[2],
+    //                point2[0], point2[1], point2[2],
+    //                point1[0], point1[1], point1[2]);
+
+    //   }
+    // }
+
+
+  }
 
   private Matrix generateTorus(double cx, double cy, double cz,
                                double r0, double r1, int steps ) {
