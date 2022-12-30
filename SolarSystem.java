@@ -13,7 +13,7 @@ public class SolarSystem{
 
         //variables
         int steps = 200;
-        int dist = 200;
+        int dist = 300;
         int radius = 25;
         double year = 60;
         int day = 30;
@@ -26,7 +26,7 @@ public class SolarSystem{
         double marsTheta = 0;
         double moonThta = Math.PI/2;
 
-        int[][] background = createRGBMap("background.jpg", 500);
+        int[][] background = createRGBMap("background.jpg", Screen.XRES);
 
         //planets
         ArrayList<Planet> planets = new ArrayList<Planet>();
@@ -59,7 +59,7 @@ public class SolarSystem{
         Matrix transform = new Matrix();
         transform.ident();
         Stack<Matrix> csystems = new Stack<Matrix>();
-        Matrix tmp = new Matrix(Matrix.TRANSLATE, Screen.XRES/2, Screen.YRES/2-1, 250);
+        Matrix tmp = new Matrix(Matrix.TRANSLATE, 400, 400, 250);
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
@@ -78,11 +78,11 @@ public class SolarSystem{
             }
 
             //rotate
-            // tmp = new Matrix(Matrix.ROTATE, -Math.PI/4, 'X');
-            // tmp.mult(csystems.peek());
-            // csystems.push(tmp.copy());
+            tmp = new Matrix(Matrix.ROTATE, -Math.PI/4, 'X');
+            tmp.mult(csystems.peek());
+            csystems.push(tmp.copy());
 
-            csystems.push(csystems.peek().copy());
+            //csystems.push(csystems.peek().copy());
 
             for (int j = 0; j < planets.size(); j ++){
                 Planet p = planets.get(j);
@@ -205,8 +205,8 @@ public class SolarSystem{
     }
 
     public static void drawBackground(Screen s, int[][] background){
-        for (int i = 0; i < 500; i ++){
-            for (int j = 0; j < 500; j ++){
+        for (int i = 0; i < Screen.XRES; i ++){
+            for (int j = 0; j < Screen.XRES; j ++){
                 s.plot(new Color (background[j][i]), i, j, -1.0/0);
             }
         }
