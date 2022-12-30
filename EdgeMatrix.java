@@ -19,8 +19,7 @@ public class EdgeMatrix extends Matrix {
       y0 = y1;
     }
   }//addCircle
-
-
+  
   public void addCurve( double x0, double y0,
                          double x1, double y1,
                          double x2, double y2,

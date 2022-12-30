@@ -37,13 +37,19 @@ public class SolarSystem2D {
         csystems.push(tmp.copy());
 
         //Venus
-        double VenusR = radius * 0.949;
+        int r, g, b;
+
+        double VenusR = radius * 0.949 * 2;
+        System.out.println(VenusR);
         double VenusD = dist * 0.72;
         double VenusTheta = Math.PI * 3 / 4;
         ArrayList<Color> VenusColor = new ArrayList<>();
         for (int i = 0; i < VenusR; i ++){
             if (i < VenusR * 0.5){
-                VenusColor.add(new Color (255, 120, 0));
+                r = 255;
+                g = (int) (194 - i * 5);
+                b = 0;
+                VenusColor.add(new Color (r, g, b));
             } else if (i < VenusR * 0.75){
                 VenusColor.add(new Color (220, 90, 40));
             } else{
@@ -57,12 +63,9 @@ public class SolarSystem2D {
     }
 
     public static void draw2DPlanet(Screen s, double distance, double theta, ArrayList<Color> colors, Stack<Matrix> csystems){
-        for (int i = 0; i < colors.size(); i ++){
-            EdgeMatrix edges = new EdgeMatrix();
-            edges.addCircle(Math.cos(theta) * distance, Math.sin(theta) * distance, 0,
-            i, 0.01);
-            edges.mult(csystems.peek());
-            edges.drawEdges(s, colors.get(i));
+        for (int i = colors.size() - 1; i >= 0; i --){
+            s.addFilledCircle(Math.cos(theta) * distance + Screen.XRES / 2, Math.sin(theta) * distance + Screen.YRES / 2, 0,
+            i, colors.get(i));
         }
     }
 }
