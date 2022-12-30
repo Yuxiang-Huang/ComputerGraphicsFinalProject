@@ -2,40 +2,7 @@ import java.util.*;
 import java.awt.*;
 
 public class EdgeMatrix extends Matrix {
-
-  private Matrix generateCylinder(double x0, double y0, double y1, double z0,
-  double r, int steps ) {
-
-    //assume x0 == x1
-
-    Matrix points = new Matrix();
-    double x, y, z;
-
-    //for every y value of points on line
-    for (y = y0; y < y1; y++) {
-      //draw a circle
-      for(int circle = 0; circle <= steps; circle++){
-        double circ = (double)circle / steps;
-
-        x = r * Math.cos(Math.PI * 2 * circ) + x0;
-        z = r * Math.sin(Math.PI * 2 * circ) + z0;
-        
-        points.addColumn(x, y, z);
-      }
-    }
-    return points;
-  }
-
-  public void addCylinder( double x0, double y0, double y1, double z0,
-  double r, int steps ) {
-
-    Matrix points = generateCylinder(x0, y0, y1, z0, r, steps);
-
-    for (double[] arr : points.m){
-      addEdge(arr[0], arr[1], arr[2], arr[0]+1, arr[1], arr[2]);
-    }
-  }
-
+  
   public void addCircle(double cx, double cy, double cz,
                         double r, double step) {
     double x0, y0, x1, y1, t;
