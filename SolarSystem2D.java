@@ -10,11 +10,8 @@ public class SolarSystem2D {
         Screen s = new Screen();
 
         //variables
-        int steps = 200;
         int dist = 300;
         int radius = 25;
-        double year = 60;
-        int day = 30;
 
         //theta
         double sunTheta = 0;
@@ -37,7 +34,7 @@ public class SolarSystem2D {
         csystems.push(tmp.copy());
 
         //Venus
-        int r, g, b;
+        double r, g, b;
 
         double VenusR = radius * 0.949 * 2;
         System.out.println(VenusR);
@@ -46,14 +43,23 @@ public class SolarSystem2D {
         ArrayList<Color> VenusColor = new ArrayList<>();
         for (int i = 0; i < VenusR; i ++){
             if (i < VenusR * 0.5){
-                r = 255;
-                g = (int) (194 - i * 5);
-                b = 0;
-                VenusColor.add(new Color (r, g, b));
+                double now = i;
+                r = 225 + (237 - 225) * now / (VenusR * 0.5);
+                g = 195 + (99 - 195) * now / (VenusR * 0.5);
+                b = 13 + (27 - 13) * now / (VenusR * 0.5);
+                VenusColor.add(new Color ((int)r, (int)g, (int)b));
             } else if (i < VenusR * 0.75){
-                VenusColor.add(new Color (220, 90, 40));
+                double now = i - VenusR * 0.5;
+                r = 226 + (179 - 226) * now / (VenusR * (0.75 - 0.5));
+                g = 90 + (112 - 93) * now / (VenusR * (0.75 - 0.5));;
+                b = 36 - (70 - 36) * now / (VenusR * (0.75 - 0.5));;
+                VenusColor.add(new Color ((int)r, (int)g, (int)b));
             } else{
-                VenusColor.add(new Color (155,135, 105));
+                double now = i - VenusR * 0.75;
+                r = 158 + (142 - 158) * now / (VenusR * (1 - 0.75));
+                g = 122 + (129 - 122) * now / (VenusR * (1 - 0.75));
+                b = 88 + (103 - 88) * now / (VenusR * (1 - 0.75));
+                VenusColor.add(new Color ((int)r, (int)g, (int)b));
             }
         }
 
