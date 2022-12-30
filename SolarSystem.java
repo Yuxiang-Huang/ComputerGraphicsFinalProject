@@ -20,10 +20,10 @@ public class SolarSystem{
 
         //theta
         double sunTheta = 0;
-        double mercuryTheta = -Math.PI / 4;
-        double venusTheta = Math.PI * 2 / 3;
-        double earthTheta = -Math.PI / 3;
-        double marsTheta = Math.PI / 3;
+        double mercuryTheta = -Math.PI / 2;
+        double venusTheta = Math.PI * 3 / 4;
+        double earthTheta = Math.PI / 4;
+        double marsTheta = Math.PI * 5 / 4;
         double moonTheta = Math.PI * 3 / 4;
 
         int[][] background = createRGBMap("background.jpg", Screen.XRES);
@@ -78,7 +78,7 @@ public class SolarSystem{
             }
 
             //rotate
-            tmp = new Matrix(Matrix.ROTATE, -Math.PI/4, 'X');
+            tmp = new Matrix(Matrix.ROTATE, -Math.PI/5, 'X');
             tmp.mult(csystems.peek());
             csystems.push(tmp.copy());
 

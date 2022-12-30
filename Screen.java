@@ -78,9 +78,8 @@ public class Screen {
     }
   }
 
-  public void drawLine(int x0, int y0, int x1, int y1, Color c) {
+  public void drawLine(int x0, int y0, int x1, int y1, double z, Color c) {
     int x, y, d, A, B;
-    double z = 0;
     //swap points if going right -> left
     int xt, yt;
     if (x0 > x1) {

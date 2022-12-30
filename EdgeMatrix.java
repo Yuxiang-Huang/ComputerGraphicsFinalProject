@@ -61,7 +61,7 @@ public class EdgeMatrix extends Matrix {
     for(int point=0; point<m.size()-1; point+=2) {
       double[] p0 = m.get(point);
       double[] p1 = m.get(point+1);
-      s.drawLine((int)p0[0], (int)p0[1], (int)p1[0], (int)p1[1], c);
+      s.drawLine((int)p0[0], (int)p0[1], (int)p1[0], (int)p1[1], p0[2], c);
     }//draw lines
   }//drawEdges
 
