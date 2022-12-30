@@ -7,8 +7,8 @@ import javax.swing.*;
 
 public class Screen {
 
-  public static final int XRES = 500;
-  public static final int YRES = 500;
+  public static final int XRES = 750;
+  public static final int YRES = 600;
   public static final int MAX_COLOR = 255;
   public static final int YRES_OFFSET = 40;
   public static final Color DEFAULT_COLOR = new Color(0, 0, 0);
@@ -175,9 +175,9 @@ public class Screen {
     if (x >= 0 && x < width && newy >= 0 && newy < height ) {
               // System.out.println(zbuffer[x][y]);
               // System.out.println(z >= zbuffer[x][y]);
-      if ((int) (z * 1000) >= (int) (zbuffer[x][y] * 1000)){
+      if ((int) (z * 1000) >= (int) (zbuffer[x][newy] * 1000)){
         img.setRGB(x, newy, c.getRGB());
-        zbuffer[x][y] = z;
+        zbuffer[x][newy] = z;
       }
     }
   }//plot

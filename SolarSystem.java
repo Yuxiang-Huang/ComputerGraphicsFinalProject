@@ -18,27 +18,35 @@ public class SolarSystem{
         double year = 60;
         int day = 30;
 
+        //theta
+        double sunTheta = 0;
+        double mercuryTheta = 0;
+        double venusTheta = 0;
+        double earthTheta = 0;
+        double marsTheta = 0;
+        double moonThta = Math.PI/2;
+
         int[][] background = createRGBMap("background.jpg", 500);
 
         //planets
         ArrayList<Planet> planets = new ArrayList<Planet>();
         //size, dist, revTime, selfRotateTime
-        Planet Sun = new Planet(radius * 2, 0, 100, 50, new Color (255, 255, 0), createRGBMap("sun.jpg", steps));
+        Planet Sun = new Planet(radius * 2, 0, 100, 50, new Color (255, 255, 0), createRGBMap("sun.jpg", steps), sunTheta);
         planets.add(Sun);
 
-        Planet Mercury = new Planet(radius * 0.383, dist * 0.39, year * 0.25, day * 3, new Color (0, 0, 255), createRGBMap("mercury.jpg", steps));
+        Planet Mercury = new Planet(radius * 0.383, dist * 0.39, year * 0.25, day * 3, new Color (0, 0, 255), createRGBMap("mercury.jpg", steps), mercuryTheta);
         planets.add(Mercury);
 
-        Planet Venus = new Planet(radius * 0.949, dist * 0.72, year * 0.6, day * 2, new Color (150, 75, 0), createRGBMap("venus.jpg", steps));
+        Planet Venus = new Planet(radius * 0.949, dist * 0.72, year * 0.6, day * 2, new Color (150, 75, 0), createRGBMap("venus.jpg", steps), venusTheta);
         planets.add(Venus);
 
-        Planet Earth = new Planet(radius, dist, year, day, new Color (0, 255, 0), createRGBMap("earth.jpg", steps));
+        Planet Earth = new Planet(radius, dist, year, day, new Color (0, 255, 0), createRGBMap("earth.jpg", steps), earthTheta);
         planets.add(Earth);
 
-        Planet Mars = new Planet(radius * 0.532, dist * 1.52, year * 2, day * 1.03, new Color (255, 0, 0), createRGBMap("mars.jpg", steps));
+        Planet Mars = new Planet(radius * 0.532, dist * 1.52, year * 2, day * 1.03, new Color (255, 0, 0), createRGBMap("mars.jpg", steps), marsTheta);
         planets.add(Mars);
 
-        Planet Moon = new Planet(radius * 0.3, Earth.size + 0.1 * dist, year / 3, year / 3, new Color (192, 192, 192), createRGBMap("moon.jpg", steps));
+        Planet Moon = new Planet(radius * 0.3, Earth.size + 0.1 * dist, year / 3, year / 3, new Color (192, 192, 192), createRGBMap("moon.jpg", steps), moonThta);
 
         // //start gif
         // BufferedImage firstImage = s.getimg();
@@ -51,7 +59,7 @@ public class SolarSystem{
         Matrix transform = new Matrix();
         transform.ident();
         Stack<Matrix> csystems = new Stack<Matrix>();
-        Matrix tmp = new Matrix(Matrix.TRANSLATE, 250, 250, 250);
+        Matrix tmp = new Matrix(Matrix.TRANSLATE, Screen.XRES/2, Screen.YRES/2-1, 250);
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
@@ -69,9 +77,12 @@ public class SolarSystem{
                 p.update();
             }
 
-            tmp = new Matrix(Matrix.ROTATE, -Math.PI/4, 'X');
-            tmp.mult(csystems.peek());
-            csystems.push(tmp.copy());
+            //rotate
+            // tmp = new Matrix(Matrix.ROTATE, -Math.PI/4, 'X');
+            // tmp.mult(csystems.peek());
+            // csystems.push(tmp.copy());
+
+            csystems.push(csystems.peek().copy());
 
             for (int j = 0; j < planets.size(); j ++){
                 Planet p = planets.get(j);
@@ -84,17 +95,25 @@ public class SolarSystem{
 
                 csystems.push(csystems.peek().copy());
 
-                //translate and rotate
+                //translate
                 tmp = new Matrix(Matrix.TRANSLATE, p.x, p.y, 0);
                 tmp.mult(csystems.peek());
                 csystems.pop();
                 csystems.push(tmp.copy());
 
+                //self rotate
                 tmp = new Matrix(Matrix.ROTATE, p.selfRotate, 'Z');
                 tmp.mult(csystems.peek());
                 csystems.pop();
                 csystems.push(tmp.copy());
 
+                // //rotate
+                // tmp = new Matrix(Matrix.ROTATE, Math.PI/4, 'X');
+                // tmp.mult(csystems.peek());
+                // csystems.pop();
+                // csystems.push(tmp.copy());
+
+                //fix
                 tmp = new Matrix(Matrix.ROTATE, Math.PI/2, 'Y');
                 tmp.mult(csystems.peek());
                 csystems.pop();

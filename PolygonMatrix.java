@@ -232,13 +232,12 @@ public class PolygonMatrix extends Matrix {
       double[] p2 = m.get(point+2);
 
       rowCounter += 0.5;
-      if (rowCounter == steps-1){
+      if (rowCounter == steps){
         rowCounter = 0;
         colCounter ++;
       }
 
-      Color c = new Color(rgb[(int)rowCounter]
-      [Math.min(colCounter, rgb[0].length - 1)]);
+      Color c = new Color(rgb[(int)rowCounter][Math.min(colCounter, rgb[0].length - 1)]);
 
       Polygon tri = new Polygon(p0, p1, p2, c);
 

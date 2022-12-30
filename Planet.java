@@ -13,13 +13,13 @@ public class Planet{
   double selfRotate = 0;
   double selfRotateTime;
 
-  public Planet(double size, double radius, double revTime, double selfRotateTime, Color c, int[][] rgb){
+  public Planet(double size, double radius, double revTime, double selfRotateTime, Color c, int[][] rgb, double theta){
     this.size = size;
     this.radius = radius;
     this.revTime = revTime;
     this.selfRotateTime = selfRotateTime;
     this.c = c;
-    theta = Math.random() * 2 * Math.PI;
+    this.theta = theta;
     x = Math.cos(theta) * radius;
     y = Math.sin(theta) * radius;
     this.rgb = rgb;
