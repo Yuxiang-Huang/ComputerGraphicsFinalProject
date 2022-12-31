@@ -121,10 +121,16 @@ public class SolarSystem2D {
         int steps = 200;
 
         Planet Sun = new Planet(25 * 1.75, 0, 100, 50, new Color (255, 255, 0), createRGBMap("sun.jpg", steps), 0);
-        
+    
         //fix
         Matrix tmp = new Matrix(Matrix.ROTATE, Math.PI/2, 'Y');
         tmp.mult(csystems.peek());
+        csystems.push(tmp.copy());
+
+        //scale
+        tmp = new Matrix(Matrix.SCALE, 0.5, 0.5, 0.5);
+        tmp.mult(csystems.peek());
+        csystems.pop();
         csystems.push(tmp.copy());
 
         //draw
