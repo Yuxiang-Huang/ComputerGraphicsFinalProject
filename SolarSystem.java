@@ -92,7 +92,7 @@ public class SolarSystem{
 
                 //draw the orbit in the rotated world
                 EdgeMatrix edges = new EdgeMatrix();
-                edges.addCircle(0, 0, 0, p.radius, 0.01);
+                edges.addCircle(0, 0, 0, p.dist, 0.01);
                 edges.mult(csystems.peek());
                 edges.drawEdges(s, p.c);
 
@@ -141,7 +141,7 @@ public class SolarSystem{
 
                     //orbit
                     edges = new EdgeMatrix();
-                    edges.addCircle(0, 0, 0, Moon.radius, 0.01);
+                    edges.addCircle(0, 0, 0, Moon.dist, 0.01);
                     edges.mult(csystems.peek());
                     edges.drawEdges(s, Moon.c);
 

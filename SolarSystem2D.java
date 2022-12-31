@@ -34,6 +34,9 @@ public class SolarSystem2D {
         double marsTheta = Math.PI * 5 / 4;
         double moonTheta = 0;
 
+        int[][] background = createRGBMap("background.jpg", Screen.XRES);
+        drawBackground(s, background);
+
         drawVenus(radius * 0.949, dist * 0.72, venusTheta, s, csystems);
 
         drawSun(radius * 1.75, 0, sunTheta, s, csystems);
@@ -300,5 +303,13 @@ public class SolarSystem2D {
             }
         }
         return rgb;
+    }
+
+    public static void drawBackground(Screen s, int[][] background){
+        for (int i = 0; i < Screen.XRES; i ++){
+            for (int j = 0; j < Screen.XRES; j ++){
+                s.plot(new Color (background[j][i]), i, j, -1.0/0, 620); //620 from sysout
+            }
+        }
     }
 }
