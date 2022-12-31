@@ -27,7 +27,7 @@ public class SolarSystem{
         double venusTheta = Math.PI * 3 / 4;
         double earthTheta = Math.PI / 4;
         double marsTheta = Math.PI * 5 / 4;
-        double moonTheta = Math.PI * 3 / 4;
+        double moonTheta = 0;
 
         int[][] background = createRGBMap("background.jpg", Screen.XRES);
 

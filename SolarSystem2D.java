@@ -32,7 +32,7 @@ public class SolarSystem2D {
         double venusTheta = Math.PI * 3 / 4;
         double earthTheta = Math.PI / 4;
         double marsTheta = Math.PI * 5 / 4;
-        double moonTheta = Math.PI * 3 / 4;
+        double moonTheta = 0;
 
         drawVenus(radius * 0.949, dist * 0.72, venusTheta, s, csystems);
 
@@ -41,6 +41,10 @@ public class SolarSystem2D {
         drawMercury(radius * 0.383, dist * 0.39, mercuryTheta, s, csystems);
 
         drawMars(radius * 0.532, dist * 1.52, marsTheta, s, csystems);
+
+        drawEarth(radius / 2, dist, earthTheta, s, csystems);
+
+        drawMoon(earthTheta, moonTheta, s, csystems);
   
         s.display();
     }
@@ -82,33 +86,33 @@ public class SolarSystem2D {
         draw2DPlanet(s, PlanetDist, PlanetTheta, PlanetColor, csystems);
     }
 
-    public static void drawSun(double SunR, double SunD, double SunTheta, Screen s, Stack<Matrix> csystems)throws IOException{
+    public static void drawSun(double PlanetRadius, double PlanetDist, double PlanetTheta, Screen s, Stack<Matrix> csystems)throws IOException{
         //2D
         double r, g, b;
-        ArrayList<Color> SunColor = new ArrayList<>();
-        for (int i = 0; i < SunR; i ++){
-            if (i < SunR * 0.45){
-                double now = i;
+        ArrayList<Color> PlanetColor = new ArrayList<>();
+        for (int i = 0; i < PlanetRadius; i ++){
+            if (i < PlanetRadius * 0.45){
+                double factor = i / (PlanetRadius * 0.45);
                 r = 255;
-                g = 245 + (228 - 245) * now / (SunR * 0.45);
-                b = 200 + (100 - 200) * now / (SunR * 0.45);
-                SunColor.add(new Color ((int)r, (int)g, (int)b));
-            } else if (i < SunR * 0.77){
-                double now = i - SunR * 0.45;
+                g = 245 + (228 - 245) * factor;
+                b = 200 + (100 - 200) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            } else if (i < PlanetRadius * 0.77){
+                double factor = (i - PlanetRadius * 0.45) / (PlanetRadius * (0.77 - 0.45));;
                 r = 255;
-                g = 200 + (100 - 299) * now / (SunR * (0.77 - 0.45));;
+                g = 200 + (100 - 299) * factor;
                 b = 53;
-                SunColor.add(new Color ((int)r, (int)g, (int)b));
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
             } else{
-                double now = i - SunR * 0.77;
-                r = 254 + (232 - 254) * now / (SunR * (1 - 0.77));
-                g = 215 + (67 - 215) * now / (SunR * (1 - 0.77));
-                b = 52 + (17 - 52) * now / (SunR * (1 - 0.77));
-                SunColor.add(new Color ((int)r, (int)g, (int)b));
+                double factor = (i - PlanetRadius * 0.77) / (PlanetRadius * (1 - 0.77));
+                r = 254 + (232 - 254) * factor;
+                g = 215 + (67 - 215) * factor;
+                b = 52 + (17 - 52) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
             }
         }
 
-        draw2DPlanet(s, SunD, SunTheta, SunColor, csystems);
+        draw2DPlanet(s, PlanetDist, PlanetTheta, PlanetColor, csystems);
 
         //3D
         int steps = 200;
@@ -183,6 +187,81 @@ public class SolarSystem2D {
         }
 
         draw2DPlanet(s, PlanetDist, PlanetTheta, PlanetColor, csystems);
+    }
+
+    public static void drawEarth(double PlanetRadius, double PlanetDist, double PlanetTheta, Screen s, Stack<Matrix> csystems){
+        //Earth
+        double r, g, b;
+        ArrayList<Color> PlanetColor = new ArrayList<>();
+        for (int i = 0; i < PlanetRadius; i ++){
+            if (i < PlanetRadius * 0.22){
+                double factor = i / (PlanetRadius * 0.5);
+                r = 225 + (237 - 225) * factor;
+                g = 195 + (99 - 195) * factor;
+                b = 13 + (27 - 13) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            } else if (i < PlanetRadius * 0.5){
+                double factor = (i - PlanetRadius * 0.22) / (PlanetRadius * (0.5 - 0.22));;
+                r = 226 + (179 - 226) * factor;
+                g = 90 + (112 - 93) * factor;
+                b = 36 - (70 - 36) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            } else{
+                double factor = (i - PlanetRadius * 0.5) / (PlanetRadius * (1 - 0.5));
+                r = 158 + (142 - 158) * factor;
+                g = 122 + (129 - 122) * factor;
+                b = 88 + (103 - 88) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            }
+        }
+
+        draw2DPlanet(s, PlanetDist, PlanetTheta, PlanetColor, csystems);
+    }
+
+    public static void drawMoon(double earthTheta, double moonTheta, Screen s, Stack<Matrix> csystems) throws IOException{
+        int steps = 200;
+        int dist = 300;
+        int radius = 25;
+        double year = 60;
+        int day = 30;
+
+        Planet Earth = new Planet(radius, dist, year, day, new Color (0, 255, 0), createRGBMap("earth.jpg", steps), earthTheta);
+
+        Planet Moon = new Planet(radius * 0.25, radius + 15, year / 3, year / 3, new Color (192, 192, 192), createRGBMap("moon.jpg", steps), moonTheta);
+
+        Moon.update();
+
+        //translate to Moon
+        Matrix tmp = new Matrix(Matrix.TRANSLATE, Earth.x, Earth.y, 0);
+        tmp.mult(csystems.peek());
+        csystems.pop();
+        csystems.push(tmp.copy());
+
+        tmp = new Matrix(Matrix.TRANSLATE, Moon.x, Moon.y, 0);
+        tmp.mult(csystems.peek());
+        csystems.pop();
+        csystems.push(tmp.copy());
+
+        //self rotate
+        tmp = new Matrix(Matrix.ROTATE, Moon.selfRotate, 'Z');
+        tmp.mult(csystems.peek());
+        csystems.pop();
+        csystems.push(tmp.copy());
+
+        //fix y
+        tmp = new Matrix(Matrix.ROTATE, Math.PI/2, 'Y');
+        tmp.mult(csystems.peek());
+        csystems.pop();
+        csystems.push(tmp.copy());
+
+        //draw
+        PolygonMatrix polys = new PolygonMatrix();
+        polys.addSphere(0, 0, 0, Moon.size, steps);
+        polys.mult(csystems.peek());
+
+        polys.drawPolygons(s, Moon.rgb, steps);
+
+        csystems.pop();
     }
 
     public static int[][] createRGBMap(String name, int steps) throws IOException{
