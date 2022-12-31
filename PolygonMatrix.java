@@ -339,9 +339,9 @@ public class PolygonMatrix extends Matrix {
       double[] p1 = m.get(point+1);
       double[] p2 = m.get(point+2);
 
-      int red = (23 * (point/3))%256;
-      int green = (109 * (point/3))%256;
-      int blue = (227 * (point/3))%256;
+      int red = (23 * (point/3+1))%256;
+      int green = (109 * (point/3+1))%256;
+      int blue = (227 * (point/3+1))%256;
       Color c = new Color(red, green, blue);
 
       Polygon tri = new Polygon(p0, p1, p2, c);

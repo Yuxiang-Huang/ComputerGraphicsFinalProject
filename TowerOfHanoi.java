@@ -8,7 +8,7 @@ import javax.imageio.stream.*;
 import java.net.URL;
 
 public class TowerOfHanoi {
-    static int level = 5;
+    static int level = 1;
     static ArrayList<Integer> first;
     static ArrayList<Integer> second;
     static ArrayList<Integer> third;
@@ -36,8 +36,9 @@ public class TowerOfHanoi {
         ImageOutputStream output =
         new FileImageOutputStream(new File("TowerOfHanoi.gif"));
         GifSequenceWriter writer =
-        new GifSequenceWriter(output, firstImage.getType(), 200, false);
+        new GifSequenceWriter(output, firstImage.getType(), 500, false);
 
+        draw(s, csystems, writer);
         solve(s, csystems, first, third, second, level, writer);
 
         //display animation
@@ -71,24 +72,27 @@ public class TowerOfHanoi {
         s.clearScreen();
 
         PolygonMatrix polys = new PolygonMatrix();
+        //floor
+        polys.addBox(0, floorHeight - 20, 0, Screen.XRES, 20, 0);
+
         //poles
-        polys.addCylinder(Screen.XRES / 4, floorHeight, Screen.YRES - floorHeight, 0, poleRadius - 5, 20);
+        polys.addCylinder(Screen.XRES / 6, floorHeight, Screen.YRES - floorHeight, 0, poleRadius - 5, 20);
         polys.addCylinder(Screen.XRES / 2, floorHeight, Screen.YRES - floorHeight, 0, poleRadius - 5, 20);
-        polys.addCylinder(Screen.XRES * 3 / 4, floorHeight, Screen.YRES - floorHeight, 0, poleRadius - 5, 20);
+        polys.addCylinder(Screen.XRES * 5 / 6, floorHeight, Screen.YRES - floorHeight, 0, poleRadius - 5, 20);
 
         //rings
         for (int i = 0; i < first.size(); i ++){
-            polys.addTorus(Screen.XRES / 4, (ringRadius * 10) * i / level + floorHeight + ringRadius/2, 
+            polys.addTorus(Screen.XRES / 6, (ringRadius * 2) * i + floorHeight + ringRadius/2, 
             0, ringRadius, poleRadius * first.get(i), 20);
         }
 
         for (int i = 0; i < second.size(); i ++){
-            polys.addTorus(Screen.XRES / 2, (ringRadius * 10) * i / level + floorHeight + ringRadius/2, 
+            polys.addTorus(Screen.XRES / 2, (ringRadius * 2) * i + floorHeight + ringRadius/2, 
             0, ringRadius, poleRadius * second.get(i), 20);
         }
 
         for (int i = 0; i < third.size(); i ++){
-            polys.addTorus(Screen.XRES * 3 / 4, (ringRadius * 10) * i / level + floorHeight + ringRadius/2, 
+            polys.addTorus(Screen.XRES * 5 / 6, (ringRadius * 2) * i + floorHeight + ringRadius/2, 
             0, ringRadius, poleRadius * third.get(i), 20);
         }
 
