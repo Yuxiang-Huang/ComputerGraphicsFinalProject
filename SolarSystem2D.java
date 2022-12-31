@@ -11,13 +11,7 @@ public class SolarSystem2D {
 
         //variables
         int dist = 300;
-        int radius = 25;
-
-        //theta
-        double mercuryTheta = -Math.PI / 2;
-        double earthTheta = Math.PI / 4;
-        double marsTheta = Math.PI * 5 / 4;
-        double moonTheta = Math.PI * 3 / 4;
+        int radius = 25 * 2;
 
         //set up the world at the center
         Matrix transform = new Matrix();
@@ -32,41 +26,65 @@ public class SolarSystem2D {
         tmp.mult(csystems.peek());
         csystems.push(tmp.copy());
 
-        double r, g, b;
+        //theta
+        double sunTheta = 0;
+        double mercuryTheta = -Math.PI * 2 / 5;
+        double venusTheta = Math.PI * 3 / 4;
+        double earthTheta = Math.PI / 4;
+        double marsTheta = Math.PI * 5 / 4;
+        double moonTheta = Math.PI * 3 / 4;
 
-        //Venus
-        double VenusR = radius * 0.949 * 2;
-        double VenusD = dist * 0.72;
-        double VenusTheta = Math.PI * 3 / 4;
-        ArrayList<Color> VenusColor = new ArrayList<>();
-        for (int i = 0; i < VenusR; i ++){
-            if (i < VenusR * 0.5){
-                double now = i;
-                r = 225 + (237 - 225) * now / (VenusR * 0.5);
-                g = 195 + (99 - 195) * now / (VenusR * 0.5);
-                b = 13 + (27 - 13) * now / (VenusR * 0.5);
-                VenusColor.add(new Color ((int)r, (int)g, (int)b));
-            } else if (i < VenusR * 0.75){
-                double now = i - VenusR * 0.5;
-                r = 226 + (179 - 226) * now / (VenusR * (0.75 - 0.5));
-                g = 90 + (112 - 93) * now / (VenusR * (0.75 - 0.5));;
-                b = 36 - (70 - 36) * now / (VenusR * (0.75 - 0.5));;
-                VenusColor.add(new Color ((int)r, (int)g, (int)b));
+        drawVenus(radius * 0.949, dist * 0.72, venusTheta, s, csystems);
+
+        drawSun(radius * 1.75, 0, sunTheta, s, csystems);
+
+        drawMercury(radius * 0.383, dist * 0.39, mercuryTheta, s, csystems);
+
+        drawMars(radius * 0.532, dist * 1.52, marsTheta, s, csystems);
+  
+        s.display();
+    }
+
+    public static void draw2DPlanet(Screen s, double distance, double theta, ArrayList<Color> colors, Stack<Matrix> csystems){
+        for (int i = colors.size() - 1; i >= 0; i --){
+            EdgeMatrix edges = new EdgeMatrix();
+            edges.addFilledCircle(Math.cos(theta) * distance, Math.sin(theta) * distance, 0, i + 1);
+            edges.mult(csystems.peek());
+            edges.drawEdges(s, colors.get(i));
+        }
+    }
+
+    public static void drawVenus(double PlanetRadius, double PlanetDist, double PlanetTheta, Screen s, Stack<Matrix> csystems){
+        double r, g, b;
+        ArrayList<Color> PlanetColor = new ArrayList<>();
+        for (int i = 0; i < PlanetRadius; i ++){
+            if (i < PlanetRadius * 0.22){
+                double factor = i / (PlanetRadius * 0.5);
+                r = 225 + (237 - 225) * factor;
+                g = 195 + (99 - 195) * factor;
+                b = 13 + (27 - 13) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            } else if (i < PlanetRadius * 0.5){
+                double factor = (i - PlanetRadius * 0.22) / (PlanetRadius * (0.5 - 0.22));;
+                r = 226 + (179 - 226) * factor;
+                g = 90 + (112 - 93) * factor;
+                b = 36 - (70 - 36) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
             } else{
-                double now = i - VenusR * 0.75;
-                r = 158 + (142 - 158) * now / (VenusR * (1 - 0.75));
-                g = 122 + (129 - 122) * now / (VenusR * (1 - 0.75));
-                b = 88 + (103 - 88) * now / (VenusR * (1 - 0.75));
-                VenusColor.add(new Color ((int)r, (int)g, (int)b));
+                double factor = (i - PlanetRadius * 0.5) / (PlanetRadius * (1 - 0.5));
+                r = 158 + (142 - 158) * factor;
+                g = 122 + (129 - 122) * factor;
+                b = 88 + (103 - 88) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
             }
         }
 
-        draw2DPlanet(s, VenusD, VenusTheta, VenusColor, csystems);
+        draw2DPlanet(s, PlanetDist, PlanetTheta, PlanetColor, csystems);
+    }
 
-        //Sun
-        double SunR = radius * 2 * 2;
-        double SunD = 0;
-        double SunTheta = 0;
+    public static void drawSun(double SunR, double SunD, double SunTheta, Screen s, Stack<Matrix> csystems)throws IOException{
+        //2D
+        double r, g, b;
         ArrayList<Color> SunColor = new ArrayList<>();
         for (int i = 0; i < SunR; i ++){
             if (i < SunR * 0.45){
@@ -92,33 +110,79 @@ public class SolarSystem2D {
 
         draw2DPlanet(s, SunD, SunTheta, SunColor, csystems);
 
+        //3D
         int steps = 200;
 
-        Planet Sun = new Planet(radius * 2, 0, 100, 50, new Color (255, 255, 0), createRGBMap("sun.jpg", steps), 0);
-       
+        Planet Sun = new Planet(25 * 1.75, 0, 100, 50, new Color (255, 255, 0), createRGBMap("sun.jpg", steps), 0);
+        
         //fix
-        tmp = new Matrix(Matrix.ROTATE, Math.PI/2, 'Y');
+        Matrix tmp = new Matrix(Matrix.ROTATE, Math.PI/2, 'Y');
         tmp.mult(csystems.peek());
-        csystems.pop();
         csystems.push(tmp.copy());
 
         //draw
         PolygonMatrix polys = new PolygonMatrix();
         polys.addSphere(0, 0, 0, Sun.size, steps);
         polys.mult(csystems.peek());
-
         polys.drawPolygons(s, Sun.rgb, steps);
 
-        s.display();
+        csystems.pop();
     }
 
-    public static void draw2DPlanet(Screen s, double distance, double theta, ArrayList<Color> colors, Stack<Matrix> csystems){
-        for (int i = colors.size() - 1; i >= 0; i --){
-            EdgeMatrix edges = new EdgeMatrix();
-            edges.addFilledCircle(Math.cos(theta) * distance, Math.sin(theta) * distance, 0, i);
-            edges.mult(csystems.peek());
-            edges.drawEdges(s, colors.get(i));
+    public static void drawMercury(double PlanetRadius, double PlanetDist, double PlanetTheta, Screen s, Stack<Matrix> csystems){
+        double r, g, b;
+        ArrayList<Color> PlanetColor = new ArrayList<>();
+        for (int i = 0; i < PlanetRadius; i ++){
+            if (i < PlanetRadius * 0.42){
+                double factor = i / (PlanetRadius * 0.42);
+                r = 225 + (237 - 225) * factor;
+                g = 195 + (99 - 195) * factor;
+                b = 13 + (27 - 13) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            } else if (i < PlanetRadius * 0.84){
+                double factor = (i - PlanetRadius * 0.42) / (PlanetRadius * (0.84 - 0.42));;
+                r = 226 + (179 - 226) * factor;
+                g = 90 + (112 - 93) * factor;
+                b = 36 - (70 - 36) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            } else{
+                double factor = (i - PlanetRadius * 0.84) / (PlanetRadius * (1 - 0.84));
+                r = 158 + (142 - 158) * factor;
+                g = 122 + (129 - 122) * factor;
+                b = 88 + (103 - 88) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            }
         }
+
+        draw2DPlanet(s, PlanetDist, PlanetTheta, PlanetColor, csystems);
+    }
+
+    public static void drawMars(double PlanetRadius, double PlanetDist, double PlanetTheta, Screen s, Stack<Matrix> csystems){
+        double r, g, b;
+        ArrayList<Color> PlanetColor = new ArrayList<>();
+        for (int i = 0; i < PlanetRadius; i ++){
+            if (i < PlanetRadius * 0.2){
+                double factor = i / (PlanetRadius * 0.2);
+                r = 225 + (237 - 225) * factor;
+                g = 195 + (99 - 195) * factor;
+                b = 13 + (27 - 13) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            } else if (i < PlanetRadius * 0.6){
+                double factor = (i - PlanetRadius * 0.2) / (PlanetRadius * (0.6 - 0.2));;
+                r = 226 + (179 - 226) * factor;
+                g = 90 + (112 - 93) * factor;
+                b = 36 - (70 - 36) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            } else{
+                double factor = (i - PlanetRadius * 0.6) / (PlanetRadius * (1 - 0.6));
+                r = 158 + (142 - 158) * factor;
+                g = 122 + (129 - 122) * factor;
+                b = 88 + (103 - 88) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            }
+        }
+
+        draw2DPlanet(s, PlanetDist, PlanetTheta, PlanetColor, csystems);
     }
 
     public static int[][] createRGBMap(String name, int steps) throws IOException{

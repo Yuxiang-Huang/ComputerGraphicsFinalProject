@@ -9,6 +9,9 @@ import java.net.URL;
 
 public class SolarSystem{
   public static void main(String[] args) throws Exception {
+        //for scale 
+        //* csystems.peek().get(3)[2] / 250
+
         Screen s = new Screen();
 
         //variables
@@ -31,7 +34,7 @@ public class SolarSystem{
         //planets
         ArrayList<Planet> planets = new ArrayList<Planet>();
         //size, dist, revTime, selfRotateTime
-        Planet Sun = new Planet(radius * 2, 0, 100, 50, new Color (255, 255, 0), createRGBMap("sun.jpg", steps), sunTheta);
+        Planet Sun = new Planet(radius * 1.75, 0, 100, 50, new Color (255, 255, 0), createRGBMap("sun.jpg", steps), sunTheta);
         planets.add(Sun);
 
         Planet Mercury = new Planet(radius * 0.383, dist * 0.39, year * 0.25, day * 3, new Color (0, 0, 255), createRGBMap("mercury.jpg", steps), mercuryTheta);
@@ -165,7 +168,7 @@ public class SolarSystem{
 
                     //draw
                     polys = new PolygonMatrix();
-                    polys.addSphere(0, 0, 0, Moon.size * csystems.peek().get(3)[2] / 250, steps);
+                    polys.addSphere(0, 0, 0, Moon.size, steps);
                     polys.mult(csystems.peek());
 
                     polys.drawPolygons(s, Moon.rgb, steps);
