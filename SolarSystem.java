@@ -177,7 +177,7 @@ public class SolarSystem{
             //finish this frame
             //writer.writeToSequence(s.getimg());
             csystems.pop();
-        //}
+        //}s
 
         s.display();
 
@@ -212,7 +212,7 @@ public class SolarSystem{
     public static void drawBackground(Screen s, int[][] background){
         for (int i = 0; i < Screen.XRES; i ++){
             for (int j = 0; j < Screen.XRES; j ++){
-                s.plot(new Color (background[j][i]), i, j, -1.0/0);
+                s.plot(new Color (background[j][i]), i, j, -1.0/0);    
             }
         }
     }

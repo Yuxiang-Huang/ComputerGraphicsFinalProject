@@ -14,7 +14,6 @@ public class SolarSystem2D {
         int radius = 25;
 
         //theta
-        double sunTheta = 0;
         double mercuryTheta = -Math.PI / 2;
         double earthTheta = Math.PI / 4;
         double marsTheta = Math.PI * 5 / 4;
@@ -33,11 +32,10 @@ public class SolarSystem2D {
         tmp.mult(csystems.peek());
         csystems.push(tmp.copy());
 
-        //Venus
         double r, g, b;
 
+        //Venus
         double VenusR = radius * 0.949 * 2;
-        System.out.println(VenusR);
         double VenusD = dist * 0.72;
         double VenusTheta = Math.PI * 3 / 4;
         ArrayList<Color> VenusColor = new ArrayList<>();
@@ -64,6 +62,35 @@ public class SolarSystem2D {
         }
 
         draw2DPlanet(s, VenusD, VenusTheta, VenusColor, csystems);
+
+        //Sun
+        double SunR = radius * 2 * 2;
+        double SunD = 0;
+        double SunTheta = 0;
+        ArrayList<Color> SunColor = new ArrayList<>();
+        for (int i = 0; i < SunR; i ++){
+            if (i < SunR * 0.45){
+                double now = i;
+                r = 255;
+                g = 245 + (228 - 245) * now / (SunR * 0.45);
+                b = 200 + (100 - 200) * now / (SunR * 0.45);
+                SunColor.add(new Color ((int)r, (int)g, (int)b));
+            } else if (i < SunR * 0.77){
+                double now = i - SunR * 0.45;
+                r = 255;
+                g = 200 + (100 - 299) * now / (SunR * (0.77 - 0.45));;
+                b = 53;
+                SunColor.add(new Color ((int)r, (int)g, (int)b));
+            } else{
+                double now = i - SunR * 0.77;
+                r = 254 + (232 - 254) * now / (SunR * (1 - 0.77));
+                g = 215 + (67 - 215) * now / (SunR * (1 - 0.77));
+                b = 52 + (17 - 52) * now / (SunR * (1 - 0.77));
+                SunColor.add(new Color ((int)r, (int)g, (int)b));
+            }
+        }
+
+        draw2DPlanet(s, SunD, SunTheta, SunColor, csystems);
 
         s.display();
     }
