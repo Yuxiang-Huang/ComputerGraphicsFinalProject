@@ -393,7 +393,7 @@ public class PolygonMatrix extends Matrix {
     }//draw lines
   }//drawPloygons
 
-  public void drawPolygons(Screen s, int[][] rgb, int steps, int xLimit) {
+  public void drawPolygons(Screen s, int[][] rgb, int steps, int xLowerLimit, int xUpperLimit) {
     if ( m.size() < 3) {
       System.out.println("Need at least 3 points to draw a polygon");
       return;
@@ -423,7 +423,7 @@ public class PolygonMatrix extends Matrix {
       Polygon tri = new Polygon(p0, p1, p2, c);
 
       if (tri.getNormal()[2] > 0) {
-        tri.scanlineConvert(s, xLimit);
+        tri.scanlineConvert(s, xLowerLimit, xUpperLimit);
         // s.drawLine((int)p0[0], (int)p0[1], (int)p1[0], (int)p1[1], c);
         // s.drawLine((int)p2[0], (int)p2[1], (int)p1[0], (int)p1[1], c);
         // s.drawLine((int)p0[0], (int)p0[1], (int)p2[0], (int)p2[1], c);

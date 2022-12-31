@@ -3,6 +3,7 @@ import java.io.*;
 import java.awt.*;
 import java.awt.image.*;
 import javax.imageio.*;
+import javax.sql.rowset.spi.XmlReader;
 import javax.swing.text.AttributeSet.ColorAttribute;
 
 public class SolarSystem2D {
@@ -48,7 +49,6 @@ public class SolarSystem2D {
 
         drawEarth(radius / 2, dist, earthTheta, s, csystems);
         drawSnowFlakes(radius / 2, dist, earthTheta, s, csystems, 3, false);
-
 
         drawMoon(earthTheta, moonTheta, s, csystems);
   
@@ -249,7 +249,7 @@ public class SolarSystem2D {
         PolygonMatrix polys = new PolygonMatrix();
         polys.addSphere(0, 0, 0, Earth.size, steps);
         polys.mult(csystems.peek());
-        polys.drawPolygons(s, Earth.rgb, steps, (int) (Screen.XRES / 2 + Earth.x - Earth.size / 3));
+        polys.drawPolygons(s, Earth.rgb, steps, (int) (Screen.XRES / 2 + Earth.x - Earth.size / 3), Screen.XRES);
 
         csystems.pop();
     }
@@ -316,8 +316,8 @@ public class SolarSystem2D {
 
     public static void drawBackground(Screen s, int[][] background){
         for (int i = 0; i < Screen.XRES; i ++){
-            for (int j = 0; j < Screen.XRES; j ++){
-                s.plot(new Color (background[j][i]), i, j, -1.0/0, 603); //603 from sysout
+            for (int j = 0; j < Screen.YRES; j ++){
+                s.plot(new Color (background[j][i]), i, j, -1.0/0, 603, Screen.XRES); //603 from sysout
             }
         }
     }

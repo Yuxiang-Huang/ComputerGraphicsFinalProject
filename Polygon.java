@@ -122,7 +122,7 @@ public class Polygon {
     }
   }//scanlineConvert
 
-  public void scanlineConvert(Screen s, int xLimit) {
+  public void scanlineConvert(Screen s, int xLowerLimit, int xUpperLimit) {
     ArrayList<double[]> points = new ArrayList<double[]>();
     points.add(p0);
     points.add(p1);
@@ -163,7 +163,7 @@ public class Polygon {
     // System.out.println(dx1);
 
     while (y < (int) points.get(1)[1]){
-      s.drawScanline((int)x0, z0, (int)x1, z1, y, c, xLimit);
+      s.drawScanline((int)x0, z0, (int)x1, z1, y, c, xLowerLimit, xUpperLimit);
       x0 += dx0;
       x1 += dx1;
       z0 += dz0;
@@ -184,7 +184,7 @@ public class Polygon {
     }
 
     while (y < (int) points.get(2)[1]){
-      s.drawScanline((int)x0, z0, (int)x1, z1, y, c, xLimit);
+      s.drawScanline((int)x0, z0, (int)x1, z1, y, c, xLowerLimit, xUpperLimit);
       x0 += dx0;
       x1 += dx1;
       z0 += dz0;

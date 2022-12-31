@@ -77,7 +77,7 @@ public class Screen {
     }
   }
 
-  public void drawScanline(int x0, double z0, int x1, double z1, int y, Color c, int xLimit) {
+  public void drawScanline(int x0, double z0, int x1, double z1, int y, Color c, int xLowerLimit, int xUpperLimit) {
     if (x0 > x1) {
       int xt = x0;
       x0 = x1;
@@ -90,7 +90,7 @@ public class Screen {
     double dz = (z1 - z0) / (x1 - x0);
 
     while (x0 <= x1){
-      plot(c, x0, y, z0, xLimit);
+      plot(c, x0, y, z0, xLowerLimit, xUpperLimit);
       z0 += dz;
       x0 ++;
     }
@@ -213,7 +213,7 @@ public class Screen {
 
         d = A + B/2;
         while ( x < x1 ) {
-          plot( c, x, y, z );
+          plot(c, x, y, z, xLowerLimit, xUpperLimit);
           if ( d > 0 ) {
             y+= 1;
             d+= B;
@@ -229,7 +229,7 @@ public class Screen {
         d = A - B/2;
 
         while ( x < x1 ) {
-          plot( c, x, y, z );
+          plot(c, x, y, z, xLowerLimit, xUpperLimit);
           if ( d < 0 ) {
             y-= 1;
             d-= B;
@@ -249,7 +249,7 @@ public class Screen {
         d = A/2 + B;
 
         while ( y < y1 ) {
-          plot( c, x, y, z );
+          plot(c, x, y, z, xLowerLimit, xUpperLimit);
           if ( d < 0 ) {
             x+= 1;
             d+= A;
@@ -265,7 +265,7 @@ public class Screen {
         d = A/2 - B;
 
         while ( y > y1 ) {
-          plot( c, x, y, z);
+          plot(c, x, y, z, xLowerLimit, xUpperLimit);
           if ( d > 0 ) {
             x+= 1;
             d+= A;
@@ -299,8 +299,6 @@ public class Screen {
         img.setRGB(x, newy, c.getRGB());
         zbuffer[x][newy] = z;
       }
-    } else{
-      System.out.println(x);
     }
   }//plot with limit
 
