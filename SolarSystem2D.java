@@ -6,7 +6,7 @@ import javax.imageio.*;
 import javax.swing.text.AttributeSet.ColorAttribute;
 
 public class SolarSystem2D {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Screen s = new Screen();
 
         //variables
@@ -92,13 +92,46 @@ public class SolarSystem2D {
 
         draw2DPlanet(s, SunD, SunTheta, SunColor, csystems);
 
+        int steps = 200;
+
+        Planet Sun = new Planet(radius * 2, 0, 100, 50, new Color (255, 255, 0), createRGBMap("sun.jpg", steps), 0);
+       
+        //fix
+        tmp = new Matrix(Matrix.ROTATE, Math.PI/2, 'Y');
+        tmp.mult(csystems.peek());
+        csystems.pop();
+        csystems.push(tmp.copy());
+
+        //draw
+        PolygonMatrix polys = new PolygonMatrix();
+        polys.addSphere(0, 0, 0, Sun.size, steps);
+        polys.mult(csystems.peek());
+
+        polys.drawPolygons(s, Sun.rgb, steps);
+
         s.display();
     }
 
     public static void draw2DPlanet(Screen s, double distance, double theta, ArrayList<Color> colors, Stack<Matrix> csystems){
         for (int i = colors.size() - 1; i >= 0; i --){
-            s.addFilledCircle(Math.cos(theta) * distance + Screen.XRES / 2, Math.sin(theta) * distance + Screen.YRES / 2, 0,
-            i, colors.get(i));
+            EdgeMatrix edges = new EdgeMatrix();
+            edges.addFilledCircle(Math.cos(theta) * distance, Math.sin(theta) * distance, 0, i);
+            edges.mult(csystems.peek());
+            edges.drawEdges(s, colors.get(i));
         }
+    }
+
+    public static int[][] createRGBMap(String name, int steps) throws IOException{
+        File file = new File(name);
+        BufferedImage image = ImageIO.read(file);
+
+        int[][] rgb = new int[steps][steps];
+
+        for (int i = 0; i < steps; i ++) {
+            for (int j = 0; j < steps; j ++) {
+                rgb[j][i] = image.getRGB(i * image.getWidth() / steps, (steps - j - 1) * image.getHeight() / steps);
+            }
+        }
+        return rgb;
     }
 }

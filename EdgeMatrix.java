@@ -19,7 +19,18 @@ public class EdgeMatrix extends Matrix {
       y0 = y1;
     }
   }//addCircle
-  
+
+  public void addFilledCircle(double cx, double cy, double cz,
+  double r) {
+    for(int y = (int) (cy - r); y <= (int) (cy + r); y++){
+      for(int x = (int) (cx - r); x <=(int) (cx + r); x++){
+        if((x - cx)*(x - cx)+(y - cy)*(y - cy) <= r*r){
+          addEdge(x, y, cz, x, y, cz);
+        }
+      }
+    }
+  }
+
   public void addCurve( double x0, double y0,
                          double x1, double y1,
                          double x2, double y2,

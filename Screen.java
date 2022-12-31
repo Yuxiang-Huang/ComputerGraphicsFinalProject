@@ -48,17 +48,6 @@ public class Screen {
     }
   }//clearScreen
 
-  public void addFilledCircle(double cx, double cy, double cz,
-  double r, Color c) {
-    for(int y = (int) (cy - r); y <= (int) (cy + r); y++){
-      for(int x = (int) (cx - r); x <=(int) (cx + r); x++){
-        if((x - cx)*(x - cx)+(y - cy)*(y - cy) <= r*r){
-          plot(c, x, y, cz);
-        }
-      }
-    }
-  }
-
 /*======== void draw_scanline() ==========
   Inputs: int x0, double z0
           int x1, double z1
