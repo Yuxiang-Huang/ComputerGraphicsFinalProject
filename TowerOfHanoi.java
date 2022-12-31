@@ -8,7 +8,7 @@ import javax.imageio.stream.*;
 import java.net.URL;
 
 public class TowerOfHanoi {
-    static int level = 5;
+    static int level = 3;
     static ArrayList<Integer> first;
     static ArrayList<Integer> second;
     static ArrayList<Integer> third;
@@ -73,7 +73,7 @@ public class TowerOfHanoi {
 
         PolygonMatrix polys = new PolygonMatrix();
         //floor
-        polys.addBox(0, floorHeight + 50, 0, Screen.XRES, 100, 0);
+        polys.addBox(0, floorHeight, 125, Screen.XRES, 20, 250);
 
         //poles
         polys.addCylinder(Screen.XRES / 6, floorHeight, Screen.YRES - floorHeight, 0, poleRadius - 5, 20);
