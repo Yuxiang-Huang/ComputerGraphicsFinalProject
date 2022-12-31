@@ -189,8 +189,8 @@ public class SolarSystem2D {
         draw2DPlanet(s, PlanetDist, PlanetTheta, PlanetColor, csystems);
     }
 
-    public static void drawEarth(double PlanetRadius, double PlanetDist, double PlanetTheta, Screen s, Stack<Matrix> csystems){
-        //Earth
+    public static void drawEarth(double PlanetRadius, double PlanetDist, double PlanetTheta, Screen s, Stack<Matrix> csystems) throws IOException{
+        //2D
         double r, g, b;
         ArrayList<Color> PlanetColor = new ArrayList<>();
         for (int i = 0; i < PlanetRadius; i ++){
@@ -216,6 +216,30 @@ public class SolarSystem2D {
         }
 
         draw2DPlanet(s, PlanetDist, PlanetTheta, PlanetColor, csystems);
+
+        //3D
+        int steps = 200;
+
+        Planet Earth = new Planet(25, 300, 60, 30, new Color (0, 255, 0), createRGBMap("earth.jpg", steps), PlanetTheta);
+
+        //translate
+        Matrix tmp = new Matrix(Matrix.TRANSLATE, Earth.x, Earth.y, 0);
+        tmp.mult(csystems.peek());
+        csystems.push(tmp.copy());
+
+        //fix
+        tmp = new Matrix(Matrix.ROTATE, Math.PI/2, 'Y');
+        tmp.mult(csystems.peek());
+        csystems.pop();
+        csystems.push(tmp.copy());
+
+        //draw
+        PolygonMatrix polys = new PolygonMatrix();
+        polys.addSphere(0, 0, 0, Earth.size, steps);
+        polys.mult(csystems.peek());
+        polys.drawPolygons(s, Earth.rgb, steps, (int) (Screen.XRES / 2 + Earth.x + Earth.size / 3));
+
+        csystems.pop();
     }
 
     public static void drawMoon(double earthTheta, double moonTheta, Screen s, Stack<Matrix> csystems) throws IOException{

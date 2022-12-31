@@ -392,4 +392,42 @@ public class PolygonMatrix extends Matrix {
       }
     }//draw lines
   }//drawPloygons
+
+  public void drawPolygons(Screen s, int[][] rgb, int steps, int xLimit) {
+    if ( m.size() < 3) {
+      System.out.println("Need at least 3 points to draw a polygon");
+      return;
+    }//not enough points
+
+    double rowCounter = 0;
+    int colCounter = 0;
+
+    // System.out.println(rgb.length);
+    // System.out.println(rgb[0].length);
+
+    // System.out.println(m.size()/3);
+
+    for(int point=0; point<m.size()-1; point+=3) {
+      double[] p0 = m.get(point);
+      double[] p1 = m.get(point+1);
+      double[] p2 = m.get(point+2);
+
+      rowCounter += 0.5;
+      if (rowCounter == steps){
+        rowCounter = 0;
+        colCounter ++;
+      }
+
+      Color c = new Color(rgb[(int)rowCounter][Math.min(colCounter, rgb[0].length - 1)]);
+
+      Polygon tri = new Polygon(p0, p1, p2, c);
+
+      if (tri.getNormal()[2] > 0) {
+        tri.scanlineConvert(s, xLimit);
+        // s.drawLine((int)p0[0], (int)p0[1], (int)p1[0], (int)p1[1], c);
+        // s.drawLine((int)p2[0], (int)p2[1], (int)p1[0], (int)p1[1], c);
+        // s.drawLine((int)p0[0], (int)p0[1], (int)p2[0], (int)p2[1], c);
+      }
+    }//draw lines
+  }//drawPloygons with limit
 }//class PolygonMatrix

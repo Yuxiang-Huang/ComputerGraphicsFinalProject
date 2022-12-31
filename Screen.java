@@ -77,6 +77,25 @@ public class Screen {
     }
   }
 
+  public void drawScanline(int x0, double z0, int x1, double z1, int y, Color c, int xLimit) {
+    if (x0 > x1) {
+      int xt = x0;
+      x0 = x1;
+      x1 = xt;
+      double zt = z0;
+      z0 = z1;
+      z1 = zt;
+    }
+
+    double dz = (z1 - z0) / (x1 - x0);
+
+    while (x0 <= x1){
+      plot(c, x0, y, z0, xLimit);
+      z0 += dz;
+      x0 ++;
+    }
+  } //with limit
+
   public void drawLine(int x0, int y0, int x1, int y1, double z, Color c) {
     int x, y, d, A, B;
     //swap points if going right -> left
@@ -179,6 +198,18 @@ public class Screen {
       }
     }
   }//plot
+
+  public void plot(Color c, int x, int y, double z, int xLimit) {
+    int newy = width - 1 - y;
+    if (x >= xLimit && x >= 0 && x < width && newy >= 0 && newy < height ) {
+              // System.out.println(zbuffer[x][y]);
+              // System.out.println(z >= zbuffer[x][y]);
+      if ((int) (z * 1000) >= (int) (zbuffer[x][newy] * 1000)){
+        img.setRGB(x, newy, c.getRGB());
+        zbuffer[x][newy] = z;
+      }
+    }
+  }//plot with limit
 
   public void savePpm(String filename) {
     String ppmFile = "P3\n";

@@ -2,7 +2,7 @@ import java.awt.*;
 
 public class Planet{
   double size;
-  double radius;
+  double dist;
   double revTime;
   double theta;
   double x;
@@ -13,22 +13,22 @@ public class Planet{
   double selfRotate = 0;
   double selfRotateTime;
 
-  public Planet(double size, double radius, double revTime, double selfRotateTime, Color c, int[][] rgb, double theta){
+  public Planet(double size, double dist, double revTime, double selfRotateTime, Color c, int[][] rgb, double theta){
     this.size = size;
-    this.radius = radius;
+    this.dist = dist;
     this.revTime = revTime;
     this.selfRotateTime = selfRotateTime;
     this.c = c;
     this.theta = theta;
-    x = Math.cos(theta) * radius;
-    y = Math.sin(theta) * radius;
+    x = Math.cos(theta) * dist;
+    y = Math.sin(theta) * dist;
     this.rgb = rgb;
   }
 
   public void update(){
     theta += 2 * Math.PI / revTime;
     selfRotate += 2 * Math.PI / selfRotateTime;
-    x = Math.cos(theta) * radius;
-    y = Math.sin(theta) * radius;
+    x = Math.cos(theta) * dist;
+    y = Math.sin(theta) * dist;
   }
 }

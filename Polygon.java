@@ -121,4 +121,75 @@ public class Polygon {
       y ++;
     }
   }//scanlineConvert
+
+  public void scanlineConvert(Screen s, int xLimit) {
+    ArrayList<double[]> points = new ArrayList<double[]>();
+    points.add(p0);
+    points.add(p1);
+    points.add(p2);
+    Collections.sort(points, new Comparator<double[]>(){
+      public int compare(double[] p0, double[] p1){
+        if (p0[1] > p1[1]){
+          return 1;
+        } else{
+          return -1;
+        }
+      }
+    });
+
+    // for (double[] p : points){
+    //   System.out.println(Arrays.toString(p));
+    // }
+    // System.out.println();
+
+    int y = (int) points.get(0)[1];
+    double x0 = points.get(0)[0];
+    double dx0 = (points.get(2)[0] - points.get(0)[0]) / ((int)points.get(2)[1] - (int)points.get(0)[1]);
+    // if (points.get(2)[1] - points.get(0)[1] < 1){
+    //   dx0 = points.get(2)[0] - points.get(0)[0];
+    // }
+    double z0 = points.get(0)[2];
+    double dz0 = (points.get(2)[2] - points.get(0)[2]) / ((int)points.get(2)[1] - (int)points.get(0)[1]);
+
+    double x1 = points.get(0)[0];
+    double dx1 = (points.get(1)[0] - points.get(0)[0]) / ((int)points.get(1)[1] - (int)points.get(0)[1]);
+    // if (points.get(1)[1] - points.get(0)[1] < 1){
+    //   dx1 = points.get(1)[0] - points.get(0)[0];
+    // }
+    double z1 = points.get(0)[2];
+    double dz1 = (points.get(1)[2] - points.get(0)[2]) / ((int)points.get(1)[1] - (int)points.get(0)[1]);
+
+    // System.out.println(dx0);
+    // System.out.println(dx1);
+
+    while (y < (int) points.get(1)[1]){
+      s.drawScanline((int)x0, z0, (int)x1, z1, y, c, xLimit);
+      x0 += dx0;
+      x1 += dx1;
+      z0 += dz0;
+      z1 += dz1;
+      y ++;
+    }
+
+    y = (int) points.get(1)[1];
+    x1 = points.get(1)[0];
+    dx1 = (points.get(2)[0] - points.get(1)[0]) / ((int)points.get(2)[1] - (int)points.get(1)[1]);
+
+    z1 = points.get(1)[2];
+    dz1 = (points.get(2)[2] - points.get(1)[2]) / ((int)points.get(2)[1] - (int)points.get(1)[1]);
+
+    if (Math.abs(dx1) > Math.abs(points.get(2)[0] - points.get(1)[0])){
+      dx1 = points.get(2)[0] - points.get(1)[0];
+      dz1 = points.get(2)[2] - points.get(1)[2];
+    }
+
+    while (y < (int) points.get(2)[1]){
+      s.drawScanline((int)x0, z0, (int)x1, z1, y, c, xLimit);
+      x0 += dx0;
+      x1 += dx1;
+      z0 += dz0;
+      z1 += dz1;
+      y ++;
+    }
+  }//scanlineConvert with limit
 }//class Polygon
