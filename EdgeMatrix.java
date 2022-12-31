@@ -75,5 +75,16 @@ public class EdgeMatrix extends Matrix {
     }//draw lines
   }//drawEdges
 
+  public void drawEdges(Screen s, Color c, int xLowerLimit, int xUpperLimit) {
+    if ( m.size() < 2) {
+      System.out.println("Need at least 2 edges to draw a line");
+      return;
+    }//not enough points
 
+    for(int point=0; point<m.size()-1; point+=2) {
+      double[] p0 = m.get(point);
+      double[] p1 = m.get(point+1);
+      s.drawLine((int)p0[0], (int)p0[1], (int)p1[0], (int)p1[1], p0[2], c, xLowerLimit, xUpperLimit);
+    }//draw lines
+  }//drawEdges with limit
 }//class EdgeMatrix

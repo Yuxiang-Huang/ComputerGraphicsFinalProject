@@ -37,9 +37,8 @@ public class SolarSystem2D {
         int[][] background = createRGBMap("background.jpg", Screen.XRES);
         drawBackground(s, background);
 
-        drawVenus(radius * 0.949, dist * 0.72, venusTheta, s, csystems);
-
-        drawSnowFlakes(radius * 0.949, dist * 0.72, venusTheta, s, csystems, 5, true);
+        drawVenus(radius * 0.949, dist * 0.72, venusTheta, s, csystems);  
+        drawSnowFlakes(radius * 0.949, dist * 0.72, venusTheta, s, csystems, 10, true);
 
         drawSun(radius * 1.75, 0, sunTheta, s, csystems);
 
@@ -48,6 +47,8 @@ public class SolarSystem2D {
         drawMars(radius * 0.532, dist * 1.52, marsTheta, s, csystems);
 
         drawEarth(radius / 2, dist, earthTheta, s, csystems);
+        drawSnowFlakes(radius / 2, dist, earthTheta, s, csystems, 3, false);
+
 
         drawMoon(earthTheta, moonTheta, s, csystems);
   
@@ -316,7 +317,7 @@ public class SolarSystem2D {
     public static void drawBackground(Screen s, int[][] background){
         for (int i = 0; i < Screen.XRES; i ++){
             for (int j = 0; j < Screen.XRES; j ++){
-                s.plot(new Color (background[j][i]), i, j, -1.0/0, 603); //620 from sysout
+                s.plot(new Color (background[j][i]), i, j, -1.0/0, 603); //603 from sysout
             }
         }
     }
@@ -331,7 +332,7 @@ public class SolarSystem2D {
         if (random){
             double phi = 0;
 
-            while (phi < Math.PI * 2){
+            while (phi < Math.PI * 2 - Math.PI / 10){
                 EdgeMatrix edges = new EdgeMatrix();
                 //translate to the center of this snowflake
                 double currLen = PlanetRadius + length;
@@ -358,7 +359,7 @@ public class SolarSystem2D {
                 phi += Math.random() * Math.PI / 10 + Math.PI / 10;
             }
         } else {
-            int times = 10;
+            int times = 20;
             for (int i = 0; i < times; i ++){
                 EdgeMatrix edges = new EdgeMatrix();
                 double phi = Math.PI * 2 * i / times;
@@ -380,7 +381,7 @@ public class SolarSystem2D {
                 }
 
                 edges.mult(csystems.peek());
-                edges.drawEdges(s, new Color (255, 255, 0));
+                edges.drawEdges(s, new Color (255, 255, 255), 0, 603); //603 from sysout
                 
                 csystems.pop();
             }
