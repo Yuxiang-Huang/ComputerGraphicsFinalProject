@@ -1,4 +1,11 @@
 import java.util.*;
+import java.io.*;
+import java.awt.*;
+import java.awt.image.*;
+import javax.imageio.*;
+import javax.swing.*;
+import javax.imageio.stream.*;
+import java.net.URL;
 
 public class TowerOfHanoi {
     static int level = 5;
@@ -9,7 +16,7 @@ public class TowerOfHanoi {
     static int poleRadius = 20;
     static int ringRadius = 20;
     static int floorHeight = 200;
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         first = new ArrayList<Integer>();
         for (int i = level - 1; i >= 0; i--) {
             first.add(i + 1);
@@ -24,41 +31,65 @@ public class TowerOfHanoi {
         Stack<Matrix> csystems = new Stack<Matrix>();
         csystems.push(transform.copy());
 
-        draw(s, csystems, first, second, third);
+        //start gif
+        BufferedImage firstImage = s.getimg();
+        ImageOutputStream output =
+        new FileImageOutputStream(new File("TowerOfHanoi.gif"));
+        GifSequenceWriter writer =
+        new GifSequenceWriter(output, firstImage.getType(), 200, false);
 
-       // solve(first, third, second, level);
+        solve(s, csystems, first, third, second, level, writer);
+
+        //display animation
+        URL url = SolarSystem.class.getResource("TowerOfHanoi.gif");
+        Icon icon = new ImageIcon(url);
+        JLabel label = new JLabel(icon);
+        JFrame f = new JFrame("Animation");
+        f.getContentPane().add(label);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.pack();
+        f.setLocationRelativeTo(null);
+        f.setVisible(true);
+        writer.close();
+        output.close();
     }
 
-    public static void solve(ArrayList<Integer> from, ArrayList<Integer> to, ArrayList<Integer> tmp, int level){
+    public static void solve(Screen s, Stack<Matrix> csystems, ArrayList<Integer> from, ArrayList<Integer> to, 
+    ArrayList<Integer> tmp, int level, GifSequenceWriter writer)throws IOException{
         if (level == 1){
             to.add(from.remove(from.size() - 1));
-            System.out.println(first);
-            System.out.println(second);
-            System.out.println(third);
-            System.out.println();
+            draw(s, csystems, writer);
         } else{
-            solve(from, tmp, to, level - 1);
+            solve(s, csystems, from, tmp, to, level - 1, writer);
             to.add(from.remove(from.size() - 1));
-            System.out.println(first);
-            System.out.println(second);
-            System.out.println(third);
-            System.out.println();
-            solve(tmp, to, from, level - 1);
+            draw(s, csystems, writer);
+            solve(s, csystems, tmp, to, from, level - 1, writer);
         }
     }
 
-    public static void draw (Screen s, Stack<Matrix> csystems, ArrayList<Integer> first, ArrayList<Integer> second, ArrayList<Integer> third){
+    public static void draw (Screen s, Stack<Matrix> csystems, GifSequenceWriter writer) throws IOException{
+        s.clearScreen();
+
         PolygonMatrix polys = new PolygonMatrix();
         //poles
         polys.addCylinder(Screen.XRES / 4, floorHeight, Screen.YRES - floorHeight, 0, poleRadius - 5, 20);
         polys.addCylinder(Screen.XRES / 2, floorHeight, Screen.YRES - floorHeight, 0, poleRadius - 5, 20);
         polys.addCylinder(Screen.XRES * 3 / 4, floorHeight, Screen.YRES - floorHeight, 0, poleRadius - 5, 20);
 
-        //first rings
+        //rings
         for (int i = 0; i < first.size(); i ++){
-            int num = first.size() - i;
-            polys.addTorus(Screen.XRES / 4, (ringRadius * 10) * (i + 1) / level + floorHeight, 
-            0, ringRadius, poleRadius * num, 20);
+            polys.addTorus(Screen.XRES / 4, (ringRadius * 10) * i / level + floorHeight + ringRadius/2, 
+            0, ringRadius, poleRadius * first.get(i), 20);
+        }
+
+        for (int i = 0; i < second.size(); i ++){
+            polys.addTorus(Screen.XRES / 2, (ringRadius * 10) * i / level + floorHeight + ringRadius/2, 
+            0, ringRadius, poleRadius * second.get(i), 20);
+        }
+
+        for (int i = 0; i < third.size(); i ++){
+            polys.addTorus(Screen.XRES * 3 / 4, (ringRadius * 10) * i / level + floorHeight + ringRadius/2, 
+            0, ringRadius, poleRadius * third.get(i), 20);
         }
 
         // //rotate
@@ -72,6 +103,6 @@ public class TowerOfHanoi {
 
         //csystems.pop();
 
-        s.display();
+        writer.writeToSequence(s.getimg());
     }
 }
