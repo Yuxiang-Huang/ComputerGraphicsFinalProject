@@ -39,6 +39,8 @@ public class SolarSystem2D {
 
         drawVenus(radius * 0.949, dist * 0.72, venusTheta, s, csystems);
 
+        drawSnowFlakes(radius * 0.949, dist * 0.72, venusTheta, s, csystems, 5, true);
+
         drawSun(radius * 1.75, 0, sunTheta, s, csystems);
 
         drawMercury(radius * 0.383, dist * 0.39, mercuryTheta, s, csystems);
@@ -246,7 +248,7 @@ public class SolarSystem2D {
         PolygonMatrix polys = new PolygonMatrix();
         polys.addSphere(0, 0, 0, Earth.size, steps);
         polys.mult(csystems.peek());
-        polys.drawPolygons(s, Earth.rgb, steps, (int) (Screen.XRES / 2 + Earth.x + Earth.size / 3));
+        polys.drawPolygons(s, Earth.rgb, steps, (int) (Screen.XRES / 2 + Earth.x - Earth.size / 3));
 
         csystems.pop();
     }
@@ -314,8 +316,76 @@ public class SolarSystem2D {
     public static void drawBackground(Screen s, int[][] background){
         for (int i = 0; i < Screen.XRES; i ++){
             for (int j = 0; j < Screen.XRES; j ++){
-                s.plot(new Color (background[j][i]), i, j, -1.0/0, 620); //620 from sysout
+                s.plot(new Color (background[j][i]), i, j, -1.0/0, 603); //620 from sysout
             }
         }
+    }
+
+    public static void drawSnowFlakes(double PlanetRadius, double PlanetDist, double PlanetTheta, Screen s, Stack<Matrix> csystems, 
+    int length, boolean random){        
+        //translate to the center of the planet
+        Matrix tmp = new Matrix(Matrix.TRANSLATE, PlanetDist * Math.cos(PlanetTheta), PlanetDist * Math.sin(PlanetTheta), 0);
+        tmp.mult(csystems.peek());
+        csystems.push(tmp.copy());
+
+        if (random){
+            double phi = 0;
+
+            while (phi < Math.PI * 2){
+                EdgeMatrix edges = new EdgeMatrix();
+                //translate to the center of this snowflake
+                double currLen = PlanetRadius + length;
+                tmp = new Matrix(Matrix.TRANSLATE, currLen * Math.cos(phi), currLen * Math.sin(phi), 0);
+                tmp.mult(csystems.peek());
+                csystems.push(tmp.copy());
+                //rotate
+                tmp = new Matrix(Matrix.ROTATE, phi, 'Z');
+                tmp.mult(csystems.peek());
+                csystems.pop();
+                csystems.push(tmp.copy());
+
+                //draw 6 edges
+                for (int j = 0; j < 6; j ++){
+                    double alpha = Math.PI * 2 * j / 6;
+                    edges.addEdge(0, 0, 0, length * Math.cos(alpha), length * Math.sin(alpha), 0);
+                }
+
+                edges.mult(csystems.peek());
+                edges.drawEdges(s, new Color (255, 255, 0));
+                
+                csystems.pop();
+
+                phi += Math.random() * Math.PI / 10 + Math.PI / 10;
+            }
+        } else {
+            int times = 10;
+            for (int i = 0; i < times; i ++){
+                EdgeMatrix edges = new EdgeMatrix();
+                double phi = Math.PI * 2 * i / times;
+                //translate to the center of this snowflake
+                double currLen = PlanetRadius + length;
+                tmp = new Matrix(Matrix.TRANSLATE, currLen * Math.cos(phi), currLen * Math.sin(phi), 0);
+                tmp.mult(csystems.peek());
+                csystems.push(tmp.copy());
+                //rotate
+                tmp = new Matrix(Matrix.ROTATE, phi, 'Z');
+                tmp.mult(csystems.peek());
+                csystems.pop();
+                csystems.push(tmp.copy());
+
+                //draw 6 edges
+                for (int j = 0; j < 6; j ++){
+                    double alpha = Math.PI * 2 * j / 6;
+                    edges.addEdge(0, 0, 0, length * Math.cos(alpha), length * Math.sin(alpha), 0);
+                }
+
+                edges.mult(csystems.peek());
+                edges.drawEdges(s, new Color (255, 255, 0));
+                
+                csystems.pop();
+            }
+        }
+
+        csystems.pop();
     }
 }
