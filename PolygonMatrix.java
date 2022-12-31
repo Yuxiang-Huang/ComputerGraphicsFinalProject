@@ -230,7 +230,6 @@ public class PolygonMatrix extends Matrix {
 
     //for y value of points on line
     for (double h = 0; h < steps; h ++) {
-      y += dy;
       //draw a circle
       for(int circle = 0; circle < steps; circle++){
         double circ = (double)circle / steps;
@@ -240,6 +239,7 @@ public class PolygonMatrix extends Matrix {
         
         points.addColumn(x, y, z);
       }
+      y += dy;
     }
     return points;
   }

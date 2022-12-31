@@ -73,7 +73,7 @@ public class TowerOfHanoi {
 
         PolygonMatrix polys = new PolygonMatrix();
         //floor
-        polys.addBox(0, floorHeight - 20, 0, Screen.XRES, 20, 0);
+        polys.addBox(0, floorHeight, 0, Screen.XRES, 20, 0);
 
         //poles
         polys.addCylinder(Screen.XRES / 6, floorHeight, Screen.YRES - floorHeight, 0, poleRadius - 5, 20);
@@ -82,22 +82,22 @@ public class TowerOfHanoi {
 
         //rings
         for (int i = 0; i < first.size(); i ++){
-            polys.addTorus(Screen.XRES / 6, (ringRadius * 2) * i + floorHeight + ringRadius/2, 
+            polys.addTorus(Screen.XRES / 6, (ringRadius * 2) * i + floorHeight + ringRadius, 
             0, ringRadius, poleRadius * first.get(i), 20);
         }
 
         for (int i = 0; i < second.size(); i ++){
-            polys.addTorus(Screen.XRES / 2, (ringRadius * 2) * i + floorHeight + ringRadius/2, 
+            polys.addTorus(Screen.XRES / 2, (ringRadius * 2) * i + floorHeight + ringRadius, 
             0, ringRadius, poleRadius * second.get(i), 20);
         }
 
         for (int i = 0; i < third.size(); i ++){
-            polys.addTorus(Screen.XRES * 5 / 6, (ringRadius * 2) * i + floorHeight + ringRadius/2, 
+            polys.addTorus(Screen.XRES * 5 / 6, (ringRadius * 2) * i + floorHeight + ringRadius, 
             0, ringRadius, poleRadius * third.get(i), 20);
         }
 
         // //rotate
-        // Matrix tmp = new Matrix(Matrix.ROTATE, Math.PI/6, 'X');
+        // Matrix tmp = new Matrix(Matrix.ROTATE, Math.PI/10, 'X');
         // tmp.mult(csystems.peek());
         // csystems.push(tmp.copy());
 
