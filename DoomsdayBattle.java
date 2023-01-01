@@ -43,15 +43,15 @@ public class DoomsdayBattle {
         // for (int i = 0; i < introFrame; i ++){
         //     System.out.println(i);
         //     s.clearScreen();
-        //     WaterDrop.y -= (Screen.YRES / 2) / introFrame;
+        //     sfp.y -= (Screen.YRES / 2) / introFrame;
         //     sfp.display(s);
         //     writer.writeToSequence(s.getimg());
         // }
 
         //start battle
         sfp.intro = false;
-        WaterDrop.x = Screen.XRES * 9 / 10; 
-        WaterDrop.y = Screen.YRES;
+        sfp.x = Screen.XRES * 9 / 10; 
+        sfp.y = Screen.YRES;
 
         ArrayList<SpaceShip> ships = new ArrayList<>();
         for (int i = 0; i < 4; i ++){
@@ -60,7 +60,7 @@ public class DoomsdayBattle {
             }
         }
 
-        int battleframe = 100;
+        int battleframe = 30;
         for (int i = 0; i < battleframe; i ++){
             s.clearScreen();
             System.out.println(i);

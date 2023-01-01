@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.zip.ZipEntry;
 
 public class SpaceShip {
     public double x, y, z;
@@ -9,6 +10,16 @@ public class SpaceShip {
     public SpaceShip(int i, int j){
         x = Screen.XRES * (2 * i + 1) / 8;
         y = Screen.YRES * (2 * j + 1) / 10;
+    }
+
+    public void escape(WaterDrop sfp){
+        int speed = 5;
+        double direction = Math.atan2(y - sfp.y, x - sfp.x);
+
+        //ztheta += Math.abs(direction - ztheta) 
+
+        x += Math.cos(direction) * speed;
+        y += Math.sin(direction) * speed;
     }
 
     public void display(Screen s){
@@ -66,5 +77,11 @@ public class SpaceShip {
         polys.mult(csystems.peek());
         polys.drawPolygons(s);
         csystems.pop();
+    }
+
+    public void destroy(ArrayList<SpaceShip> ships){
+        ships.remove(this);
+
+        //animation
     }
 }

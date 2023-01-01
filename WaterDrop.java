@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class WaterDrop {
-    public static double x, y, z;
+    public double x, y, z;
     double theta = 0;
     public boolean acc = false;
     public boolean intro = true;
@@ -15,41 +15,48 @@ public class WaterDrop {
     }
 
     public void update(ArrayList<SpaceShip> ships){
-        SpaceShip target = ships.get(0);
-        double distance = dist(target);
-        //find closest ship
-        for (SpaceShip ship : ships){
-            if (dist(ship) < distance){
-                distance = dist(ship);
-                target = ship;
+        if (ships.size() == 0){
+            //move toward spectator
+        } else{
+            SpaceShip target = ships.get(0);
+            double distance = dist(target, this);
+            //find closest ship
+            for (SpaceShip ship : ships){
+                if (dist(ship, this) < distance){
+                    distance = dist(ship, this);
+                    target = ship;
+                }
+                if (ships.size() <= 40){
+                    ship.escape(this);
+                }
             }
-        }
 
-        //direction
-        direction = Math.atan2(target.y - y, target.x - x);
+            //direction
+            direction = Math.atan2(target.y - y, target.x - x);
 
-        //move toward it
-        int speed = 25;
-        if (Math.abs(x - target.x) <= speed){
-            x = target.x;
-        } else{
-            x = Math.abs(target.x - x) / (target.x - x) * speed + x;
-        }
+            //move toward it
+            int speed = 25;
+            if (Math.abs(x - target.x) <= speed){
+                x = target.x;
+            } else{
+                x = Math.abs(target.x - x) / (target.x - x) * speed + x;
+            }
 
-        if (Math.abs(y - target.y) <= speed){
-            y = target.y;
-        } else{
-            y = Math.abs(target.y - y) / (target.y - y) * speed + y;
-        }
+            if (Math.abs(y - target.y) <= speed){
+                y = target.y;
+            } else{
+                y = Math.abs(target.y - y) / (target.y - y) * speed + y;
+            }
 
-        //destroy it
-        if (x == target.x && y == target.y){
-            ships.remove(target);
+            //destroy it
+            if (x == target.x && y == target.y){
+                target.destroy(ships);
+            }
         }
     }
 
-    public static double dist (SpaceShip ship){
-        return Math.sqrt((x - ship.x) * (x - ship.x) + (y - ship.y) * (y - ship.y));
+    public static double dist (SpaceShip ship, WaterDrop sfp){
+        return Math.sqrt((sfp.x - ship.x) * (sfp.x - ship.x) + (sfp.y - ship.y) * (sfp.y - ship.y));
     }
 
     public void display(Screen s){
