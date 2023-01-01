@@ -25,28 +25,29 @@ public class DoomsdayBattle {
         WaterDrop sfp = new WaterDrop();
 
         //entrance
-        // int introFrame = 25;
-        // for (int i = 0; i < introFrame; i ++){
-        //     System.out.println(i);
-        //     s.clearScreen();
-        //     sfp.y -= (Screen.YRES / 2) / introFrame;
-        //     sfp.theta += Math.PI * 2 / introFrame;
-        //     sfp.display(s);
-        //     writer.writeToSequence(s.getimg());
+        int introFrame = 25;
+        for (int i = 0; i < introFrame; i ++){
+            System.out.println(i);
+            s.clearScreen();
+            sfp.y -= (Screen.YRES / 2) / introFrame;
+            sfp.display(s);
+            writer.writeToSequence(s.getimg());
 
-        //     if (i == 20){
-        //         sfp.acc = true;
-        //     }
-        // }
+            if (i == 20){
+                sfp.acc = true;
+            }
+        }
 
-        // introFrame = 5;
-        // for (int i = 0; i < introFrame; i ++){
-        //     System.out.println(i);
-        //     s.clearScreen();
-        //     sfp.y -= (Screen.YRES / 2) / introFrame;
-        //     sfp.display(s);
-        //     writer.writeToSequence(s.getimg());
-        // }
+        sfp.rotateSpeed *= 2;
+
+        introFrame = 5;
+        for (int i = 0; i < introFrame; i ++){
+            System.out.println(i);
+            s.clearScreen();
+            sfp.y -= (Screen.YRES / 2) / introFrame;
+            sfp.display(s);
+            writer.writeToSequence(s.getimg());
+        }
 
         //start battle
         sfp.intro = false;
@@ -60,7 +61,7 @@ public class DoomsdayBattle {
             }
         }
 
-        int battleframe = 100;
+        int battleframe = 30;
         for (int i = 0; i < battleframe; i ++){
             s.clearScreen();
             System.out.println(i);

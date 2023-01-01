@@ -7,6 +7,11 @@ public class WaterDrop {
     public boolean intro = true;
 
     double direction = 0;
+    double rotateSpeed = Math.PI * 2 / 100;
+
+    double expand = 0;
+    double expandX = 0;
+    double expandY = 0;
 
     public WaterDrop(){
         x = Screen.XRES/2;
@@ -65,13 +70,20 @@ public class WaterDrop {
         csystems.push(tmp.copy());
 
         //direction
-        tmp = new Matrix(Matrix.ROTATE, direction + Math.PI/2, 'Z');
-        tmp.mult(csystems.peek());
-        csystems.pop();
-        csystems.push(tmp.copy());
+        if (intro){
+            tmp = new Matrix(Matrix.ROTATE, direction, 'Z');
+            tmp.mult(csystems.peek());
+            csystems.pop();
+            csystems.push(tmp.copy());
+        } else{
+            tmp = new Matrix(Matrix.ROTATE, direction + Math.PI/2, 'Z');
+            tmp.mult(csystems.peek());
+            csystems.pop();
+            csystems.push(tmp.copy());
+        }
 
         //rotate
-        theta += Math.PI * 2 / 100;
+        theta += rotateSpeed;
         tmp = new Matrix(Matrix.ROTATE, theta, 'Y');
         tmp.mult(csystems.peek());
         csystems.pop();
@@ -87,9 +99,69 @@ public class WaterDrop {
         //draw
         PolygonMatrix polys = new PolygonMatrix();
         polys.addCurve(0, 0, 0, 50, -50, 0, 0, 50, 0, Matrix.HERMITE, 20);
+        polys.mult(csystems.peek());
+        polys.drawPolygons(s);
+
+        //accelearation animation
         if (acc){
-            polys.addTorus(0, 35, z, 1, 7, 20);
+            if (expand == 0){
+                expandX = x;
+                expandY = y;
+            }
+            animateAcc(s);
+            if (expand >= 2){
+                expand = 0;
+            } else{
+                expand += 0.4;
+            }
         }
+    }
+
+    void animateAcc(Screen s){
+        Matrix transform = new Matrix();
+        transform.ident();
+        Stack<Matrix> csystems = new Stack<Matrix>();
+        Matrix tmp;
+
+        //translate to the center of the halo
+        if (intro){
+            tmp = new Matrix(Matrix.TRANSLATE, expandX + 35 * 5 * Math.cos(direction + Math.PI/2), 
+            expandY + 35 * 5 * Math.sin(direction + Math.PI/2), z);
+            tmp.mult(transform);
+            csystems.push(tmp.copy());
+        } else{
+            tmp = new Matrix(Matrix.TRANSLATE, expandX+ 35 * Math.cos(direction), 
+            expandY + 35 * Math.sin(direction), z);
+            tmp.mult(transform);
+            csystems.push(tmp.copy());
+        }
+
+        //direction
+        if (intro){
+            tmp = new Matrix(Matrix.ROTATE, direction, 'Z');
+            tmp.mult(csystems.peek());
+            csystems.pop();
+            csystems.push(tmp.copy());
+        } else{
+            tmp = new Matrix(Matrix.ROTATE, direction + Math.PI/2, 'Z');
+            tmp.mult(csystems.peek());
+            csystems.pop();
+            csystems.push(tmp.copy());
+        }
+
+        //dilates
+        if (intro){
+            tmp = new Matrix(Matrix.SCALE, 5, 5, 5);
+            tmp.mult(csystems.peek());
+            csystems.push(tmp.copy());
+        }
+        tmp = new Matrix(Matrix.SCALE, expand, 1, 1);
+        tmp.mult(csystems.peek());
+        csystems.push(tmp.copy());
+
+        //draw
+        PolygonMatrix polys = new PolygonMatrix();
+        polys.addTorus(0, 0, z, 1, 5, 20);
         polys.mult(csystems.peek());
         polys.drawPolygons(s);
     }
