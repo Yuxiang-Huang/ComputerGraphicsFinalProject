@@ -26,7 +26,7 @@ public class WaterDrop {
                     distance = dist(ship, this);
                     target = ship;
                 }
-                if (ships.size() <= 10){
+                if (ships.size() <= 15){
                     ship.escape(this);
                 }
             }

@@ -13,6 +13,7 @@ public class SpaceShip {
     }
 
     public void escape(WaterDrop sfp){
+        ztheta -= Math.PI/2;
         int speed = 5;
         double rotateSpeed = Math.PI / 50;
         //rotate toward runaway
@@ -20,12 +21,16 @@ public class SpaceShip {
         if (Math.abs(direction - ztheta) < rotateSpeed){
             ztheta = direction; 
             speed *= 2;
-        } else{
+        } else if (Math.abs(direction - ztheta) < Math.PI){
             ztheta += Math.abs(direction - ztheta) / (direction - ztheta) * rotateSpeed;
+        } else{
+            ztheta -= Math.abs(direction - ztheta) / (direction - ztheta) * rotateSpeed;
         }
 
         x += Math.cos(direction) * speed;
         y += Math.sin(direction) * speed;
+
+        ztheta += Math.PI/2;
     }
 
     public void display(Screen s){
@@ -38,7 +43,7 @@ public class SpaceShip {
         csystems.push(tmp.copy());
 
         //rotate
-        tmp = new Matrix(Matrix.ROTATE, ztheta, 'Z');
+        tmp = new Matrix(Matrix.ROTATE, ztheta - Math.PI / 2, 'Z');
         tmp.mult(csystems.peek());
         csystems.pop();
         csystems.push(tmp.copy());

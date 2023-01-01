@@ -60,7 +60,7 @@ public class DoomsdayBattle {
             }
         }
 
-        int battleframe = 150;
+        int battleframe = 100;
         for (int i = 0; i < battleframe; i ++){
             s.clearScreen();
             System.out.println(i);
