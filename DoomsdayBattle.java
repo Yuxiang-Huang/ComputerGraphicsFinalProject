@@ -24,11 +24,25 @@ public class DoomsdayBattle {
 
         WaterDrop sfp = new WaterDrop();
 
-        int introFrame = 30;
+        int introFrame = 25;
         for (int i = 0; i < introFrame; i ++){
             System.out.println(i);
             s.clearScreen();
-            sfp.y -= (Screen.YRES - 20) / introFrame;
+            sfp.y -= (Screen.YRES / 2) / introFrame;
+            sfp.theta += Math.PI * 2 / introFrame;
+            sfp.display(s);
+            writer.writeToSequence(s.getimg());
+
+            if (i == 20){
+                sfp.acc = true;
+            }
+        }
+
+        introFrame = 5;
+        for (int i = 0; i < introFrame; i ++){
+            System.out.println(i);
+            s.clearScreen();
+            sfp.y -= (Screen.YRES / 2) / introFrame;
             sfp.theta += Math.PI * 2 / introFrame;
             sfp.display(s);
             writer.writeToSequence(s.getimg());

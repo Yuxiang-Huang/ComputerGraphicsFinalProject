@@ -3,6 +3,7 @@ import java.util.*;
 public class WaterDrop {
     public double x, y, z;
     double theta = 0;
+    public boolean acc = false;
 
     public WaterDrop(){
         x = Screen.XRES/2;
@@ -26,13 +27,16 @@ public class WaterDrop {
         csystems.push(tmp.copy());
 
         //dilate
-        tmp = new Matrix(Matrix.SCALE, 10, 10, 10);
+        tmp = new Matrix(Matrix.SCALE, 5, 5, 5);
         tmp.mult(csystems.peek());
         csystems.push(tmp.copy());
 
         //draw
         PolygonMatrix polys = new PolygonMatrix();
-        polys.addCurve(0, 0, 0, 25, -25, 0, 0, 25, 0, Matrix.HERMITE, 20);
+        polys.addCurve(0, 0, 0, 50, -50, 0, 0, 50, 0, Matrix.HERMITE, 20);
+        if (acc){
+            polys.addTorus(0, 35, z, 1, 7, 20);
+        }
         polys.mult(csystems.peek());
         polys.drawPolygons(s);
     }
