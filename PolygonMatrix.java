@@ -140,6 +140,39 @@ public class PolygonMatrix extends Matrix {
     }
   }//addTorus
 
+  private Matrix generateTorus(double cx, double cy, double cz,
+                               double r0, double r1, int steps ) {
+
+    Matrix points = new Matrix();
+    int circle, rotation, rot_start, rot_stop, circ_start, circ_stop;
+    double x, y, z, rot, circ;
+
+    rot_start = 0;
+    rot_stop = steps;
+    circ_start = 0;
+    circ_stop = steps;
+
+    for (rotation = rot_start; rotation < rot_stop; rotation++) {
+      rot = (double)rotation / steps;
+
+      for(circle = circ_start; circle < circ_stop; circle++){
+        circ = (double)circle / steps;
+
+        x = Math.cos(2*Math.PI * rot) *
+          (r0 * Math.cos(2*Math.PI * circ) + r1) + cx;
+        y = r0 * Math.sin(2*Math.PI * circ) + cy;
+        z = -1*Math.sin(2*Math.PI * rot) *
+          (r0 * Math.cos(2*Math.PI * circ) + r1) + cz;
+
+        /* printf("rotation: %d\tcircle: %d\n", rotation, circle); */
+        /* printf("rot: %lf\tcirc: %lf\n", rot, circ); */
+        /* printf("sphere point: (%0.2f, %0.2f, %0.2f)\n\n", x, y, z); */
+        points.addColumn(x, y, z);
+      }
+    }
+    return points;
+  }//generateTorus
+
   private Matrix generateCurve(double x0, double y0,
   double x1, double y1,
   double x2, double y2,
@@ -284,38 +317,71 @@ public class PolygonMatrix extends Matrix {
     }
   }
 
-  private Matrix generateTorus(double cx, double cy, double cz,
-                               double r0, double r1, int steps ) {
-
+  private Matrix generateCone(double x0, double y0, double y1, double z0,
+  double r, int steps ) {
     Matrix points = new Matrix();
-    int circle, rotation, rot_start, rot_stop, circ_start, circ_stop;
-    double x, y, z, rot, circ;
+    double x, y, z;
 
-    rot_start = 0;
-    rot_stop = steps;
-    circ_start = 0;
-    circ_stop = steps;
+    y = Math.min(y0, y1);
+    double dy = Math.abs(y1 - y0) / steps;
+    double dr = r / steps;
 
-    for (rotation = rot_start; rotation < rot_stop; rotation++) {
-      rot = (double)rotation / steps;
+    //for y value of points on line
+    for (double h = 0; h < steps; h ++) {
+      //draw a circle
+      for(int circle = 0; circle < steps; circle++){
+        double circ = (double)circle / steps;
 
-      for(circle = circ_start; circle < circ_stop; circle++){
-        circ = (double)circle / steps;
-
-        x = Math.cos(2*Math.PI * rot) *
-          (r0 * Math.cos(2*Math.PI * circ) + r1) + cx;
-        y = r0 * Math.sin(2*Math.PI * circ) + cy;
-        z = -1*Math.sin(2*Math.PI * rot) *
-          (r0 * Math.cos(2*Math.PI * circ) + r1) + cz;
-
-        /* printf("rotation: %d\tcircle: %d\n", rotation, circle); */
-        /* printf("rot: %lf\tcirc: %lf\n", rot, circ); */
-        /* printf("sphere point: (%0.2f, %0.2f, %0.2f)\n\n", x, y, z); */
+        x = r * Math.cos(Math.PI * 2 * circ) + x0;
+        z = r * Math.sin(Math.PI * 2 * circ) + z0;
+        
         points.addColumn(x, y, z);
       }
+      y += dy;
+      r -= dr;
     }
     return points;
-  }//generateTorus
+  }
+
+  public void addCone( double x0, double y0, double y1, double z0,
+  double r, int steps ) {
+
+    Matrix points = generateCone(x0, y0, y1, z0, r, steps);
+
+    int p0, p1, p2, p3, lat, longt;
+    int latStop, longStop, latStart, longStart;
+    latStart = 0;
+    latStop = steps;
+    longStart = 0;
+    longStop = steps;
+
+
+    for ( lat = latStart; lat < latStop; lat++ ) {
+      for ( longt = longStart; longt < longStop; longt++ ) {
+
+        p0 = lat * steps + longt;
+        if (longt == steps - 1)
+          p1 = p0 - longt;
+        else
+          p1 = p0 + 1;
+        p2 = (p1 + steps) % (steps * steps);
+        p3 = (p0 + steps) % (steps * steps);
+
+        double[] point0 = points.get(p0);
+        double[] point1 = points.get(p1);
+        double[] point2 = points.get(p2);
+        double[] point3 = points.get(p3);
+
+        addPolygon(point0[0], point0[1], point0[2],
+                   point3[0], point3[1], point3[2],
+                   point2[0], point2[1], point2[2]);
+        addPolygon(point0[0], point0[1], point0[2],
+                   point2[0], point2[1], point2[2],
+                   point1[0], point1[1], point1[2]);
+
+      }
+    }
+  }
 
   public void addPolygon(double x0, double y0, double z0,
                          double x1, double y1, double z1,

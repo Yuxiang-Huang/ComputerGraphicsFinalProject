@@ -25,6 +25,7 @@ public class SpaceShip {
         polys.addSphere(0, 0, 0, size, 20);
         polys.addTorus(0, 0, 0, size/2, size * 2, 20);
         polys.addCylinder(0, 0, 100, 0, size/2, 20);
+        polys.addCone(0, 100, 200, 0, size/2, 20);
 
         //rotate
         tmp = new Matrix(Matrix.ROTATE, xtheta, 'X');
