@@ -47,10 +47,15 @@ public class SpaceShip {
 
         //other parts
         polys = new PolygonMatrix();
-        polys.addCylinder(0, 0, 75, 0, size/2, 20);
-        polys.addCone(0, 50, 150, 0, size/2, 20);
-        polys.addCylinder(size, -size/2, -110, 0, size/2, 20);
-        polys.addCylinder(-size, -size/2, -110, 0, size/2, 20);
+        polys.addCylinder(0, size, size * 3, 0, size/4, 20);
+        polys.addCone(0, size * 2, size * 4.5, 0, size/3, 20);
+        //back
+        polys.addCylinder(size, -size/3, -size*4, 0, size/3, 20);
+        polys.addCylinder(-size, -size/3, -size*4, 0, size/3, 20);
+        polys.addCylinder(0, -size/3, -size*3.5, 0, size/3, 20);
+        //front
+        polys.addCylinder(size/1.5, size, size*3.5, 0, size/4, 20);
+        polys.addCylinder(-size/1.5, size, size*3.5, 0, size/4, 20);
 
         //rotate
         tmp = new Matrix(Matrix.ROTATE, Math.PI/2, 'X');
