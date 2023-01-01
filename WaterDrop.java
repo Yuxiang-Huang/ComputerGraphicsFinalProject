@@ -18,39 +18,35 @@ public class WaterDrop {
         if (ships.size() == 0){
             //move toward spectator
         } else{
-            SpaceShip target = ships.get(0);
-            double distance = dist(target, this);
-            //find closest ship
-            for (SpaceShip ship : ships){
-                if (dist(ship, this) < distance){
-                    distance = dist(ship, this);
-                    target = ship;
-                }
-                if (ships.size() <= 15){
-                    ship.escape(this);
-                }
-            }
-
-            //direction
-            direction = Math.atan2(target.y - y, target.x - x);
-
-            //move toward it
             int speed = 25;
-            if (Math.abs(x - target.x) <= speed * Math.cos(direction)){
-                x = target.x;
-            } else{
-                x = speed * Math.cos(direction) + x;
-            }
+            while (speed > 0){
+                SpaceShip target = ships.get(0);
+                double distance = dist(target, this);
+                //find closest ship
+                for (SpaceShip ship : ships){
+                    if (dist(ship, this) < distance){
+                        distance = dist(ship, this);
+                        target = ship;
+                    }
+                    if (ships.size() <= 15){
+                        ship.escape(this);
+                    }
+                }
 
-            if (Math.abs(y - target.y) <= speed * Math.sin(direction)){
-                y = target.y;
-            } else{
-                y = speed * Math.sin(direction) + y;
-            }
+                //direction
+                direction = Math.atan2(target.y - y, target.x - x);
 
-            //destroy it
-            if (x == target.x && y == target.y){
-                target.destroy(ships);
+                //move toward it
+                if (distance < speed){
+                    x = target.x;
+                    y = target.y;
+                    target.destroy(ships);
+                    speed -= distance;
+                } else{
+                    x = speed * Math.cos(direction) + x;
+                    y = speed * Math.sin(direction) + y;
+                    speed = 0;
+                }
             }
         }
     }
