@@ -49,6 +49,8 @@ public class SpaceShip {
         polys = new PolygonMatrix();
         polys.addCylinder(0, 0, 75, 0, size/2, 20);
         polys.addCone(0, 50, 150, 0, size/2, 20);
+        polys.addCylinder(size, -size/2, -110, 0, size/2, 20);
+        polys.addCylinder(-size, -size/2, -110, 0, size/2, 20);
 
         //rotate
         tmp = new Matrix(Matrix.ROTATE, Math.PI/2, 'X');
