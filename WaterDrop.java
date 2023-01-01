@@ -11,8 +11,12 @@ public interface WaterDrop {
         // polys.addCurve(200, 200, 200, 450, -175, 0, 200, 450, 0, Matrix.HERMITE, 25);
         // polys.drawPolygons(s);
 
-        SpaceShip test = new SpaceShip(Screen.XRES/2, Screen.YRES/2);
-        test.display(s);
+        for (int i = 0; i < 5; i ++){
+            for (int j = 0; j < 5; j ++){
+                SpaceShip test = new SpaceShip(i, j);
+                test.display(s);
+            }
+        }
 
         s.display();
     }

@@ -4,11 +4,11 @@ public class SpaceShip {
     public double x, y, z;
     public double xtheta = -Math.PI / 6;
     public double ztheta = Math.PI / 2;
-    int size = 30;
+    int size = 15;
 
     public SpaceShip(int i, int j){
-        x = i;
-        y = j;
+        x = Screen.XRES * (2 * i + 1) / 10;
+        y = Screen.YRES * (2 * j + 1) / 10;
     }
 
     public void display(Screen s){
