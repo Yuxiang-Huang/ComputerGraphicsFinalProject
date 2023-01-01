@@ -44,7 +44,6 @@ public class DoomsdayBattle {
         //     System.out.println(i);
         //     s.clearScreen();
         //     WaterDrop.y -= (Screen.YRES / 2) / introFrame;
-        //     sfp.theta += Math.PI * 2 / introFrame;
         //     sfp.display(s);
         //     writer.writeToSequence(s.getimg());
         // }
@@ -61,7 +60,7 @@ public class DoomsdayBattle {
             }
         }
 
-        int battleframe = 10;
+        int battleframe = 75;
         for (int i = 0; i < battleframe; i ++){
             s.clearScreen();
             System.out.println(i);
