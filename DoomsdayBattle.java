@@ -50,7 +50,7 @@ public class DoomsdayBattle {
 
         //start battle
         sfp.intro = false;
-        sfp.x = Screen.XRES * 9 / 10; 
+        sfp.x = Screen.XRES; 
         sfp.y = Screen.YRES;
 
         ArrayList<SpaceShip> ships = new ArrayList<>();
@@ -60,7 +60,7 @@ public class DoomsdayBattle {
             }
         }
 
-        int battleframe = 30;
+        int battleframe = 150;
         for (int i = 0; i < battleframe; i ++){
             s.clearScreen();
             System.out.println(i);

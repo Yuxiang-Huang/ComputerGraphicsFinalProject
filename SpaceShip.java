@@ -8,15 +8,21 @@ public class SpaceShip {
     int size = 15;
 
     public SpaceShip(int i, int j){
-        x = Screen.XRES * (2 * i + 1) / 8;
-        y = Screen.YRES * (2 * j + 1) / 10;
+        x = Screen.XRES * (2 * i + 3) / 10;
+        y = Screen.YRES * (2 * j + 2) / 12;
     }
 
     public void escape(WaterDrop sfp){
         int speed = 5;
+        double rotateSpeed = Math.PI / 50;
+        //rotate toward runaway
         double direction = Math.atan2(y - sfp.y, x - sfp.x);
-
-        //ztheta += Math.abs(direction - ztheta) 
+        if (Math.abs(direction - ztheta) < rotateSpeed){
+            ztheta = direction; 
+            speed *= 2;
+        } else{
+            ztheta += Math.abs(direction - ztheta) / (direction - ztheta) * rotateSpeed;
+        }
 
         x += Math.cos(direction) * speed;
         y += Math.sin(direction) * speed;
@@ -32,6 +38,11 @@ public class SpaceShip {
         csystems.push(tmp.copy());
 
         //rotate
+        tmp = new Matrix(Matrix.ROTATE, ztheta, 'Z');
+        tmp.mult(csystems.peek());
+        csystems.pop();
+        csystems.push(tmp.copy());
+
         tmp = new Matrix(Matrix.ROTATE, xtheta, 'X');
         tmp.mult(csystems.peek());
         csystems.pop();
@@ -42,7 +53,7 @@ public class SpaceShip {
         csystems.pop();
         csystems.push(tmp.copy());
 
-        tmp = new Matrix(Matrix.ROTATE, ztheta, 'Z');
+        tmp = new Matrix(Matrix.ROTATE, Math.PI / 2, 'Z');
         tmp.mult(csystems.peek());
         csystems.pop();
         csystems.push(tmp.copy());
