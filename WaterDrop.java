@@ -29,7 +29,7 @@ public class WaterDrop {
         direction = Math.atan2(target.y - y, target.x - x);
 
         //move toward it
-        int speed = 50;
+        int speed = 25;
         if (Math.abs(x - target.x) <= speed){
             x = target.x;
         } else{
@@ -61,15 +61,15 @@ public class WaterDrop {
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
-        //rotate
-        theta += Math.PI * 2 / 100;
-        tmp = new Matrix(Matrix.ROTATE, theta, 'Y');
+        //direction
+        tmp = new Matrix(Matrix.ROTATE, direction + Math.PI/2, 'Z');
         tmp.mult(csystems.peek());
         csystems.pop();
         csystems.push(tmp.copy());
 
-        //direction
-        tmp = new Matrix(Matrix.ROTATE, direction + Math.PI/2, 'Z');
+        //rotate
+        theta += Math.PI * 2 / 100;
+        tmp = new Matrix(Matrix.ROTATE, theta, 'Y');
         tmp.mult(csystems.peek());
         csystems.pop();
         csystems.push(tmp.copy());

@@ -20,7 +20,7 @@ public class DoomsdayBattle {
         ImageOutputStream output =
         new FileImageOutputStream(new File("DoomsdayBattle.gif"));
         GifSequenceWriter writer =
-        new GifSequenceWriter(output, firstImage.getType(), 100, false);
+        new GifSequenceWriter(output, firstImage.getType(), 50, false);
 
         WaterDrop sfp = new WaterDrop();
 
@@ -60,7 +60,7 @@ public class DoomsdayBattle {
             }
         }
 
-        int battleframe = 75;
+        int battleframe = 100;
         for (int i = 0; i < battleframe; i ++){
             s.clearScreen();
             System.out.println(i);
