@@ -36,16 +36,16 @@ public class WaterDrop {
 
             //move toward it
             int speed = 25;
-            if (Math.abs(x - target.x) <= speed){
+            if (Math.abs(x - target.x) <= speed * Math.cos(direction)){
                 x = target.x;
             } else{
-                x = Math.abs(target.x - x) / (target.x - x) * speed + x;
+                x = speed * Math.cos(direction) + x;
             }
 
-            if (Math.abs(y - target.y) <= speed){
+            if (Math.abs(y - target.y) <= speed * Math.sin(direction)){
                 y = target.y;
             } else{
-                y = Math.abs(target.y - y) / (target.y - y) * speed + y;
+                y = speed * Math.sin(direction) + y;
             }
 
             //destroy it
