@@ -7,7 +7,7 @@ public class SpaceShip {
     int size = 15;
 
     public SpaceShip(int i, int j){
-        x = Screen.XRES * (2 * i + 1) / 10;
+        x = Screen.XRES * (2 * i + 1) / 8;
         y = Screen.YRES * (2 * j + 1) / 10;
     }
 

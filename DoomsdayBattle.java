@@ -24,38 +24,54 @@ public class DoomsdayBattle {
 
         WaterDrop sfp = new WaterDrop();
 
-        int introFrame = 25;
-        for (int i = 0; i < introFrame; i ++){
-            System.out.println(i);
-            s.clearScreen();
-            sfp.y -= (Screen.YRES / 2) / introFrame;
-            sfp.theta += Math.PI * 2 / introFrame;
-            sfp.display(s);
-            writer.writeToSequence(s.getimg());
+        //entrance
+        // int introFrame = 25;
+        // for (int i = 0; i < introFrame; i ++){
+        //     System.out.println(i);
+        //     s.clearScreen();
+        //     sfp.y -= (Screen.YRES / 2) / introFrame;
+        //     sfp.theta += Math.PI * 2 / introFrame;
+        //     sfp.display(s);
+        //     writer.writeToSequence(s.getimg());
 
-            if (i == 20){
-                sfp.acc = true;
+        //     if (i == 20){
+        //         sfp.acc = true;
+        //     }
+        // }
+
+        // introFrame = 5;
+        // for (int i = 0; i < introFrame; i ++){
+        //     System.out.println(i);
+        //     s.clearScreen();
+        //     WaterDrop.y -= (Screen.YRES / 2) / introFrame;
+        //     sfp.theta += Math.PI * 2 / introFrame;
+        //     sfp.display(s);
+        //     writer.writeToSequence(s.getimg());
+        // }
+
+        //start battle
+        sfp.intro = false;
+        WaterDrop.x = Screen.XRES * 9 / 10; 
+        WaterDrop.y = Screen.YRES;
+
+        ArrayList<SpaceShip> ships = new ArrayList<>();
+        for (int i = 0; i < 4; i ++){
+            for (int j = 0; j < 5; j ++){
+                ships.add(new SpaceShip(i, j));
             }
         }
 
-        introFrame = 5;
-        for (int i = 0; i < introFrame; i ++){
-            System.out.println(i);
+        int battleframe = 10;
+        for (int i = 0; i < battleframe; i ++){
             s.clearScreen();
-            sfp.y -= (Screen.YRES / 2) / introFrame;
-            sfp.theta += Math.PI * 2 / introFrame;
+            System.out.println(i);
+            sfp.update(ships);
             sfp.display(s);
+            for (SpaceShip ship : ships){
+                ship.display(s);
+            }
             writer.writeToSequence(s.getimg());
         }
-
-        //s.display();
-
-        // for (int i = 0; i < 5; i ++){
-        //     for (int j = 0; j < 5; j ++){
-        //         SpaceShip test = new SpaceShip(i, j);
-        //         test.display(s);
-        //     }
-        // }
 
         //display animation
         URL url = SolarSystem.class.getResource("DoomsdayBattle.gif");
