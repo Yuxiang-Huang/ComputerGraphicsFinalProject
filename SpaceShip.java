@@ -113,16 +113,15 @@ public class SpaceShip {
 
         //expand or contract
         if (expand){
-            scale += 0.5;
-            if (scale >= 3){
+            scale += 0.2;
+            if (scale >= 2.5){
                 expand = false; 
             }
         } else{
-            scale -= 0.25;
-            if (scale >= 3){
-                expand = false; 
+            scale -= 0.1;
+            if (scale <= 0){
+                explode.remove(this);
             }
-            explode.remove(this);
         }
  
          //draw
