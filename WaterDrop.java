@@ -228,34 +228,23 @@ public class WaterDrop {
 
         //translate to the tail
         if (intro){
-            tmp = new Matrix(Matrix.TRANSLATE, x + size * 5 * Math.cos(direction + Math.PI/2), 
-            y + size * 5 * Math.sin(direction + Math.PI/2), z);
+            tmp = new Matrix(Matrix.TRANSLATE, x + size * 5 * Math.cos(direction), 
+            y + size * 5 * Math.sin(direction), z);
             tmp.mult(transform);
             csystems.push(tmp.copy());
         } else{
-            tmp = new Matrix(Matrix.TRANSLATE, x - size * Math.cos(direction), 
-            y - size * Math.sin(direction), z);
+            tmp = new Matrix(Matrix.TRANSLATE, x + size * Math.cos(direction), 
+            y + size * Math.sin(direction), z);
             tmp.mult(transform);
-            csystems.push(tmp.copy());
-        }
-    
-        //direction
-        if (intro){
-            tmp = new Matrix(Matrix.ROTATE, direction, 'Z');
-            tmp.mult(csystems.peek());
-            csystems.push(tmp.copy());
-        } else{
-            tmp = new Matrix(Matrix.ROTATE, direction + Math.PI/2, 'Z');
-            tmp.mult(csystems.peek());
             csystems.push(tmp.copy());
         }
 
         //draw
         EdgeMatrix edges = new EdgeMatrix();
         if (intro){
-            edges.addEdge(0,0, 0, Math.cos(direction + Math.PI/2) * 100, Math.sin(direction + Math.PI/2) * 100, 0);
+            edges.addEdge(0,0, 0, Math.cos(direction) * 100, Math.sin(direction) * 100, 0);
         } else{
-            edges.addEdge(0, 0, 0, Math.cos(direction + Math.PI/2) * 20, -Math.sin(direction) * 20, 0);
+            edges.addEdge(0, 0, 0, Math.cos(direction) * 20, Math.sin(direction) * 20, 0);
         }
         edges.mult(csystems.peek());
         edges.drawEdges(s, new Color(0, 0, 255));
