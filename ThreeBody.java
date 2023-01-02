@@ -21,11 +21,12 @@ public class ThreeBody{
     tmp.mult(transform);
     csystems.push(tmp.copy());
 
+    tmp = new Matrix(Matrix.ROTATE, -Math.PI / 3, 'X');
+    tmp.mult(csystems.peek());
+    csystems.push(tmp.copy());
+
     EdgeMatrix edges = new EdgeMatrix();
-    edges.addCurve(100, 0, 0, 100, -100, 0, 0, 100, 0.01, EdgeMatrix.HERMITE);
-    edges.addCurve(-100, 0, 0, 100, 100, 0, 0, 100, 0.01, EdgeMatrix.HERMITE);
-    edges.addCurve(100, 0, 0, -100, -100, 0, 0, -100, 0.01, EdgeMatrix.HERMITE);
-    edges.addCurve(-100, 0, 0, -100, 100, 0, 0, -100, 0.01, EdgeMatrix.HERMITE);
+    edges.addStar(0, 0, -100, 100, 100, 10);
     edges.mult(csystems.peek());
     edges.drawEdges(s, new Color(0, 0, 255));
 
