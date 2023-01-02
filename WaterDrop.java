@@ -1,9 +1,11 @@
 import java.util.*;
+import java.awt.*;
 
 public class WaterDrop {
     public double x, y, z;
+    int size = 50;
     double theta = 0;
-    public boolean acc = false;
+    public boolean acc = true;
     public boolean intro = true;
 
     double direction = 0;
@@ -162,19 +164,21 @@ public class WaterDrop {
 
         //draw
         PolygonMatrix polys = new PolygonMatrix();
-        polys.addCurve(0, 0, 0, 50, -50, 0, 0, 50, 0, Matrix.HERMITE, 20);
+        polys.addCurve(0, 0, 0, size, -size, 0, 0, size, 0, Matrix.HERMITE, 20);
         polys.mult(csystems.peek());
         polys.drawPolygons(s);
 
         //accelearation animation
         if (acc){
-            expandX = x;
-            expandY = y;
+            if (expand == 0){
+                expandX = x;
+                expandY = y;
+            }
             animateAcc(s);
             if (expand >= 2){
                 expand = 0;
             } else{
-                expand += 0.3;
+                expand += 0.4;
             }
         }
     }
@@ -187,13 +191,13 @@ public class WaterDrop {
 
         //translate to the center of the halo
         if (intro){
-            tmp = new Matrix(Matrix.TRANSLATE, expandX + 35 * 5 * Math.cos(direction + Math.PI/2), 
-            expandY + 35 * 5 * Math.sin(direction + Math.PI/2), z);
+            tmp = new Matrix(Matrix.TRANSLATE, expandX + size * 5 * Math.cos(direction + Math.PI/2), 
+            expandY + size * 5 * Math.sin(direction + Math.PI/2), z);
             tmp.mult(transform);
             csystems.push(tmp.copy());
         } else{
-            tmp = new Matrix(Matrix.TRANSLATE, expandX - 35 * Math.cos(direction), 
-            expandY - 35 * Math.sin(direction), z);
+            tmp = new Matrix(Matrix.TRANSLATE, expandX - size * Math.cos(direction), 
+            expandY - size * Math.sin(direction), z);
             tmp.mult(transform);
             csystems.push(tmp.copy());
         }
@@ -226,5 +230,45 @@ public class WaterDrop {
         polys.addTorus(0, 0, z, 1, 5, 20);
         polys.mult(csystems.peek());
         polys.drawPolygons(s);
+
+
+        // //lines
+        // transform = new Matrix();
+        // transform.ident();
+        // csystems = new Stack<Matrix>();
+
+        // //translate to the tail
+        // if (intro){
+        //     tmp = new Matrix(Matrix.TRANSLATE, expandX + size * 5 * Math.cos(direction + Math.PI/2), 
+        //     expandY + size * 5 * Math.sin(direction + Math.PI/2), z);
+        //     tmp.mult(transform);
+        //     csystems.push(tmp.copy());
+        // } else{
+        //     tmp = new Matrix(Matrix.TRANSLATE, expandX - size * Math.cos(direction), 
+        //     expandY - size * Math.sin(direction), z);
+        //     tmp.mult(transform);
+        //     csystems.push(tmp.copy());
+        // }
+    
+        // //direction
+        // if (intro){
+        //     tmp = new Matrix(Matrix.ROTATE, direction, 'Z');
+        //     tmp.mult(csystems.peek());
+        //     csystems.push(tmp.copy());
+        // } else{
+        //     tmp = new Matrix(Matrix.ROTATE, direction + Math.PI/2, 'Z');
+        //     tmp.mult(csystems.peek());
+        //     csystems.push(tmp.copy());
+        // }
+
+        // //draw
+        // EdgeMatrix edges = new EdgeMatrix();
+        // if (intro){
+        //     edges.addEdge(0,0, 0, Math.cos(direction) * 25, Math.sin(direction) * 25, 0);
+        // } else{
+        //     edges.addEdge(0, 0, 0, Math.cos(direction + Math.PI/2) * 5, Math.sin(direction + Math.PI/2) * 5, 0);
+        // }
+        // edges.mult(csystems.peek());
+        // edges.drawEdges(s, new Color(0, 0, 255));
     }
 }

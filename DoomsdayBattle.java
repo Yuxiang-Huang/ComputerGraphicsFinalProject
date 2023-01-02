@@ -1,6 +1,5 @@
 import java.util.*;
 import java.io.*;
-import java.awt.*;
 import java.awt.image.*;
 import javax.imageio.*;
 import javax.swing.*;
@@ -37,7 +36,7 @@ public class DoomsdayBattle {
         sfp.acc = true;
         sfp.rotateSpeed *= 2;
 
-        introFrame = 7; //5
+        introFrame = 7; //7
         for (int i = 0; i < introFrame; i ++){
             System.out.println(i);
             s.clearScreen();
@@ -59,6 +58,8 @@ public class DoomsdayBattle {
                 ships.add(new SpaceShip(i, j));
             }
         }
+
+        ships = new ArrayList<>();
 
         //animation battle
         // int battleframe = 60;
@@ -99,12 +100,12 @@ public class DoomsdayBattle {
         }
 
         //move towards viewer
-        while (sfp.x != Screen.XRES/2 || sfp.y != Screen.YRES/2){
-            s.clearScreen();
-            sfp.end();
-            sfp.display(s);
-            writer.writeToSequence(s.getimg());
-        }
+        // while (sfp.x != Screen.XRES/2 || sfp.y != Screen.YRES/2){
+        //     s.clearScreen();
+        //     sfp.end();
+        //     sfp.display(s);
+        //     writer.writeToSequence(s.getimg());
+        // }
 
         //display animation
         URL url = SolarSystem.class.getResource("DoomsdayBattle.gif");
