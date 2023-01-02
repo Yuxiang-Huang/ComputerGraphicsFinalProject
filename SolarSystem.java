@@ -62,7 +62,7 @@ public class SolarSystem{
         Matrix transform = new Matrix();
         transform.ident();
         Stack<Matrix> csystems = new Stack<Matrix>();
-        Matrix tmp = new Matrix(Matrix.TRANSLATE, 400, 400, 250);
+        Matrix tmp = new Matrix(Matrix.TRANSLATE, Screen.XRES/2, Screen.YRES/2, 250);
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
