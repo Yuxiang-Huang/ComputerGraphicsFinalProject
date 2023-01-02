@@ -7,6 +7,10 @@ public class SpaceShip {
     public double ztheta = Math.PI / 2;
     int size = 15;
 
+    //for explosion
+    public boolean expand = true;
+    double scale = 1;
+
     public SpaceShip(int i, int j){
         x = Screen.XRES * (2 * i + 3) / 10;
         y = Screen.YRES * (2 * j + 2) / 12;
@@ -95,9 +99,35 @@ public class SpaceShip {
         csystems.pop();
     }
 
-    public void destroy(ArrayList<SpaceShip> ships){
-        ships.remove(this);
+    public void explode(Screen s, ArrayList<SpaceShip> explode){
+         //translate to the center of the ship
+         Matrix transform = new Matrix();
+         transform.ident();
+         Stack<Matrix> csystems = new Stack<Matrix>();
+         Matrix tmp = new Matrix(Matrix.TRANSLATE, x, y, z);
+         tmp.mult(transform);
+         csystems.push(tmp.copy());
 
-        //animation
+        PolygonMatrix polys = new PolygonMatrix();
+        polys.addSphere(0, 0, 0, scale * size * 2, 20);
+
+        //expand or contract
+        if (expand){
+            scale += 0.5;
+            if (scale >= 3){
+                expand = false; 
+            }
+        } else{
+            scale -= 0.25;
+            if (scale >= 3){
+                expand = false; 
+            }
+            explode.remove(this);
+        }
+ 
+         //draw
+         polys.mult(csystems.peek());
+         polys.drawPolygons(s);
+         csystems.pop();
     }
 }

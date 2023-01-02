@@ -25,7 +25,7 @@ public class DoomsdayBattle {
         WaterDrop sfp = new WaterDrop();
 
         //entrance
-        int introFrame = 25;
+        int introFrame = 0;
         for (int i = 0; i < introFrame; i ++){
             System.out.println(i);
             s.clearScreen();
@@ -40,7 +40,7 @@ public class DoomsdayBattle {
 
         sfp.rotateSpeed *= 2;
 
-        introFrame = 5;
+        introFrame = 0;
         for (int i = 0; i < introFrame; i ++){
             System.out.println(i);
             s.clearScreen();
@@ -55,6 +55,7 @@ public class DoomsdayBattle {
         sfp.y = Screen.YRES;
 
         ArrayList<SpaceShip> ships = new ArrayList<>();
+        ArrayList<SpaceShip> explode = new ArrayList<>();
         for (int i = 0; i < 4; i ++){
             for (int j = 0; j < 5; j ++){
                 ships.add(new SpaceShip(i, j));
@@ -65,10 +66,17 @@ public class DoomsdayBattle {
         for (int i = 0; i < battleframe; i ++){
             s.clearScreen();
             System.out.println(i);
-            sfp.update(ships);
+            sfp.update(ships, explode);
             sfp.display(s);
             for (SpaceShip ship : ships){
                 ship.display(s);
+            }
+            for (int j = explode.size() - 1; j >= 0 ; j--){
+                SpaceShip ship = explode.get(j);
+                if (ship.expand){
+                    ship.display(s);
+                }
+                ship.explode(s, explode);
             }
             writer.writeToSequence(s.getimg());
         }

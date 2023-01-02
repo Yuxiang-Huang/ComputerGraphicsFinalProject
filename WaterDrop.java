@@ -19,7 +19,7 @@ public class WaterDrop {
         z = 0;
     }
 
-    public void update(ArrayList<SpaceShip> ships){
+    public void update(ArrayList<SpaceShip> ships, ArrayList<SpaceShip> explode){
         if (ships.size() == 0){
             //move toward spectator
         } else{
@@ -43,9 +43,11 @@ public class WaterDrop {
 
                 //move toward it
                 if (distance < speed){
+                    //destroy
                     x = target.x;
                     y = target.y;
-                    target.destroy(ships);
+                    explode.add(target);
+                    ships.remove(target);
                     speed -= distance;
                 } else{
                     x = speed * Math.cos(direction) + x;
