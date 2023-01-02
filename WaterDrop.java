@@ -98,6 +98,28 @@ public class WaterDrop {
         }
     }
 
+    public void end(){
+        int speed = 25;
+        while (speed > 0){
+            //direction
+            double targetx = Screen.XRES/2;
+            double targety = Screen.YRES/2;
+            direction = Math.atan2(targety - y, targetx - x);
+            double distance = Math.sqrt((x - targetx) * (x - targetx) + (y - targety) * (y - targety));
+            //move toward it
+            if (distance < speed){
+                x = targetx;
+                y = targety;
+                speed = 0;
+            } else{
+                //not enough speed
+                x = speed * Math.cos(direction) + x;
+                y = speed * Math.sin(direction) + y;
+                speed = 0;
+            }
+        }
+    }
+
     public static double dist (SpaceShip ship, WaterDrop sfp){
         return Math.sqrt((sfp.x - ship.x) * (sfp.x - ship.x) + (sfp.y - ship.y) * (sfp.y - ship.y));
     }
@@ -146,15 +168,13 @@ public class WaterDrop {
 
         //accelearation animation
         if (acc){
-            if (expand == 0){
-                expandX = x;
-                expandY = y;
-            }
+            expandX = x;
+            expandY = y;
             animateAcc(s);
             if (expand >= 2){
                 expand = 0;
             } else{
-                expand += 0.4;
+                expand += 0.3;
             }
         }
     }
@@ -172,8 +192,8 @@ public class WaterDrop {
             tmp.mult(transform);
             csystems.push(tmp.copy());
         } else{
-            tmp = new Matrix(Matrix.TRANSLATE, expandX+ 35 * Math.cos(direction), 
-            expandY + 35 * Math.sin(direction), z);
+            tmp = new Matrix(Matrix.TRANSLATE, expandX - 35 * Math.cos(direction), 
+            expandY - 35 * Math.sin(direction), z);
             tmp.mult(transform);
             csystems.push(tmp.copy());
         }
