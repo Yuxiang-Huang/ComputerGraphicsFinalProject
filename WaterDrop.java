@@ -35,6 +35,8 @@ public class WaterDrop {
                     }
                     if (ships.size() <= 10){
                         ship.escape(this);
+                    } else if (ships.size() <= 15){
+                        ship.turn();
                     }
                 }
 

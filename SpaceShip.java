@@ -7,19 +7,24 @@ public class SpaceShip {
     public double ztheta = Math.PI / 2;
     int size = 15;
 
+    double rotateSpeed = Math.PI / 100;
+
     //for explosion
     public boolean expand = true;
     double scale = 1;
 
     public SpaceShip(int i, int j){
-        x = Screen.XRES * (2 * i + 3) / 10;
+        x = Screen.XRES * (2 * i + 1) / 10;
         y = Screen.YRES * (2 * j + 2) / 12;
+    }
+
+    public void turn (){
+        ztheta += (Math.random() * rotateSpeed - Math.random() * rotateSpeed) * 5;
     }
 
     public void escape(WaterDrop sfp){
         ztheta -= Math.PI/2;
-        int speed = 5;
-        double rotateSpeed = Math.PI / 50;
+        int speed = 3;
         //rotate toward runaway
         double direction = Math.atan2(y - sfp.y, x - sfp.x);
         if (Math.abs(direction - ztheta) < rotateSpeed){
