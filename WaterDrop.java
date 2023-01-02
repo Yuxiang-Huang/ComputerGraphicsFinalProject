@@ -5,7 +5,7 @@ public class WaterDrop {
     public double x, y, z;
     int size = 50;
     double theta = 0;
-    public boolean acc = true;
+    public boolean acc = false;
     public boolean intro = true;
 
     double direction = 0;
@@ -208,7 +208,7 @@ public class WaterDrop {
 
         //dilates
         if (intro){
-            tmp = new Matrix(Matrix.SCALE, 5, 5, 5);
+            tmp = new Matrix(Matrix.SCALE, 5, 1, 5);
             tmp.mult(csystems.peek());
             csystems.push(tmp.copy());
         }
@@ -239,15 +239,31 @@ public class WaterDrop {
             csystems.push(tmp.copy());
         }
 
-        //draw
-        EdgeMatrix edges = new EdgeMatrix();
+        //dilates
         if (intro){
-            edges.addEdge(0,0, 0, Math.cos(direction) * 100, Math.sin(direction) * 100, 0);
-        } else{
-            edges.addEdge(0, 0, 0, Math.cos(direction) * 20, Math.sin(direction) * 20, 0);
+            tmp = new Matrix(Matrix.SCALE, 1, 5, 1);
+            tmp.mult(csystems.peek());
+            csystems.push(tmp.copy());
         }
-        edges.mult(csystems.peek());
-        edges.drawEdges(s, new Color(0, 0, 255));
+
+        //draw
+        double b = 255;
+        double lastX = 0;
+        double lastY = 0;
+        for (int i = 0; i < 50; i ++){
+            EdgeMatrix edges = new EdgeMatrix();
+            edges.addEdge(lastX, lastY, 0, Math.cos(direction) + lastX, Math.sin(direction) + lastY, 0);
+            if (intro){
+                edges.addEdge(lastX-1, lastY, 0, lastX - 1, Math.sin(direction) + lastY, 0);
+                edges.addEdge(lastX+1, lastY, 0, lastX + 1, Math.sin(direction) + lastY, 0);
+            }
+            lastX += Math.cos(direction);
+            lastY += Math.sin(direction);
+
+            edges.mult(csystems.peek());
+            edges.drawEdges(s, new Color(0, 0, (int) b));
+            b -= 255.0 / 50;
+        }
 
         direction -= Math.PI/2;
     }
