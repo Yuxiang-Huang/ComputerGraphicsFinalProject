@@ -383,6 +383,78 @@ public class PolygonMatrix extends Matrix {
     }
   }
 
+  public void addStar(double x0, double y0, double z0, double z1,
+  double r, int steps){
+    Matrix points = generateStar(x0, y0, z0, z1, r, steps);
+    System.out.println(points.m.size());
+    int p0, p1, p2, p3, lat, longt;
+    int latStop, longStop, latStart, longStart;
+    latStart = 0;
+    latStop = steps;
+    longStart = 0;
+    longStop = steps;
+
+    for ( lat = latStart; lat < latStop; lat++ ) {
+      for ( longt = longStart; longt < longStop; longt++ ) {
+
+        p0 = lat * steps + longt;
+        if (longt == steps - 1)
+          p1 = p0 - longt;
+        else
+          p1 = p0 + 1;
+        p2 = (p1 + steps) % (steps * steps);
+        p3 = (p0 + steps) % (steps * steps);
+
+        double[] point0 = points.get(p0);
+        double[] point1 = points.get(p1);
+        double[] point2 = points.get(p2);
+        double[] point3 = points.get(p3);
+
+        addPolygon(point0[0], point0[1], point0[2],
+                   point3[0], point3[1], point3[2],
+                   point2[0], point2[1], point2[2]);
+        addPolygon(point0[0], point0[1], point0[2],
+                   point2[0], point2[1], point2[2],
+                   point1[0], point1[1], point1[2]);
+
+      }
+    }
+  }
+
+  private Matrix generateStar(double x, double y, double z0, double z1,
+  double r0, int steps ) {
+    Matrix points = new Matrix();
+    double z, r;
+
+    z = Math.min(z0, z1);
+    double dz = Math.abs(z1 - z0) / steps;
+
+    r = 0;
+    double dr = r0 / steps;
+
+    //for y value of points on line
+    for (double h = 0; h <= steps; h ++) {
+      //draw a circle
+      EdgeMatrix edges = new EdgeMatrix();
+      edges.addMyCurve(r, 0, 0, r, -r, 0, 0, r, steps/4, EdgeMatrix.HERMITE);
+      edges.addMyCurve(-r, 0, 0, r, r, 0, 0, r, steps/4, EdgeMatrix.HERMITE);
+      edges.addMyCurve(r, 0, 0, -r, -r, 0, 0, -r, steps/4, EdgeMatrix.HERMITE);
+      edges.addMyCurve(-r, 0, 0, -r, r, 0, 0, -r, steps/4, EdgeMatrix.HERMITE);
+      edges.mult(new Matrix(Matrix.TRANSLATE, x, y, z));
+      for (int i = 0; i < edges.m.size(); i += 2){
+        double[] arr = edges.m.get(i);
+        points.addColumn(arr[0], arr[1], arr[2]);
+      }
+      z += dz;
+      if (h < steps/2){
+        r += dr;
+      } else{
+        r -= dr;
+      }
+    }
+    return points;
+  }
+
   public void addPolygon(double x0, double y0, double z0,
                          double x1, double y1, double z1,
                          double x2, double y2, double z2) {

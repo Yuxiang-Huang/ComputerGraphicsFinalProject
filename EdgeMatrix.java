@@ -2,6 +2,7 @@ import java.util.*;
 import java.awt.*;
 
 public class EdgeMatrix extends Matrix {
+  //make sure steps is divisible by 4
   public void addStar(double x0, double y0, double z0, double z1,
   double r, int steps){
     Matrix points = generateStar(x0, y0, z0, z1, r, steps);
@@ -9,6 +10,8 @@ public class EdgeMatrix extends Matrix {
     for (double[] arr : points.m){
       addEdge(arr[0], arr[1], arr[2], arr[0]+1, arr[1], arr[2]);
     }
+
+    System.out.println(points.m.size());
   }
 
   private Matrix generateStar(double x, double y, double z0, double z1,
@@ -26,12 +29,13 @@ public class EdgeMatrix extends Matrix {
     for (double h = 0; h < steps; h ++) {
       //draw a circle
       EdgeMatrix edges = new EdgeMatrix();
-      edges.addCurve(r, 0, 0, r, -r, 0, 0, r, 0.01, EdgeMatrix.HERMITE);
-      edges.addCurve(-r, 0, 0, r, r, 0, 0, r, 0.01, EdgeMatrix.HERMITE);
-      edges.addCurve(r, 0, 0, -r, -r, 0, 0, -r, 0.01, EdgeMatrix.HERMITE);
-      edges.addCurve(-r, 0, 0, -r, r, 0, 0, -r, 0.01, EdgeMatrix.HERMITE);
+      edges.addMyCurve(r, 0, 0, r, -r, 0, 0, r, steps/4, EdgeMatrix.HERMITE);
+      edges.addMyCurve(-r, 0, 0, r, r, 0, 0, r, steps/4, EdgeMatrix.HERMITE);
+      edges.addMyCurve(r, 0, 0, -r, -r, 0, 0, -r, steps/4, EdgeMatrix.HERMITE);
+      edges.addMyCurve(-r, 0, 0, -r, r, 0, 0, -r, steps/4, EdgeMatrix.HERMITE);
       edges.mult(new Matrix(Matrix.TRANSLATE, x, y, z));
-      for (double[] arr : edges.m){
+      for (int i = 0; i < edges.m.size(); i += 2){
+        double[] arr = edges.m.get(i);
         points.addColumn(arr[0], arr[1], arr[2]);
       }
       z += dz;
@@ -87,6 +91,30 @@ public class EdgeMatrix extends Matrix {
 
     for (t=step; t <= 1.000001; t+= step) {
 
+      x = xm[0]*t*t*t + xm[1]*t*t+ xm[2]*t + xm[3];
+      y = ym[0]*t*t*t + ym[1]*t*t+ ym[2]*t + ym[3];
+      addEdge(x0, y0, 0, x, y, 0);
+      x0 = x;
+      y0 = y;
+    }
+  }//addCurve
+
+  public void addMyCurve( double x0, double y0,
+                         double x1, double y1,
+                         double x2, double y2,
+                         double x3, double y3,
+                         double step, int curveType ) {
+
+    double t, x, y;
+    Matrix xcoefs = new Matrix(curveType, x0, x1, x2, x3);
+    Matrix ycoefs = new Matrix(curveType, y0, y1, y2, y3);
+
+    double[] xm = xcoefs.get(0);
+    double[] ym = ycoefs.get(0);
+
+    
+    for (int i = 1; i <= step; i ++){
+      t = 1.0 / step * i;
       x = xm[0]*t*t*t + xm[1]*t*t+ xm[2]*t + xm[3];
       y = ym[0]*t*t*t + ym[1]*t*t+ ym[2]*t + ym[3];
       addEdge(x0, y0, 0, x, y, 0);

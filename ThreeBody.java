@@ -25,10 +25,11 @@ public class ThreeBody{
     tmp.mult(csystems.peek());
     csystems.push(tmp.copy());
 
-    EdgeMatrix edges = new EdgeMatrix();
-    edges.addStar(0, 0, -100, 100, 100, 10);
-    edges.mult(csystems.peek());
-    edges.drawEdges(s, new Color(0, 0, 255));
+    PolygonMatrix polys = new PolygonMatrix();
+    polys.addStar(0, 0, -100, 100, 100, 20);
+    //polys.addSphere(0, 0, 0, 100, 20);
+    polys.mult(csystems.peek());
+    polys.drawPolygons(s);
 
     s.display();
   }
