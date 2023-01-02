@@ -28,7 +28,7 @@ public class DoomsdayBattle {
         for (int i = 0; i < introFrame; i ++){
             System.out.println(i);
             s.clearScreen();
-            sfp.y -= (Screen.YRES / 2) / introFrame;
+            sfp.y -= (Screen.YRES * 2 / 5) / introFrame;
             sfp.display(s);
             writer.writeToSequence(s.getimg());
         }
@@ -36,11 +36,11 @@ public class DoomsdayBattle {
         sfp.acc = true;
         sfp.rotateSpeed *= 2;
 
-        introFrame = 7; //7
+        introFrame = 10; //7
         for (int i = 0; i < introFrame; i ++){
             System.out.println(i);
             s.clearScreen();
-            sfp.y -= (Screen.YRES / 2) / introFrame;
+            sfp.y -= (Screen.YRES * 3 / 5) / introFrame;
             sfp.display(s);
             writer.writeToSequence(s.getimg());
         }
@@ -59,14 +59,14 @@ public class DoomsdayBattle {
             }
         }
 
-        //ships = new ArrayList<>();
+        ships = new ArrayList<>();
 
         //animation battle
-        int battleframe = 15;
-        for (int i = 0; i < battleframe; i ++){
-        // int i = -1;
-        // while (ships.size() != 0){
-            //i ++;
+        // int battleframe = 30;
+        // for (int i = 0; i < battleframe; i ++){
+        int i = -1;
+        while (ships.size() != 0){
+            i ++;
             s.clearScreen();
             System.out.println(i);
             sfp.update(ships, explode);
@@ -100,12 +100,12 @@ public class DoomsdayBattle {
         }
 
         //move towards viewer
-        // while (sfp.x != Screen.XRES/2 || sfp.y != Screen.YRES/2){
-        //     s.clearScreen();
-        //     sfp.end();
-        //     sfp.display(s);
-        //     writer.writeToSequence(s.getimg());
-        // }
+        while (sfp.x != Screen.XRES/2 || sfp.y != Screen.YRES/2){
+            s.clearScreen();
+            sfp.end();
+            sfp.display(s);
+            writer.writeToSequence(s.getimg());
+        }
 
         //display animation
         URL url = SolarSystem.class.getResource("DoomsdayBattle.gif");

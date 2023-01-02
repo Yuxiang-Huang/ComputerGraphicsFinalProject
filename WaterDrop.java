@@ -11,9 +11,11 @@ public class WaterDrop {
     double direction = 0;
     double rotateSpeed = Math.PI * 2 / 100;
 
+    //for expanding
     double expand = 0;
     double expandX = 0;
     double expandY = 0;
+    double expandAngle = 0;
 
     //special movement
     boolean lock0 = true;
@@ -122,6 +124,7 @@ public class WaterDrop {
                 y = speed * Math.sin(direction) + y;
                 speed = 0;
             }
+            direction += Math.PI/2;
         }
     }
 
@@ -169,6 +172,7 @@ public class WaterDrop {
             if (expand == 0){
                 expandX = x;
                 expandY = y;
+                expandAngle = direction + Math.PI/2;
             }
             animateAcc(s);
             if (expand >= 2){
@@ -189,19 +193,19 @@ public class WaterDrop {
 
         //translate to the center of the halo
         if (intro){
-            tmp = new Matrix(Matrix.TRANSLATE, expandX + size * 5 * Math.cos(direction), 
-            expandY + size * 5 * Math.sin(direction), z);
+            tmp = new Matrix(Matrix.TRANSLATE, expandX + size * 5 * Math.cos(expandAngle), 
+            expandY + size * 5 * Math.sin(expandAngle), z);
             tmp.mult(transform);
             csystems.push(tmp.copy());
         } else{
-            tmp = new Matrix(Matrix.TRANSLATE, expandX + size * Math.cos(direction), 
-            expandY + size * Math.sin(direction), z);
+            tmp = new Matrix(Matrix.TRANSLATE, expandX + size * Math.cos(expandAngle), 
+            expandY + size * Math.sin(expandAngle), z);
             tmp.mult(transform);
             csystems.push(tmp.copy());
         }
 
         //direction
-        tmp = new Matrix(Matrix.ROTATE, direction - Math.PI/2, 'Z');
+        tmp = new Matrix(Matrix.ROTATE, expandAngle - Math.PI/2, 'Z');
         tmp.mult(csystems.peek());
         csystems.pop();
         csystems.push(tmp.copy());
@@ -261,8 +265,12 @@ public class WaterDrop {
             lastY += Math.sin(direction);
 
             edges.mult(csystems.peek());
-            edges.drawEdges(s, new Color(0, 0, (int) b));
-            b -= 255.0 / 50;
+            if (i == 0){
+                edges.drawEdges(s, new Color(255, 255, 255));
+            } else{
+                edges.drawEdges(s, new Color(0, 0, (int) b));
+                b -= 255.0 / 50;
+            }
         }
 
         direction -= Math.PI/2;
