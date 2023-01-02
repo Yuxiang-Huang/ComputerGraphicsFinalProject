@@ -54,6 +54,7 @@ public class DoomsdayBattle {
         sfp.x = Screen.XRES; 
         sfp.y = Screen.YRES;
 
+        //set up
         ArrayList<SpaceShip> ships = new ArrayList<>();
         ArrayList<SpaceShip> explode = new ArrayList<>();
         for (int i = 0; i < 4; i ++){
@@ -62,8 +63,12 @@ public class DoomsdayBattle {
             }
         }
 
-        int battleframe = 80;
-        for (int i = 0; i < battleframe; i ++){
+        //animation battle
+        // int battleframe = 60;
+        // for (int i = 0; i < battleframe; i ++){
+        int i = -1;
+        while (ships.size() != 0){
+            i ++;
             s.clearScreen();
             System.out.println(i);
             sfp.update(ships, explode);

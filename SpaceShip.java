@@ -8,7 +8,7 @@ public class SpaceShip {
 
     //stats
     int speed = 3;
-    double rotateSpeed = Math.PI / 100;
+    double rotateSpeed = Math.PI / 50;
 
     //for explosion
     public boolean expand = true;
@@ -23,10 +23,10 @@ public class SpaceShip {
         x += Screen.YRES / 12 / 25;
     }
 
-    public void turn (){
-        ztheta += Math.random() * rotateSpeed * 5 - rotateSpeed * 2.5;
-        x += Math.cos(ztheta) * speed;
-        y += Math.cos(ztheta) * speed;
+    public void random (){
+        double ran = Math.random() * Math.PI * 2;
+        x += Math.cos(ran) * speed;
+        y += Math.sin(ran) * speed;
     }
 
     public void escape(WaterDrop sfp){
@@ -44,6 +44,10 @@ public class SpaceShip {
 
         x += Math.cos(direction) * speed;
         y += Math.sin(direction) * speed;
+
+        if (ztheta == direction){
+            speed /= 2;
+        }
 
         ztheta += Math.PI/2;
     }
