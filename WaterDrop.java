@@ -96,6 +96,9 @@ public class WaterDrop {
                     y = speed * Math.sin(direction) + y;
                     speed = 0;
                 }
+
+                //?
+                direction += Math.PI/2;
             }
         }
     }
@@ -136,19 +139,12 @@ public class WaterDrop {
         csystems.push(tmp.copy());
 
         //direction
-        if (intro){
-            tmp = new Matrix(Matrix.ROTATE, direction, 'Z');
-            tmp.mult(csystems.peek());
-            csystems.pop();
-            csystems.push(tmp.copy());
-        } else{
-            tmp = new Matrix(Matrix.ROTATE, direction + Math.PI/2, 'Z');
-            tmp.mult(csystems.peek());
-            csystems.pop();
-            csystems.push(tmp.copy());
-        }
+        tmp = new Matrix(Matrix.ROTATE, direction, 'Z');
+        tmp.mult(csystems.peek());
+        csystems.pop();
+        csystems.push(tmp.copy());
 
-        //rotate
+        //self rotate
         theta += rotateSpeed;
         tmp = new Matrix(Matrix.ROTATE, theta, 'Y');
         tmp.mult(csystems.peek());
@@ -184,6 +180,8 @@ public class WaterDrop {
     }
 
     void animateAcc(Screen s){
+        direction += Math.PI/2;
+
         Matrix transform = new Matrix();
         transform.ident();
         Stack<Matrix> csystems = new Stack<Matrix>();
@@ -191,29 +189,22 @@ public class WaterDrop {
 
         //translate to the center of the halo
         if (intro){
-            tmp = new Matrix(Matrix.TRANSLATE, expandX + size * 5 * Math.cos(direction + Math.PI/2), 
-            expandY + size * 5 * Math.sin(direction + Math.PI/2), z);
+            tmp = new Matrix(Matrix.TRANSLATE, expandX + size * 5 * Math.cos(direction), 
+            expandY + size * 5 * Math.sin(direction), z);
             tmp.mult(transform);
             csystems.push(tmp.copy());
         } else{
-            tmp = new Matrix(Matrix.TRANSLATE, expandX - size * Math.cos(direction), 
-            expandY - size * Math.sin(direction), z);
+            tmp = new Matrix(Matrix.TRANSLATE, expandX + size * Math.cos(direction), 
+            expandY + size * Math.sin(direction), z);
             tmp.mult(transform);
             csystems.push(tmp.copy());
         }
 
         //direction
-        if (intro){
-            tmp = new Matrix(Matrix.ROTATE, direction, 'Z');
-            tmp.mult(csystems.peek());
-            csystems.pop();
-            csystems.push(tmp.copy());
-        } else{
-            tmp = new Matrix(Matrix.ROTATE, direction + Math.PI/2, 'Z');
-            tmp.mult(csystems.peek());
-            csystems.pop();
-            csystems.push(tmp.copy());
-        }
+        tmp = new Matrix(Matrix.ROTATE, direction - Math.PI/2, 'Z');
+        tmp.mult(csystems.peek());
+        csystems.pop();
+        csystems.push(tmp.copy());
 
         //dilates
         if (intro){
@@ -232,43 +223,43 @@ public class WaterDrop {
         polys.drawPolygons(s);
 
 
-        // //lines
-        // transform = new Matrix();
-        // transform.ident();
-        // csystems = new Stack<Matrix>();
+        //lines
+        csystems = new Stack<Matrix>();
 
-        // //translate to the tail
-        // if (intro){
-        //     tmp = new Matrix(Matrix.TRANSLATE, expandX + size * 5 * Math.cos(direction + Math.PI/2), 
-        //     expandY + size * 5 * Math.sin(direction + Math.PI/2), z);
-        //     tmp.mult(transform);
-        //     csystems.push(tmp.copy());
-        // } else{
-        //     tmp = new Matrix(Matrix.TRANSLATE, expandX - size * Math.cos(direction), 
-        //     expandY - size * Math.sin(direction), z);
-        //     tmp.mult(transform);
-        //     csystems.push(tmp.copy());
-        // }
+        //translate to the tail
+        if (intro){
+            tmp = new Matrix(Matrix.TRANSLATE, x + size * 5 * Math.cos(direction + Math.PI/2), 
+            y + size * 5 * Math.sin(direction + Math.PI/2), z);
+            tmp.mult(transform);
+            csystems.push(tmp.copy());
+        } else{
+            tmp = new Matrix(Matrix.TRANSLATE, x - size * Math.cos(direction), 
+            y - size * Math.sin(direction), z);
+            tmp.mult(transform);
+            csystems.push(tmp.copy());
+        }
     
-        // //direction
-        // if (intro){
-        //     tmp = new Matrix(Matrix.ROTATE, direction, 'Z');
-        //     tmp.mult(csystems.peek());
-        //     csystems.push(tmp.copy());
-        // } else{
-        //     tmp = new Matrix(Matrix.ROTATE, direction + Math.PI/2, 'Z');
-        //     tmp.mult(csystems.peek());
-        //     csystems.push(tmp.copy());
-        // }
+        //direction
+        if (intro){
+            tmp = new Matrix(Matrix.ROTATE, direction, 'Z');
+            tmp.mult(csystems.peek());
+            csystems.push(tmp.copy());
+        } else{
+            tmp = new Matrix(Matrix.ROTATE, direction + Math.PI/2, 'Z');
+            tmp.mult(csystems.peek());
+            csystems.push(tmp.copy());
+        }
 
-        // //draw
-        // EdgeMatrix edges = new EdgeMatrix();
-        // if (intro){
-        //     edges.addEdge(0,0, 0, Math.cos(direction) * 25, Math.sin(direction) * 25, 0);
-        // } else{
-        //     edges.addEdge(0, 0, 0, Math.cos(direction + Math.PI/2) * 5, Math.sin(direction + Math.PI/2) * 5, 0);
-        // }
-        // edges.mult(csystems.peek());
-        // edges.drawEdges(s, new Color(0, 0, 255));
+        //draw
+        EdgeMatrix edges = new EdgeMatrix();
+        if (intro){
+            edges.addEdge(0,0, 0, Math.cos(direction + Math.PI/2) * 100, Math.sin(direction + Math.PI/2) * 100, 0);
+        } else{
+            edges.addEdge(0, 0, 0, Math.cos(direction + Math.PI/2) * 20, -Math.sin(direction) * 20, 0);
+        }
+        edges.mult(csystems.peek());
+        edges.drawEdges(s, new Color(0, 0, 255));
+
+        direction -= Math.PI/2;
     }
 }
