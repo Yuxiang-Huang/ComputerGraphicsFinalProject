@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.zip.ZipEntry;
 
 public class SpaceShip {
     public double x, y, z;
@@ -7,6 +6,8 @@ public class SpaceShip {
     public double ztheta = Math.PI / 2;
     int size = 15;
 
+    //stats
+    int speed = 3;
     double rotateSpeed = Math.PI / 100;
 
     //for explosion
@@ -14,17 +15,22 @@ public class SpaceShip {
     double scale = 1;
 
     public SpaceShip(int i, int j){
-        x = Screen.XRES * (2 * i + 1) / 10;
+        x = Screen.XRES * (2 * i + 2) / 10;
         y = Screen.YRES * (2 * j + 2) / 12;
     }
 
+    public void forward (){
+        x += Screen.YRES / 12 / 25;
+    }
+
     public void turn (){
-        ztheta += (Math.random() * rotateSpeed - Math.random() * rotateSpeed) * 5;
+        ztheta += Math.random() * rotateSpeed * 5 - rotateSpeed * 2.5;
+        x += Math.cos(ztheta) * speed;
+        y += Math.cos(ztheta) * speed;
     }
 
     public void escape(WaterDrop sfp){
         ztheta -= Math.PI/2;
-        int speed = 3;
         //rotate toward runaway
         double direction = Math.atan2(y - sfp.y, x - sfp.x);
         if (Math.abs(direction - ztheta) < rotateSpeed){
