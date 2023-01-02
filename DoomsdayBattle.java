@@ -64,11 +64,11 @@ public class DoomsdayBattle {
         }
 
         //animation battle
-        // int battleframe = 60;
-        // for (int i = 0; i < battleframe; i ++){
-        int i = -1;
-        while (ships.size() != 0){
-            i ++;
+        int battleframe = 30;
+        for (int i = 0; i < battleframe; i ++){
+        // int i = -1;
+        // while (ships.size() != 0){
+        //     i ++;
             s.clearScreen();
             System.out.println(i);
             sfp.update(ships, explode);

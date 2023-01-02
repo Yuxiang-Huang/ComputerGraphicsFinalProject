@@ -6,9 +6,8 @@ public class SpaceShip {
     public double ztheta = Math.PI / 2;
     int size = 15;
 
-    //stats
-    int speed = 3;
-    double rotateSpeed = Math.PI / 50;
+    //for special movement
+    double randomDirection = Math.random() * Math.PI * 2;
 
     //for explosion
     public boolean expand = true;
@@ -24,30 +23,36 @@ public class SpaceShip {
     }
 
     public void random (){
-        double ran = Math.random() * Math.PI * 2;
-        x += Math.cos(ran) * speed;
-        y += Math.sin(ran) * speed;
+        //randomly escape
+        move(randomDirection);
     }
 
     public void escape(WaterDrop sfp){
-        ztheta -= Math.PI/2;
         //rotate toward runaway
         double direction = Math.atan2(y - sfp.y, x - sfp.x);
+        move(direction);
+    }
+
+    public void move(double direction){
+        //stats
+        int speed = 3;
+        double rotateSpeed = Math.PI / 50;
+
+        ztheta -= Math.PI/2;
+
+        //rotate toward direction
         if (Math.abs(direction - ztheta) < rotateSpeed){
             ztheta = direction; 
-            speed *= 2;
+            speed *= 1.5;
         } else if (Math.abs(direction - ztheta) < Math.PI){
             ztheta += Math.abs(direction - ztheta) / (direction - ztheta) * rotateSpeed;
         } else{
             ztheta -= Math.abs(direction - ztheta) / (direction - ztheta) * rotateSpeed;
         }
 
+        //move
         x += Math.cos(direction) * speed;
         y += Math.sin(direction) * speed;
-
-        if (ztheta == direction){
-            speed /= 2;
-        }
 
         ztheta += Math.PI/2;
     }
