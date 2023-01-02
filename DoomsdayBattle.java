@@ -64,18 +64,34 @@ public class DoomsdayBattle {
         }
 
         //animation battle
-        int battleframe = 30;
-        for (int i = 0; i < battleframe; i ++){
-        // int i = -1;
-        // while (ships.size() != 0){
-        //     i ++;
+        // int battleframe = 60;
+        // for (int i = 0; i < battleframe; i ++){
+        int i = -1;
+        while (ships.size() != 0){
+            i ++;
             s.clearScreen();
             System.out.println(i);
             sfp.update(ships, explode);
             sfp.display(s);
-            for (SpaceShip ship : ships){
-                ship.display(s);
+
+            //remove too close ships and update ships
+            ArrayList<SpaceShip> tmp = new ArrayList<>();
+            for (int j = ships.size() - 1; j >= 0 ; j--){
+                SpaceShip ship = ships.get(j);
+                //check closeness
+                if (tooClose(ship, ships)){
+                    tmp.add(ship);
+                } else{
+                    ship.display(s);
+                }
             }
+            for (SpaceShip ship : tmp){
+                ships.remove(ship);
+                explode.add(ship);
+            }
+
+
+            //explosion
             for (int j = explode.size() - 1; j >= 0 ; j--){
                 SpaceShip ship = explode.get(j);
                 if (ship.expand){
@@ -98,6 +114,21 @@ public class DoomsdayBattle {
         f.setVisible(true);
         writer.close();
         output.close();
+    }
+
+    public static boolean tooClose(SpaceShip ship, ArrayList<SpaceShip> ships){
+        for (SpaceShip other : ships){
+            if (!ship.equals(other)){
+                if (dist(ship, other) < 75){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static double dist(SpaceShip ship, SpaceShip other){
+        return Math.sqrt((other.x - ship.x) * (other.x - ship.x) + (other.y - ship.y) * (other.y - ship.y)); 
     }
 }
 

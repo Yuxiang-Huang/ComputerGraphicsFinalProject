@@ -70,7 +70,7 @@ public class WaterDrop {
                     //ship responses
                     if (ships.size() <= 5){
                         ship.escape(this);
-                    } else if (ships.size() <= 20){
+                    } else if (ships.size() <= 10){
                         ship.random();
                     } else if (ships.size() > 15){
                         ship.forward();

@@ -14,8 +14,8 @@ public class SpaceShip {
     double scale = 1;
 
     public SpaceShip(int i, int j){
-        x = Screen.XRES * (2 * i + 2) / 10;
-        y = Screen.YRES * (2 * j + 2) / 12;
+        x = Screen.XRES * (2 * i + 3) / 12;
+        y = Screen.YRES * (2 * j + 3) / 14;
     }
 
     public void forward (){
