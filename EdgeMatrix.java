@@ -2,51 +2,6 @@ import java.util.*;
 import java.awt.*;
 
 public class EdgeMatrix extends Matrix {
-  //make sure steps is divisible by 4
-  public void addStar(double x0, double y0, double z0, double z1,
-  double r, int steps){
-    Matrix points = generateStar(x0, y0, z0, z1, r, steps);
-
-    for (double[] arr : points.m){
-      addEdge(arr[0], arr[1], arr[2], arr[0]+1, arr[1], arr[2]);
-    }
-
-    System.out.println(points.m.size());
-  }
-
-  private Matrix generateStar(double x, double y, double z0, double z1,
-  double r0, int steps ) {
-    Matrix points = new Matrix();
-    double z, r;
-
-    z = Math.min(z0, z1);
-    double dz = Math.abs(z1 - z0) / steps;
-
-    r = 0;
-    double dr = r0 / steps;
-
-    //for y value of points on line
-    for (double h = 0; h < steps; h ++) {
-      //draw a circle
-      EdgeMatrix edges = new EdgeMatrix();
-      edges.addMyCurve(r, 0, 0, r, -r, 0, 0, r, steps/4, EdgeMatrix.HERMITE);
-      edges.addMyCurve(-r, 0, 0, r, r, 0, 0, r, steps/4, EdgeMatrix.HERMITE);
-      edges.addMyCurve(r, 0, 0, -r, -r, 0, 0, -r, steps/4, EdgeMatrix.HERMITE);
-      edges.addMyCurve(-r, 0, 0, -r, r, 0, 0, -r, steps/4, EdgeMatrix.HERMITE);
-      edges.mult(new Matrix(Matrix.TRANSLATE, x, y, z));
-      for (int i = 0; i < edges.m.size(); i += 2){
-        double[] arr = edges.m.get(i);
-        points.addColumn(arr[0], arr[1], arr[2]);
-      }
-      z += dz;
-      if (h < steps/2){
-        r += dr;
-      } else{
-        r -= dr;
-      }
-    }
-    return points;
-  }
 
   public void addCircle(double cx, double cy, double cz,
                         double r, double step) {
