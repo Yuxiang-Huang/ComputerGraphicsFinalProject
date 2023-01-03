@@ -12,7 +12,7 @@ public class ChangeTest {
         Screen s = new Screen();
 
         //variables
-        int steps = 20;
+        int steps = 30;
         int dist = 300;
         int radius = 25;
         double year = 60;
@@ -24,8 +24,7 @@ public class ChangeTest {
         int[][] background = createRGBMap("background.jpg", Screen.XRES);
 
         Planet Earth = new Planet(radius, dist, year, day, new Color (0, 255, 0), createRGBMap("earth.jpg", steps), earthTheta);
-
-        //createRGBMap("venus.jpg", steps);
+        int[][] VenusRGB = createRGBMap("venus.jpg", steps);
 
         //start gif
         BufferedImage firstImage = s.getimg();
@@ -54,11 +53,11 @@ public class ChangeTest {
             Earth.update();
 
             //rotate
-            tmp = new Matrix(Matrix.ROTATE, -Math.PI/2, 'X');
-            tmp.mult(csystems.peek());
-            csystems.push(tmp.copy());
+            // tmp = new Matrix(Matrix.ROTATE, -Math.PI/2, 'X');
+            // tmp.mult(csystems.peek());
+            // csystems.push(tmp.copy());
 
-            // csystems.push(csystems.peek().copy());
+            csystems.push(csystems.peek().copy());
 
             //self rotate
             tmp = new Matrix(Matrix.ROTATE, Earth.selfRotate, 'Z');
@@ -78,6 +77,7 @@ public class ChangeTest {
             polys.mult(csystems.peek());
 
             polys.drawPolygons(s, Earth.rgb, steps);
+            changeRGB(Earth.rgb, VenusRGB, (int)i);
 
             //finish this frame
             writer.writeToSequence(s.getimg());
@@ -96,6 +96,12 @@ public class ChangeTest {
         f.setVisible(true);
         writer.close();
         output.close();
+    }
+
+    public static void changeRGB(int[][] toChange, int[][] other, int i){
+        for (int j = 0; j < toChange.length; j ++){
+            toChange[toChange.length - i - 1][j] = other[toChange.length - i - 1][j];
+        }
     }
 
     public static int[][] createRGBMap(String name, int steps) throws IOException{
