@@ -42,6 +42,10 @@ public class Body{
       else if (type == 2){
         angle += Math.PI * 4 / 3;
         angle += Math.random() * Math.PI * 1 / 3;
+      } 
+      
+      else{
+        angle = Math.random() * Math.PI * 2;
       }
   
       //System.out.println(angle);
