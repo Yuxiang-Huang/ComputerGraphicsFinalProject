@@ -7,7 +7,6 @@ public class PlanetBody{
     public double dz;
     double m;
     double G = 6.67E-11;
-
     double t = 0.001;
   
     public PlanetBody (double mass){

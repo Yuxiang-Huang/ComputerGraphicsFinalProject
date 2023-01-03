@@ -6,7 +6,7 @@ public class Body{
     public double dy;
     public double dz;
     double m;
-    double G = 0.5;
+    double G = 6.67E-11;
   
     int initialV = 5;
   
@@ -20,7 +20,7 @@ public class Body{
     //   m = mass;
     // }
   
-    public Body (int mass, int type){
+    public Body (double mass, int type){
       m = mass;
       dx = Math.random() * initialV * 2 - initialV;
       dy = Math.random() * initialV * 2 - initialV;
@@ -46,64 +46,30 @@ public class Body{
   
       //System.out.println(angle);
   
-      x = Math.cos(angle) * radius + 250;
-      y = Math.sin(angle) * radius + 250;
-      z = Math.random() * 150 + 100;
+      x = Math.cos(angle) * radius + Screen.XRES/2;
+      y = Math.sin(angle) * radius + Screen.YRES/2;
+    //   z = Math.random() * 150 + 100;
     }
-  
-    // public Body (int mass, int type){
-    //   m = mass;
-    //
-    //   if (type == 0){
-    //     x = Math.random() * 150 + 50;
-    //     y = Math.random() * 150 + 50;
-    //
-    //     dx = Math.random() * initialV + initialV;
-    //     dy = Math.random() * initialV + initialV;
-    //   }
-    //
-    //   else if (type == 1){
-    //     x = Math.random() * 150 + 300;
-    //     y = Math.random() * 150 + 50;
-    //
-    //     dx = - (Math.random() * initialV + initialV);
-    //     dy = Math.random() * initialV + initialV;
-    //   }
-    //
-    //   else if (type == 2){
-    //     x = Math.random() * 150 + 50;
-    //     y = Math.random() * 150 + 300;
-    //
-    //     dx = Math.random() * initialV + initialV;
-    //     dy = - (Math.random() * initialV + initialV);
-    //   }
-    //
-    //   else if (type == 3){
-    //     x = Math.random() * 150 + 300;
-    //     y = Math.random() * 150 + 300;
-    //
-    //     dx = - (Math.random() * initialV + initialV);
-    //     dy = - (Math.random() * initialV + initialV);
-    //   }
-    // }
   
     public double dist(Body other){
         return Math.sqrt(Math.abs(x - other.x) * Math.abs(x - other.x) + Math.abs(y - other.y) + Math.abs(y - other.y));
       }
   
-    public void attract (Body other){
-      double d = dist(other);
-      other.dx += (x - other.x) / d / d * G * m * other.m;
-      other.dy += (y - other.y) / d / d * G * m * other.m;
-      other.dz += (z - other.z) / d / d * G * m * other.m;
-  
-      dx += (other.x - x) / d / d * G * m * other.m;
-      dy += (other.y - y) / d / d * G * m * other.m;
-      dz += (other.z - z) / d / d * G * m * other.m;
-  
-      // System.out.println();
-      // System.out.println(m);
-      // System.out.println(dx);
-      // System.out.println(dy);
+    public void attract (Body other, double t){
+        double d = dist(other);
+        double a = G * other.m / d / d;
+
+        double theta = Math.atan2(other.y - y, other.x - x);
+        double ax = a * Math.cos(theta);
+        double ay = a * Math.sin(theta);
+
+        //System.out.println("x: " + x + ", y: " + y);
+
+        x += dx * t + 0.5 * ax * t * t;
+        y += dy * t + 0.5 * ay * t * t;
+    
+        dx += ax * t;
+        dy += ay * t;
+        // dz += (other.z - z) / d / d * G * m * other.m;
     }
   }
