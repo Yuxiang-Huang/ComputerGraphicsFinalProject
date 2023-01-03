@@ -12,7 +12,7 @@ import java.net.URL;
 public class Orbit {
     public static void main(String[] args) throws IOException{
         Screen s = new Screen();
-        
+
         //start gif
         BufferedImage firstImage = s.getimg();
         ImageOutputStream output =
@@ -26,12 +26,15 @@ public class Orbit {
         center.y = Screen.YRES/2;
         center.dx = 0;
         center.dy = 0;
+        center.m = 1.5E14;
 
-        PlanetBody planet = new PlanetBody(0.01);
-        planet.x = Screen.XRES/2;
-        planet.y = Screen.YRES/2 + 100;
-        planet.dx = 0.1;
-        planet.dy = 0;
+        PlanetBody planet = new PlanetBody(1);
+        double theta = Math.random() * Math.PI * 2;
+        double len = Math.random() * 100 + 100;
+        planet.x = Math.cos(theta) * len + Screen.XRES/2;
+        planet.y = Math.sin(theta) * len + Screen.YRES/2;
+        planet.dx = Math.random() * 10;
+        planet.dy = Math.random() * 10;
 
         //start 
         int total = 30;
@@ -39,12 +42,10 @@ public class Orbit {
             System.out.println(i);
             s.clearScreen();
 
-            planet.attract(center);
-            planet.x += planet.dx;
-            planet.y += planet.dy;
-
             // System.out.println(planet.x);
             // System.out.println(planet.y);
+
+            planet.attract(center);
 
             PolygonMatrix polys = new PolygonMatrix();
             polys.addSphere(center.x, center.y, 0,20, 10);

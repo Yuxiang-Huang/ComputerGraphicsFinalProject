@@ -5,7 +5,7 @@ public class Body{
     public double dx;
     public double dy;
     public double dz;
-    int m;
+    double m;
     double G = 0.5;
   
     int initialV = 5;

@@ -26,7 +26,7 @@ public class ThreeBody{
     csystems.push(tmp.copy());
 
     PolygonMatrix polys = new PolygonMatrix();
-    polys.addStar(0, 0, -100, 100, 100, 20);
+    polys.addStar(0, 0, -100, 100, 100, 40);
     //polys.addSphere(0, 0, 0, 100, 20);
     polys.mult(csystems.peek());
     polys.drawPolygons(s);
