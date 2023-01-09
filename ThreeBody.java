@@ -11,11 +11,11 @@ import java.net.URL;
 public class ThreeBody{
   static double t = 0.001;
   static double mass = 30 * 10E11 * 1;
-  static double default_z = 150;
+  static double default_z = 100;
   public static void main(String[] args) throws Exception {
     Screen s = new Screen();
 
-    int total = 100;
+    int total = 30;
 
     Body b0 = new Body(mass, 0);
     Body b1 = new Body(mass, 1);
@@ -26,33 +26,33 @@ public class ThreeBody{
     b2.dy = - b0.dy - b1.dy;
     b2.dz = - b0.dz - b1.dz;
 
-    b0.x = 496.1561702164919;
-    b0.y = 548.6693998977779;
-    b0.z = 150.0;
-    b0.dx = -1.6598077902177328;
-    b0.dy = -1.4528478628997075;
-    b0.dz = 0.3526704634511013;
+//     b0.x = 535.0494281889503;
+//     b0.y = 539.2980299751117;
+//     b0.z = 156.66297208445667;
+//     b0.dx = -1.6453077453770488;
+//     b0.dy = -1.4128373082378358;
+//     b0.dz = -1.6761233767700676;
     
-    b1.x = 283.51973466650884;
-    b1.y = 541.5708353060493;
-    b1.z = 150.0;
-    b1.dx = 0.2295673969311237;
-    b1.dy = -0.23761978499091774;
-    b1.dz = 1.1211459084286783;
+//     b1.x = 208.75125979780722;
+//     b1.y = 441.25842179304925;
+//     b1.z = 162.31314436784535;
+//     b1.dx = 0.5700816800919801;
+//     b1.dy = -2.4354429612028357;
+//     b1.dz = -3.232491599869356;
     
-    b2.x = 475.7573545322724;
-    b2.y = 265.1925481424053;
-    b2.z = 150.0;
-    b2.dx = 1.430240393286609;
-    b2.dy = 1.690467647890625;
-    b2.dz = -1.4738163718797797;
+//     b2.x = 379.98574865247184;
+//     b2.y = 223.01895957490063;
+//     b2.z = 178.8864397548361;
+//     b2.dx = 1.0752260652850687;
+//     b2.dy = 3.8482802694406715;
+//     b2.dz = 4.908614976639424;
     
-    planet.x = 268.7762188700392;
-    planet.y = 475.21299034791014;
-    planet.z = 150.0;
-    planet.dx = 1.878708054006043;
-    planet.dy = -0.9239167667165646;
-    planet.dz = -2.9025813030769463;
+//     planet.x = 225.78920510266408;
+// planet.y = 312.00081786696296;
+// planet.z = 157.3279293343815;
+// planet.dx = -0.4093709017808784;
+// planet.dy = -1.1913025538479292;
+// planet.dz = -1.9068488528385084;
 
     //int factor = 300;
 
@@ -105,6 +105,8 @@ public class ThreeBody{
           planet.attract(b2, t);
         }
 
+        System.out.println(b0.y);
+
         // write out the first image to our sequence...
         writer.writeToSequence(s.getimg());
     }
@@ -132,7 +134,7 @@ public class ThreeBody{
 
     PolygonMatrix polys = new PolygonMatrix();
     polys.addSphere(0, 0, 0, factor * b.z / default_z, 20);
-    // polys.mult(new Matrix(Matrix.ROTATE, Math.PI/6, 'X'));
+    // polys.mult(new Matrix(Matrix.ROTATE, Math.PI/4, 'X'));
     polys.mult(new Matrix(Matrix.TRANSLATE, b.x, b.y, b.z));
     polys.drawPolygons(s);
   }

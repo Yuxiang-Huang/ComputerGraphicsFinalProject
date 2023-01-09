@@ -5,9 +5,10 @@ public class Body{
     public double dx;
     public double dy;
     public double dz;
+
     double m;
     double G = 6.67E-11;
-  
+    int type;
     int initialV = 3;
   
     // public Body (int mass){
@@ -22,6 +23,7 @@ public class Body{
   
     public Body (double mass, int type){
       m = mass;
+      this.type = type;
       double radius = Math.random() * 50 + 150;
       double angle = 0;
   
@@ -48,17 +50,28 @@ public class Body{
   
       x = Math.cos(angle) * radius + Screen.XRES/2;
       y = Math.sin(angle) * radius + Screen.YRES/2;
-      z = Math.random() * 100 + 100;
+      z = ThreeBody.default_z + Math.random() * 100 - 50;
 
-      dx = Math.random() * initialV;
       if (x > Screen.XRES/2){
-        dx *= -1;
+        dx = Math.random() * initialV - 1.25 * initialV;
+      } else{
+        dx = Math.random() * initialV - 0.75 * initialV;
       }
-      dy = Math.random() * initialV;
       if (y > Screen.YRES/2){
-        dy *= -1;
+        dy = Math.random() * initialV - 1.25 * initialV;
+      } else{
+        dy = Math.random() * initialV - 0.75 * initialV;
       }
-      dz = Math.random() * initialV * 2 - initialV;
+      if (z > ThreeBody.default_z){
+        dz = Math.random() * initialV - 1.25 * initialV;
+      } else{
+        dz = Math.random() * initialV - 0.75 * initialV;
+      }
+
+      if (type != 3){
+        y = Screen.YRES / 2;
+        dy = 0;
+      }
     }
   
     public double dist(Body other){
@@ -86,7 +99,7 @@ public class Body{
 
         x += dx * t + 0.5 * ax * t * t;
         y += dy * t + 0.5 * ay * t * t;
-        y += dz * t + 0.5 * az * t * t;
+        z += dz * t + 0.5 * az * t * t;
     
         dx += ax * t;
         dy += ay * t;
