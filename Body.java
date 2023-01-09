@@ -8,7 +8,7 @@ public class Body{
     double m;
     double G = 6.67E-11;
   
-    int initialV = 5;
+    int initialV = 3;
   
     // public Body (int mass){
     //   x = Math.random() * 300 + 100;
@@ -49,7 +49,6 @@ public class Body{
       x = Math.cos(angle) * radius + Screen.XRES/2;
       y = Math.sin(angle) * radius + Screen.YRES/2;
       z = Math.random() * 100 + 100;
-      z = 150;
 
       dx = Math.random() * initialV;
       if (x > Screen.XRES/2){
@@ -70,6 +69,11 @@ public class Body{
     public void attract (Body other, double t){
         double d = dist(other);
         double a = G * other.m / d / d;
+
+        //shell theorem
+        if (d < 15){
+          a = G * other.m * d / 15 / 15 / 15;
+        }
 
         double theta = Math.atan2(other.y - y, other.x - x);
         double phi = Math.acos((other.z - z) / d);
