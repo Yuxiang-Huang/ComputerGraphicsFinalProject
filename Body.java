@@ -50,7 +50,7 @@ public class Body{
   
       x = Math.cos(angle) * radius + Screen.XRES/2;
       y = Math.sin(angle) * radius + Screen.YRES/2;
-      z = ThreeBody.default_z + Math.random() * 100 - 50;
+      z = Math.random() * 100 - 50;
 
       if (x > Screen.XRES/2){
         dx = Math.random() * initialV - 1.25 * initialV;
@@ -62,7 +62,7 @@ public class Body{
       } else{
         dy = Math.random() * initialV - 0.75 * initialV;
       }
-      if (z > ThreeBody.default_z){
+      if (z > 0){
         dz = Math.random() * initialV - 1.25 * initialV;
       } else{
         dz = Math.random() * initialV - 0.75 * initialV;
