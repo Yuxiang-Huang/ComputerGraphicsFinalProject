@@ -10,12 +10,12 @@ import java.net.URL;
 
 public class ThreeBody{
   static double t = 0.001;
-  static double mass = 60 * 10E11 * 1;
+  static double mass = 100 * 10E11 * 1;
   static double zfactor = 250;
   public static void main(String[] args) throws Exception {
     Screen s = new Screen();
 
-    int total = 60;
+    int total = 30;
 
     Body b0 = new Body(mass, 0);
     Body b1 = new Body(mass, 1);
@@ -26,33 +26,33 @@ public class ThreeBody{
     b2.dy = - b0.dy - b1.dy;
     b2.dz = - b0.dz - b1.dz;
 
-    b0.x = 592.9224932340734;
-    b0.y = 400.0;
-    b0.z = 21.92500589062638;
-    b0.dx = -1.649980442509496;
-    b0.dy = 0.0;
-    b0.dz = -1.900331476510374;
+    // b0.x = 650.9224932340734;
+    // b0.y = 400.0;
+    // b0.z = 21.92500589062638;
+    // b0.dx = -1.649980442509496;
+    // b0.dy = 0.0;
+    // b0.dz = -1.900331476510374;
     
-    b1.x = 219.1638875292836;
-    b1.y = 400.0;
-    b1.z = 40.56616283958891;
-    b1.dx = -0.43048894335373933;
-    b1.dy = 0.0;
-    b1.dz = -1.4533533331695945;
+    // b1.x = 219.1638875292836;
+    // b1.y = 400.0;
+    // b1.z = 40.56616283958891;
+    // b1.dx = -0.43048894335373933;
+    // b1.dy = 0.0;
+    // b1.dz = -1.4533533331695945;
     
-    b2.x = 442.20107693737987;
-    b2.y = 400.0;
-    b2.z = -34.64289784385234;
-    b2.dx = 2.0804693858632355;
-    b2.dy = -0.0;
-    b2.dz = 3.3536848096799687;
+    // b2.x = 442.20107693737987;
+    // b2.y = 400.0;
+    // b2.z = -34.64289784385234;
+    // b2.dx = 2.0804693858632355;
+    // b2.dy = -0.0;
+    // b2.dz = 3.3536848096799687;
     
-    planet.x = 294.22733907724853;
-    planet.y = 285.94987853874306;
-    planet.z = 33.33674596998483;
-    planet.dx = -2.082795403749045;
-    planet.dy = 0.7184876891947818;
-    planet.dz = -1.9433570943231206;
+    // planet.x = 294.22733907724853;
+    // planet.y = 285.94987853874306;
+    // planet.z = 33.33674596998483;
+    // planet.dx = -2.082795403749045;
+    // planet.dy = 0.7184876891947818;
+    // planet.dz = -1.9433570943231206;
 
     //int factor = 300;
 
@@ -124,7 +124,7 @@ public class ThreeBody{
   }
 
   public static void draw(Body b, Screen s){
-    int factor = 10;
+    double factor = 12.5;
 
     if (b.m == mass){
       factor = 20;

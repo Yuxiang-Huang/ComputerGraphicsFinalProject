@@ -69,7 +69,7 @@ public class Body{
       }
 
       if (type != 3){
-        y = Screen.YRES / 2;
+        y = Screen.YRES / 2 + 50;
         dy = 0;
       }
     }
