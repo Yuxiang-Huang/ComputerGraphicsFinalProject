@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class WaterDrop {
     public double x, y, z;
-    int size = 50;
+    int size = 30;
     double theta = 0;
     public boolean acc = false;
     public boolean intro = true;

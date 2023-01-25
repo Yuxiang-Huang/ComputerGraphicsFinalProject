@@ -45,7 +45,7 @@ public class DoomsdayBattle {
         for (int i = 0; i < introFrame; i ++){
             System.out.println(i);
             s.clearScreen();
-            sfp.y -= (Screen.YRES * 2 / 5) / introFrame;
+            sfp.y -= ((Screen.YRES + 150) / 2) / introFrame; //150 is the size of sfp
             sfp.display(s, view, amb, lightPos, lightColor);
             writer.writeToSequence(s.getimg());
         }
@@ -53,11 +53,11 @@ public class DoomsdayBattle {
         sfp.acc = true;
         sfp.rotateSpeed *= 2;
 
-        introFrame = 10; //7
+        introFrame = 7;
         for (int i = 0; i < introFrame; i ++){
             System.out.println(i);
             s.clearScreen();
-            sfp.y -= (Screen.YRES * 3 / 5) / introFrame;
+            sfp.y -= ((Screen.YRES + 150) / 2) / introFrame;
             sfp.display(s, view, amb, lightPos, lightColor);
             writer.writeToSequence(s.getimg());
         }
