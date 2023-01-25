@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class EdgeMatrix extends Matrix {
 
-  public void addCricle(double cx, double cy, double cz,
+  public void addCircle(double cx, double cy, double cz,
                         double r, double step) {
     double x0, y0, x1, y1, t;
 

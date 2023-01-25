@@ -2,7 +2,227 @@ import java.util.*;
 import java.awt.*;
 
 public class PolygonMatrix extends Matrix {
+  private Matrix generateCurve(double x0, double y0,
+  double x1, double y1,
+  double x2, double y2,
+  double x3, double y3, 
+  double z0,
+  int curveType, int steps) {
 
+    Matrix points = new Matrix();
+    int circle, circ_start, circ_stop;
+    double t, x, y, z;
+    circ_start = 0;
+    circ_stop = steps;
+
+    //curve stuff
+    Matrix xcoefs = new Matrix(curveType, x0, x1, x2, x3);
+    Matrix ycoefs = new Matrix(curveType, y0, y1, y2, y3);
+    double[] xm = xcoefs.get(0);
+    double[] ym = ycoefs.get(0);
+
+     //find points on line
+     for (t = 1.0 / steps; t <= 1.000001; t += 1.0 / steps) {
+      x = xm[0]*t*t*t + xm[1]*t*t+ xm[2]*t + xm[3];
+      y = ym[0]*t*t*t + ym[1]*t*t+ ym[2]*t + ym[3];
+      double r = Math.abs(x - x0);
+      //draw a circle
+      for(circle = circ_start; circle < circ_stop; circle++){
+        double circ = (double)circle / steps;
+
+        x = r * Math.cos(Math.PI * 2 * circ) + x0;
+        z = r * Math.sin(Math.PI * 2 * circ) + z0;
+        
+        points.addColumn(x, y, z);
+      }
+    }
+    return points;
+  }
+
+  public void addCurve( double x0, double y0,
+  double x1, double y1,
+  double x2, double y2,
+  double x3, double y3, 
+  double z0,
+  int curveType, int steps ) {
+
+    Matrix points = generateCurve(x0, y0, x1, y1, x2, y2, x3, y3, z0, curveType, steps);
+
+    int p0, p1, p2, p3;
+    int latStop, longStop, latStart, longStart;
+    latStart = 0;
+    latStop = steps;
+    longStart = 0;
+    longStop = steps;
+
+    for (int lat = latStart; lat < latStop; lat++ ) {
+      for (int longt = longStart; longt < longStop; longt++ ) {
+
+        p0 = lat * steps + longt;
+        if (longt == steps - 1)
+          p1 = p0 - longt;
+        else
+          p1 = p0 + 1;
+        p2 = (p1 + steps) % (steps * steps);
+        p3 = (p0 + steps) % (steps * steps);
+
+        double[] point0 = points.get(p0);
+        double[] point1 = points.get(p1);
+        double[] point2 = points.get(p2);
+        double[] point3 = points.get(p3);
+
+        if (lat == 0){
+          addPolygon(x0, y0, z0,
+          point3[0], point3[1], point3[2],
+          point2[0], point2[1], point2[2]);
+        } else if (lat == latStop - 1){
+          addPolygon(point0[0], point0[1], point0[2],
+          x1, y1, z0,
+          point1[0], point1[1], point1[2]);
+        } else{
+
+        addPolygon(point0[0], point0[1], point0[2],
+                   point3[0], point3[1], point3[2],
+                   point2[0], point2[1], point2[2]);
+        addPolygon(point0[0], point0[1], point0[2],
+                   point2[0], point2[1], point2[2],
+                   point1[0], point1[1], point1[2]);
+
+        }
+      }
+    }
+  }
+
+  private Matrix generateCylinder(double x0, double y0, double y1, double z0,
+  double r, int steps ) {
+    Matrix points = new Matrix();
+    double x, y, z;
+
+    y = Math.min(y0, y1);
+    double dy = Math.abs(y1 - y0) / steps;
+
+    //for y value of points on line
+    for (double h = 0; h < steps; h ++) {
+      //draw a circle
+      for(int circle = 0; circle < steps; circle++){
+        double circ = (double)circle / steps;
+
+        x = r * Math.cos(Math.PI * 2 * circ) + x0;
+        z = r * Math.sin(Math.PI * 2 * circ) + z0;
+        
+        points.addColumn(x, y, z);
+      }
+      y += dy;
+    }
+    return points;
+  }
+
+  public void addCylinder( double x0, double y0, double y1, double z0,
+  double r, int steps ) {
+
+    Matrix points = generateCylinder(x0, y0, y1, z0, r, steps);
+
+    int p0, p1, p2, p3, lat, longt;
+    int latStop, longStop, latStart, longStart;
+    latStart = 0;
+    latStop = steps;
+    longStart = 0;
+    longStop = steps;
+
+
+    for ( lat = latStart; lat < latStop; lat++ ) {
+      for ( longt = longStart; longt < longStop; longt++ ) {
+
+        p0 = lat * steps + longt;
+        if (longt == steps - 1)
+          p1 = p0 - longt;
+        else
+          p1 = p0 + 1;
+        p2 = (p1 + steps) % (steps * steps);
+        p3 = (p0 + steps) % (steps * steps);
+
+        double[] point0 = points.get(p0);
+        double[] point1 = points.get(p1);
+        double[] point2 = points.get(p2);
+        double[] point3 = points.get(p3);
+
+        addPolygon(point0[0], point0[1], point0[2],
+                   point3[0], point3[1], point3[2],
+                   point2[0], point2[1], point2[2]);
+        addPolygon(point0[0], point0[1], point0[2],
+                   point2[0], point2[1], point2[2],
+                   point1[0], point1[1], point1[2]);
+
+      }
+    }
+  }
+
+  private Matrix generateCone(double x0, double y0, double y1, double z0,
+  double r, int steps ) {
+    Matrix points = new Matrix();
+    double x, y, z;
+
+    y = Math.min(y0, y1);
+    double dy = Math.abs(y1 - y0) / steps;
+    double dr = r / steps;
+
+    //for y value of points on line
+    for (double h = 0; h < steps; h ++) {
+      //draw a circle
+      for(int circle = 0; circle < steps; circle++){
+        double circ = (double)circle / steps;
+
+        x = r * Math.cos(Math.PI * 2 * circ) + x0;
+        z = r * Math.sin(Math.PI * 2 * circ) + z0;
+        
+        points.addColumn(x, y, z);
+      }
+      y += dy;
+      r -= dr;
+    }
+    return points;
+  }
+
+  public void addCone( double x0, double y0, double y1, double z0,
+  double r, int steps ) {
+
+    Matrix points = generateCone(x0, y0, y1, z0, r, steps);
+
+    int p0, p1, p2, p3, lat, longt;
+    int latStop, longStop, latStart, longStart;
+    latStart = 0;
+    latStop = steps;
+    longStart = 0;
+    longStop = steps;
+
+
+    for ( lat = latStart; lat < latStop; lat++ ) {
+      for ( longt = longStart; longt < longStop; longt++ ) {
+
+        p0 = lat * steps + longt;
+        if (longt == steps - 1)
+          p1 = p0 - longt;
+        else
+          p1 = p0 + 1;
+        p2 = (p1 + steps) % (steps * steps);
+        p3 = (p0 + steps) % (steps * steps);
+
+        double[] point0 = points.get(p0);
+        double[] point1 = points.get(p1);
+        double[] point2 = points.get(p2);
+        double[] point3 = points.get(p3);
+
+        addPolygon(point0[0], point0[1], point0[2],
+                   point3[0], point3[1], point3[2],
+                   point2[0], point2[1], point2[2]);
+        addPolygon(point0[0], point0[1], point0[2],
+                   point2[0], point2[1], point2[2],
+                   point1[0], point1[1], point1[2]);
+
+      }
+    }
+  }
+  
   public void addBox( double x, double y, double z,
                        double width, double height, double depth ) {
     double x0, y0, z0, x1, y1, z1;
@@ -281,6 +501,35 @@ public class PolygonMatrix extends Matrix {
         tri.setReflection(ambient, diffuse, specular);
         //tri.calculteLighting(view, amb, lightPos, lightColor);
         tri.scanlineConvert(s);
+        // s.drawLine((int)p0[0], (int)p0[1], (int)p1[0], (int)p1[1], c);
+        // s.drawLine((int)p2[0], (int)p2[1], (int)p1[0], (int)p1[1], c);
+        // s.drawLine((int)p0[0], (int)p0[1], (int)p2[0], (int)p2[1], c);
+      }
+    }//draw lines
+  }//drawPloygons
+
+  public void drawPolygons(Screen s, GfxVector view) {
+    if ( m.size() < 3) {
+      System.out.println("Need at least 3 points to draw a polygon");
+      return;
+    }//not enough points
+
+    for(int point=0; point<m.size()-1; point+=3) {
+      double[] p0 = m.get(point);
+      double[] p1 = m.get(point+1);
+      double[] p2 = m.get(point+2);
+
+      int red = (23 * (point/3+1))%256;
+      int green = (109 * (point/3+1))%256;
+      int blue = (227 * (point/3+1))%256;
+      Color c = new Color(red, green, blue);
+
+      Polygon tri = new Polygon(p0, p1, p2, c);
+
+      double dot = tri.getNormal().dotProduct(view, false);
+
+      if (dot > 0) {
+        tri.scanlineConvertOld(s);
         // s.drawLine((int)p0[0], (int)p0[1], (int)p1[0], (int)p1[1], c);
         // s.drawLine((int)p2[0], (int)p2[1], (int)p1[0], (int)p1[1], c);
         // s.drawLine((int)p0[0], (int)p0[1], (int)p2[0], (int)p2[1], c);

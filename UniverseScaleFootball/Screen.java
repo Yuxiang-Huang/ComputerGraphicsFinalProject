@@ -53,6 +53,25 @@ public class Screen {
 
   }//clearScreen
 
+  public void drawScanline(int x0, double z0, int x1, double z1, int y, Color c) {
+    if (x0 > x1) {
+      int xt = x0;
+      x0 = x1;
+      x1 = xt;
+      double zt = z0;
+      z0 = z1;
+      z1 = zt;
+    }
+
+    double dz = (z1 - z0) / (x1 - x0);
+
+    while (x0 <= x1){
+      plot(c, x0, y, z0);
+      z0 += dz;
+      x0 ++;
+    }
+  }
+
   public void drawScanline(int x0, double z0, GfxVector n0, int x1, double z1, GfxVector n1, int y, Polygon tri) {
 
     int tx;
@@ -81,7 +100,7 @@ public class Screen {
     double t = 0.0;
 
     for(x=x0; x <= x1; x++) {
-      c = tri.calculteLighting(new GfxVector(x, y, z), n0.interpolate(n1, t));
+      c = tri.calculateLighting(new GfxVector(x, y, z), n0.interpolate(n1, t));
       plot(c, x, y, z);
       z+= delta_z;
       t += 1.0/(x1 - x0 + 1);
