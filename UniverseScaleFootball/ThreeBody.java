@@ -11,27 +11,31 @@ import java.net.URL;
 public class ThreeBody{
   static double t = 0.001;
   static double mass = 100 * 10E11 * 1;
+  static int steps = 20;
   static double zfactor = 250;
   public static void main(String[] args) throws Exception {
     //lighting
     GfxVector view = new GfxVector(0, 0, 1);
 		Color amb = new Color(255, 255, 255);
     ArrayList<GfxVector> lightPos = new ArrayList<>();
-		lightPos.add(new GfxVector(250, 400, 150));
+		lightPos.add(new GfxVector(250, 250, 1000));
 		Color lightColor = new Color(255, 255, 255);
         
     double[] ambient = new double[]{0.1, 0.1, 0.1};
     double[] diffuse = new double[]{0.5, 0.5, 0.5};
     double[] specular = new double[]{0.5, 0.5, 0.5};
 
+    //setup
+    int total = 75;
     Screen s = new Screen();
-
-    int total = 100;
 
     Body b0 = new Body(mass, 0);
     Body b1 = new Body(mass, 1);
     Body b2 = new Body(mass, 2);
     Body planet = new Body(10E7, 3);
+
+    int[][] sunRGB = createRGBMap("sun.jpg", steps);
+    int[][] planetRGB = createRGBMap("planet.jpg", steps);
 
     ArrayList<Body> bodies = new ArrayList<>(); 
     bodies.add(b0);
@@ -95,9 +99,13 @@ public class ThreeBody{
           }
       
           PolygonMatrix polys = new PolygonMatrix();
-          polys.addSphere(b.x, b.y, b.z, factor * (b.z + zfactor) / zfactor, 20);
+          polys.addSphere(b.x, b.y, b.z, factor * (b.z + zfactor) / zfactor, steps);
           polys.mult(new Matrix(Matrix.ROTATE, Math.PI/6, 'X'));
-          polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular);
+          if (b.type == 3){
+            polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular, planetRGB, steps);
+          } else{
+            polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular, sunRGB, steps);
+          }
         }
 
         //change velocity
@@ -155,5 +163,19 @@ public class ThreeBody{
     System.out.println("planet" + ".dy = " + b.dy + ";");
     System.out.println("planet" + ".dz = " + b.dz + ";");
     System.out.println();
+  }
+
+  public static int[][] createRGBMap(String name, int steps) throws IOException{
+    File file = new File(name);
+    BufferedImage image = ImageIO.read(file);
+
+    int[][] rgb = new int[steps][steps];
+
+    for (int i = 0; i < steps; i ++) {
+        for (int j = 0; j < steps; j ++) {
+            rgb[j][i] = image.getRGB(i * image.getWidth() / steps, (steps - j - 1) * image.getHeight() / steps);
+        }
+    }
+    return rgb;
   }
 }

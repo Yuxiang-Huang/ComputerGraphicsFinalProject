@@ -2,97 +2,6 @@ import java.util.*;
 import java.awt.*;
 
 public class PolygonMatrix extends Matrix {
-  private Matrix generateCurve(double x0, double y0,
-  double x1, double y1,
-  double x2, double y2,
-  double x3, double y3, 
-  double z0,
-  int curveType, int steps) {
-
-    Matrix points = new Matrix();
-    int circle, circ_start, circ_stop;
-    double t, x, y, z;
-    circ_start = 0;
-    circ_stop = steps;
-
-    //curve stuff
-    Matrix xcoefs = new Matrix(curveType, x0, x1, x2, x3);
-    Matrix ycoefs = new Matrix(curveType, y0, y1, y2, y3);
-    double[] xm = xcoefs.get(0);
-    double[] ym = ycoefs.get(0);
-
-     //find points on line
-     for (t = 1.0 / steps; t <= 1.000001; t += 1.0 / steps) {
-      x = xm[0]*t*t*t + xm[1]*t*t+ xm[2]*t + xm[3];
-      y = ym[0]*t*t*t + ym[1]*t*t+ ym[2]*t + ym[3];
-      double r = Math.abs(x - x0);
-      //draw a circle
-      for(circle = circ_start; circle < circ_stop; circle++){
-        double circ = (double)circle / steps;
-
-        x = r * Math.cos(Math.PI * 2 * circ) + x0;
-        z = r * Math.sin(Math.PI * 2 * circ) + z0;
-        
-        points.addColumn(x, y, z);
-      }
-    }
-    return points;
-  }
-
-  public void addCurve( double x0, double y0,
-  double x1, double y1,
-  double x2, double y2,
-  double x3, double y3, 
-  double z0,
-  int curveType, int steps ) {
-
-    Matrix points = generateCurve(x0, y0, x1, y1, x2, y2, x3, y3, z0, curveType, steps);
-
-    int p0, p1, p2, p3;
-    int latStop, longStop, latStart, longStart;
-    latStart = 0;
-    latStop = steps;
-    longStart = 0;
-    longStop = steps;
-
-    for (int lat = latStart; lat < latStop; lat++ ) {
-      for (int longt = longStart; longt < longStop; longt++ ) {
-
-        p0 = lat * steps + longt;
-        if (longt == steps - 1)
-          p1 = p0 - longt;
-        else
-          p1 = p0 + 1;
-        p2 = (p1 + steps) % (steps * steps);
-        p3 = (p0 + steps) % (steps * steps);
-
-        double[] point0 = points.get(p0);
-        double[] point1 = points.get(p1);
-        double[] point2 = points.get(p2);
-        double[] point3 = points.get(p3);
-
-        if (lat == 0){
-          addPolygon(x0, y0, z0,
-          point3[0], point3[1], point3[2],
-          point2[0], point2[1], point2[2]);
-        } else if (lat == latStop - 1){
-          addPolygon(point0[0], point0[1], point0[2],
-          x1, y1, z0,
-          point1[0], point1[1], point1[2]);
-        } else{
-
-        addPolygon(point0[0], point0[1], point0[2],
-                   point3[0], point3[1], point3[2],
-                   point2[0], point2[1], point2[2]);
-        addPolygon(point0[0], point0[1], point0[2],
-                   point2[0], point2[1], point2[2],
-                   point1[0], point1[1], point1[2]);
-
-        }
-      }
-    }
-  }
-
   private Matrix generateCylinder(double x0, double y0, double y1, double z0,
   double r, int steps ) {
     Matrix points = new Matrix();
@@ -508,28 +417,108 @@ public class PolygonMatrix extends Matrix {
     }//draw lines
   }//drawPloygons
 
-  public void drawPolygons(Screen s, GfxVector view) {
+  public void drawPolygons(Screen s, GfxVector view, Color amb, ArrayList<GfxVector> lightPos, Color lightColor, 
+  double[] ambient, double[] diffuse, double[] specular, int[][] texture, int steps) {
     if ( m.size() < 3) {
       System.out.println("Need at least 3 points to draw a polygon");
       return;
     }//not enough points
+
+    HashMap<String, ArrayList<GfxVector>> vertexFaceNormals = new HashMap<String, ArrayList<GfxVector>>();
+    HashMap<String, GfxVector> vertexNormals = new HashMap<String, GfxVector>();
 
     for(int point=0; point<m.size()-1; point+=3) {
       double[] p0 = m.get(point);
       double[] p1 = m.get(point+1);
       double[] p2 = m.get(point+2);
 
-      int red = (23 * (point/3+1))%256;
-      int green = (109 * (point/3+1))%256;
-      int blue = (227 * (point/3+1))%256;
-      Color c = new Color(red, green, blue);
+      Polygon tri = new Polygon(p0, p1, p2);
 
-      Polygon tri = new Polygon(p0, p1, p2, c);
+      int[] pp0, pp1, pp2;
+      pp0 = new int[3];
+      pp1 = new int[3];
+      pp2 = new int[3];
+      String[] points = new String[3];
+      for (int i = 0; i < 3; i++) {
+        pp0[i] = (int) p0[i];
+        pp1[i] = (int) p1[i];
+        pp2[i] = (int) p2[i];
+      }
+      points[0] = Arrays.toString(pp0);
+      points[1] = Arrays.toString(pp1);
+      points[2] = Arrays.toString(pp2);
 
+      for (int i = 0; i < 3; i++) {
+        if (vertexFaceNormals.containsKey(points[i])) {
+          ArrayList<GfxVector> temp = vertexFaceNormals.get(points[i]);
+          GfxVector norm = tri.getNormal().getNormalized();
+
+          boolean duplicate = false;
+          for (int j = 0; j < temp.size(); j++) {
+            if (temp.get(j).equals(norm)) {
+              duplicate = true;
+            }
+          }
+
+          if (!duplicate) {
+            temp.add(tri.getNormal().getNormalized());
+            vertexFaceNormals.put(points[i], temp);
+          } else {
+            //System.out.println("same face");
+          }
+        } else {
+          ArrayList<GfxVector> temp = new ArrayList<GfxVector>();
+          temp.add(tri.getNormal().getNormalized());
+          vertexFaceNormals.put(points[i], temp);
+        }
+      }
+    }
+    //System.out.println(vertexFaceNormals.toString());
+
+    vertexFaceNormals.forEach((key, value) -> {
+      double[] avgDir = new double[3];
+
+      for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < value.size(); j++) {
+          avgDir[i] += value.get(j).getComponent(i);
+        }
+      }
+
+      avgDir[0] /= value.size();
+      avgDir[1] /= value.size();
+      avgDir[2] /= value.size();
+
+      vertexNormals.put(key, new GfxVector(avgDir[0], avgDir[1], avgDir[2]).getNormalized());
+    });
+
+    //System.out.println(vertexNormals.toString());
+
+    //texture
+    double rowCounter = 0;
+    int colCounter = 0;
+
+    for(int point=0; point<m.size()-1; point+=3) {
+      double[] p0 = m.get(point);
+      double[] p1 = m.get(point+1);
+      double[] p2 = m.get(point+2);
+
+      rowCounter += 0.5;
+      if (rowCounter == steps-1){
+        rowCounter = 0;
+        colCounter ++;
+      }
+
+      Color c = new Color(texture[(int)rowCounter]
+      [Math.min(colCounter, texture[0].length - 1)]);
+
+      Polygon tri = new Polygon(p0, p1, p2, c, vertexNormals, view, amb, lightPos, c);
       double dot = tri.getNormal().dotProduct(view, false);
 
       if (dot > 0) {
-        tri.scanlineConvertOld(s);
+
+        tri.setReflection(ambient, diffuse, specular);
+        //tri.calculteLighting(view, amb, lightPos, lightColor);
+        tri.scanlineConvert(s);
         // s.drawLine((int)p0[0], (int)p0[1], (int)p1[0], (int)p1[1], c);
         // s.drawLine((int)p2[0], (int)p2[1], (int)p1[0], (int)p1[1], c);
         // s.drawLine((int)p0[0], (int)p0[1], (int)p2[0], (int)p2[1], c);
