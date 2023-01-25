@@ -26,7 +26,7 @@ public class ThreeBody{
     double[] specular = new double[]{0.5, 0.5, 0.5};
 
     //setup
-    int total = 200;
+    int total = 325;
     Screen s = new Screen();
 
     Body b0 = new Body(mass, 0);
@@ -43,9 +43,10 @@ public class ThreeBody{
     bodies.add(b2);
     bodies.add(planet);
 
-    b2.dx = - b0.dx - b1.dx;
-    b2.dy = - b0.dy - b1.dy;
-    b2.dz = - b0.dz - b1.dz;
+    // b2.dx = - b0.dx - b1.dx;
+    // b2.dy = - b0.dy - b1.dy;
+    // b2.dz = - b0.dz - b1.dz;
+
     b0.x = 225.1431734039289;
     b0.y = 299.9988886652912;
     b0.z = -47.36201078719667;
@@ -66,10 +67,18 @@ public class ThreeBody{
     b2.dx = 4.317940046984553;
     b2.dy = 8.856920723551432E-5;
     b2.dz = -0.613921440948297;
-    bodyInfo(b0, 0);
-    bodyInfo(b1, 1);
-    bodyInfo(b2, 2);
-    bodyInfo(planet);
+
+    planet.x = 383.27541696942706;
+    planet.y = 160.26314953065503;
+    planet.z = 106.42699031402424;
+    planet.dx = -0.955315200154736;
+    planet.dy = -0.11435082462058332;
+    planet.dz = -1.2884815576633857;
+
+    // bodyInfo(b0, 0);
+    // bodyInfo(b1, 1);
+    // bodyInfo(b2, 2);
+    // bodyInfo(planet);
 
     BufferedImage firstImage = s.getimg();
 
@@ -80,11 +89,7 @@ public class ThreeBody{
 
     for (int i = 0; i < total; i ++){
         System.out.println(i);
-        if (i == 35){
-          bodyInfo(b0, 0);
-    bodyInfo(b1, 1);
-    bodyInfo(b2, 2);
-        }
+    
         s.clearScreen();
 
         for (Body b : bodies){
