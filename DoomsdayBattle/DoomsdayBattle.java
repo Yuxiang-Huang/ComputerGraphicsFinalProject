@@ -15,7 +15,7 @@ public class DoomsdayBattle {
     public static void main(String[] args) throws IOException{
         //lighting
         GfxVector view = new GfxVector(0, 0, 1);
-		Color amb = new Color(50, 50, 50);
+		Color amb = new Color(255, 255, 255);
         ArrayList<GfxVector> lightPos = new ArrayList<>();
 		lightPos.add(new GfxVector(250, 400, 150));
 		Color lightColor = new Color(255, 255, 255);
@@ -40,27 +40,27 @@ public class DoomsdayBattle {
 
         WaterDrop sfp = new WaterDrop(ambient, diffuse, specular);
 
-    //     //entrance
-    //     int introFrame = 50; //50
-    //     for (int i = 0; i < introFrame; i ++){
-    //         System.out.println(i);
-    //         s.clearScreen();
-    //         sfp.y -= ((Screen.YRES + 150) / 2) / introFrame; //150 is the size of sfp
-    //         sfp.display(s, view, amb, lightPos, lightColor);
-    //         writer.writeToSequence(s.getimg());
-    //     }
+        //entrance
+        int introFrame = 50; //50
+        for (int i = 0; i < introFrame; i ++){
+            System.out.println(i);
+            s.clearScreen();
+            sfp.y -= ((Screen.YRES + 150) / 2) / introFrame; //150 is the size of sfp
+            sfp.display(s, view, amb, lightPos, lightColor);
+            writer.writeToSequence(s.getimg());
+        }
 
-    //     sfp.acc = true;
-    //     sfp.rotateSpeed *= 2;
+        sfp.acc = true;
+        sfp.rotateSpeed *= 2;
 
-    //     introFrame = 7;
-    //     for (int i = 0; i < introFrame; i ++){
-    //         System.out.println(i);
-    //         s.clearScreen();
-    //         sfp.y -= ((Screen.YRES + 150) / 2) / introFrame;
-    //         sfp.display(s, view, amb, lightPos, lightColor);
-    //         writer.writeToSequence(s.getimg());
-    //     }
+        introFrame = 7;
+        for (int i = 0; i < introFrame; i ++){
+            System.out.println(i);
+            s.clearScreen();
+            sfp.y -= ((Screen.YRES + 150) / 2) / introFrame;
+            sfp.display(s, view, amb, lightPos, lightColor);
+            writer.writeToSequence(s.getimg());
+        }
 
         //start battle
         sfp.intro = false;
@@ -129,7 +129,7 @@ public class DoomsdayBattle {
 
         sfp.end = true;
 
-        while (sfp.size < 200){
+        while (sfp.size < 150){
             s.clearScreen();
             sfp.size += 2;
             System.out.println(sfp.size);

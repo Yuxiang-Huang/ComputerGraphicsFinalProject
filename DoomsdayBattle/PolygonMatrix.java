@@ -48,15 +48,15 @@ public class PolygonMatrix extends Matrix {
 
     Matrix points = generateCurve(x0, y0, x1, y1, x2, y2, x3, y3, z0, curveType, steps);
 
-    int p0, p1, p2, p3, lat, longt;
+    int p0, p1, p2, p3;
     int latStop, longStop, latStart, longStart;
     latStart = 0;
     latStop = steps;
     longStart = 0;
     longStop = steps;
 
-    for ( lat = latStart; lat < latStop; lat++ ) {
-      for ( longt = longStart; longt < longStop; longt++ ) {
+    for (int lat = latStart; lat < latStop; lat++ ) {
+      for (int longt = longStart; longt < longStop; longt++ ) {
 
         p0 = lat * steps + longt;
         if (longt == steps - 1)
@@ -71,6 +71,16 @@ public class PolygonMatrix extends Matrix {
         double[] point2 = points.get(p2);
         double[] point3 = points.get(p3);
 
+        if (lat == 0){
+          addPolygon(x0, y0, z0,
+          point3[0], point3[1], point3[2],
+          point2[0], point2[1], point2[2]);
+        } else if (lat == latStop - 1){
+          addPolygon(point0[0], point0[1], point0[2],
+          x1, y1, z0,
+          point1[0], point1[1], point1[2]);
+        } else{
+
         addPolygon(point0[0], point0[1], point0[2],
                    point3[0], point3[1], point3[2],
                    point2[0], point2[1], point2[2]);
@@ -78,8 +88,31 @@ public class PolygonMatrix extends Matrix {
                    point2[0], point2[1], point2[2],
                    point1[0], point1[1], point1[2]);
 
+        }
       }
     }
+
+    //tail
+    // for (int longt = longStart + 1; longt < longStop; longt++ ) {
+    //   addPolygon(x1, y1, z0, 
+    //   points.get(points.m.size() - longStop - longt)[0], 
+    //   points.get(points.m.size() - longStop - longt)[1], 
+    //   points.get(points.m.size() - longStop - longt)[2],
+    //   points.get(points.m.size() - longStop - longt - 1)[0], 
+    //   points.get(points.m.size() - longStop - longt - 1)[1], 
+    //   points.get(points.m.size() - longStop - longt - 1)[2]);
+    // }
+
+    // //head
+    // for (int longt = longStart - 1; longt < longStop; longt++ ) {
+    //   addPolygon(x0, y0, z0, 
+    //   points.get(longt + longStop)[0], points.get(longt + longStop)[1], points.get(longt + longStop)[2],
+    //   points.get(longt + 1 + longStop)[0], points.get(longt + 1 + longStop)[1], points.get(longt + 1 + longStop)[2]);
+    // }
+    // addPolygon(x0, y0, z0, 
+    // points.get(longStop)[0], points.get(longStop)[1], points.get(longStop)[2],
+    // points.get(0)[0], points.get(0)[1], points.get(0)[2]
+    // );
   }
 
   private Matrix generateCylinder(double x0, double y0, double y1, double z0,

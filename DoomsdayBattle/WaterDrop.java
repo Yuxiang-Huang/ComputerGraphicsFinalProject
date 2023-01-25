@@ -165,7 +165,7 @@ public class WaterDrop {
 
         //draw
         PolygonMatrix polys = new PolygonMatrix();
-        polys.addCurve(0, 0, 0, size, -size, 0, 0, size, 0, Matrix.HERMITE, 20);
+        polys.addCurve(0, 0, 0, size, -size, 0, 0, size, 0, Matrix.HERMITE, 30);
         polys.mult(csystems.peek());
         polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular);
     }
@@ -201,7 +201,7 @@ public class WaterDrop {
 
         //draw
         PolygonMatrix polys = new PolygonMatrix();
-        polys.addCurve(0, 0, 0, size, -size, 0, 0, size, 0, Matrix.HERMITE, 20);
+        polys.addCurve(0, 0, 0, size, -size, 0, 0, size, 0, Matrix.HERMITE, 30);
         polys.mult(csystems.peek());
         polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular);
 
