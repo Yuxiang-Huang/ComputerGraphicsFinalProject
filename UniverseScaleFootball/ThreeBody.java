@@ -14,9 +14,8 @@ public class ThreeBody{
   public static void main(String[] args) throws Exception {
     //lighting
     GfxVector view = new GfxVector(0, 0, 1);
-		Color amb = new Color(255, 255, 255);
+		Color amb = new Color(50, 50, 50);
     ArrayList<GfxVector> lightPos = new ArrayList<>();
-		lightPos.add(new GfxVector(250, 250, 1000));
 		Color lightColor = new Color(255, 255, 255);
         
     double[] ambient = new double[]{0.1, 0.1, 0.1};
@@ -24,12 +23,13 @@ public class ThreeBody{
     double[] specular = new double[]{0.5, 0.5, 0.5};
 
     //setup
-    int total = 50; //325
+    int total = 325; //325
     Screen s = new Screen();
 
     int[][] sunRGB = createRGBMap("sun.jpg", steps);
     int[][] planetRGB = createRGBMap("planet.jpg", steps);
-    //int[][] frozen = createRGBMap("frozen.jpg", steps);
+    int[][] frozen = createRGBMap("frozen.png", steps);
+    int[][] fire = createRGBMap("fire.jpg", steps);
 
     Body b0 = new Body(mass, 0, ambient, diffuse, specular, sunRGB);
     Body b1 = new Body(mass, 1, ambient, diffuse, specular, sunRGB);
@@ -90,6 +90,26 @@ public class ThreeBody{
         System.out.println(i);
     
         s.clearScreen();
+
+        if (i == 150){
+          bodyInfo(b0, 0);
+    bodyInfo(b1, 1);
+    bodyInfo(b2, 2);
+    bodyInfo(planet);
+        }
+
+        // if (i == 190){
+        //   planet.texture = frozen;
+        // }
+        // else if (i == 270){
+        //   planet.texture = fire;
+        // }
+
+        lightPos = new ArrayList<>();
+        lightPos.add(new GfxVector(250, 250, 1000));
+		    lightPos.add(new GfxVector(b0.x, b0.y, b0.z));
+        lightPos.add(new GfxVector(b1.x, b1.y, b1.z));
+        lightPos.add(new GfxVector(b2.x, b2.y, b2.z));
 
         for (Body b : bodies){
           b.display(s, view, amb, lightPos, lightColor, steps);

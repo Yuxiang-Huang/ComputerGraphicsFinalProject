@@ -526,4 +526,44 @@ public class PolygonMatrix extends Matrix {
     }//draw lines
   }//drawPloygons
 
+  public void drawPolygons(Screen s, GfxVector view, int[][] rgb, int steps) {
+    if ( m.size() < 3) {
+      System.out.println("Need at least 3 points to draw a polygon");
+      return;
+    }//not enough points
+
+    double rowCounter = 0;
+    int colCounter = 0;
+
+    // System.out.println(rgb.length);
+    // System.out.println(rgb[0].length);
+
+    // System.out.println(m.size()/3);
+
+    for(int point=0; point<m.size()-1; point+=3) {
+      double[] p0 = m.get(point);
+      double[] p1 = m.get(point+1);
+      double[] p2 = m.get(point+2);
+
+      rowCounter += 0.5;
+      if (rowCounter == steps-1){
+        rowCounter = 0;
+        colCounter ++;
+      }
+
+      Color c = new Color(rgb[(int)rowCounter]
+      [Math.min(colCounter, rgb[0].length - 1)]);
+
+      Polygon tri = new Polygon(p0, p1, p2, c);
+      double dot = tri.getNormal().dotProduct(view, false);
+
+      if (dot > 0) {
+        tri.scanlineConvertOld(s);
+        // s.drawLine((int)p0[0], (int)p0[1], (int)p1[0], (int)p1[1], c);
+        // s.drawLine((int)p2[0], (int)p2[1], (int)p1[0], (int)p1[1], c);
+        // s.drawLine((int)p0[0], (int)p0[1], (int)p2[0], (int)p2[1], c);
+      }
+    }//draw lines
+  }//drawPloygons
+
 }//class PolygonMatrix

@@ -145,6 +145,10 @@ public class Body{
         PolygonMatrix polys = new PolygonMatrix();
         polys.addSphere(0, 0, 0, factor * (z + zfactor) / zfactor, steps);
         polys.mult(csystems.peek());
-        polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular, texture, steps);
+        if (type == 3){
+          polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular, texture, steps);
+        } else{
+          polys.drawPolygons(s, view, texture, steps);
+        }
     }
   }
