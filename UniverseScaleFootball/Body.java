@@ -120,8 +120,9 @@ public class Body{
         Matrix transform = new Matrix();
         transform.ident();
         Stack<Matrix> csystems = new Stack<Matrix>();
-        Matrix tmp;
-        csystems.push(transform);
+        Matrix tmp = new Matrix(Matrix.ROTATE, Math.PI/6, 'X');
+        tmp.mult(transform);
+        csystems.push(tmp.copy());
 
         tmp = new Matrix(Matrix.TRANSLATE, x, y, z);
         tmp.mult(csystems.peek());
@@ -131,10 +132,19 @@ public class Body{
         tmp.mult(csystems.peek());
         csystems.push(tmp.copy());
 
+        if (type != 3){
+          tmp = new Matrix(Matrix.ROTATE, Math.PI * 2 / 3 * type, 'Z');
+          tmp.mult(csystems.peek());
+          csystems.push(tmp.copy());
+        }
+
+        tmp = new Matrix(Matrix.ROTATE, Math.PI / 2, 'Z');
+        tmp.mult(csystems.peek());
+        csystems.push(tmp.copy());
+
         PolygonMatrix polys = new PolygonMatrix();
         polys.addSphere(0, 0, 0, factor * (z + zfactor) / zfactor, steps);
         polys.mult(csystems.peek());
-        polys.mult(new Matrix(Matrix.ROTATE, Math.PI/6, 'X'));
         polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular, texture, steps);
     }
   }
