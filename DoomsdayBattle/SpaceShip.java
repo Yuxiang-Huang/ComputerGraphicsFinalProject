@@ -5,7 +5,7 @@ public class SpaceShip {
     public double x, y, z;
     public double xtheta = -Math.PI / 6;
     public double ztheta = Math.PI / 2;
-    int size = 15;
+    int size = 10;
 
     //for special movement
     double randomDirection = Math.random() * Math.PI * 2;
@@ -17,12 +17,12 @@ public class SpaceShip {
     //lighting
     double[] ambient, diffuse, specular;
 
-    public SpaceShip(int i, int j, double[] ambient, double[] diffuse, double[] specular){
-        x = Screen.XRES * (2 * i + 3) / 12;
+    public SpaceShip(int i, int j){
+        x = Screen.XRES * (2 * i + 1) / 10;
         y = Screen.YRES * (2 * j + 3) / 14;
-        this.ambient = ambient;
-        this.diffuse = diffuse;
-        this.specular = specular;
+        this.ambient = new double[]{0.2, 0.2, 0.2};
+        this.diffuse =  new double[]{0.5, 0.5, 0.5};
+        this.specular = new double[]{0.5, 0.5, 0.5};
     }
 
     public void forward (){
@@ -108,9 +108,10 @@ public class SpaceShip {
         polys.addCylinder(0, size, size * 3, 0, size/4, 20);
         polys.addCone(0, size * 2, size * 4.5, 0, size/3, 20);
         //back
-        polys.addCylinder(size, -size/3, -size*4, 0, size/3, 20);
-        polys.addCylinder(-size, -size/3, -size*4, 0, size/3, 20);
-        polys.addCylinder(0, -size/3, -size*3.5, 0, size/3, 20);
+        polys.addCylinder(size*1.5, -size/3, -size*4, 0, size/3, 20);
+        polys.addCylinder(-size*1.5, -size/3, -size*4, 0, size/3, 20);
+        polys.addCylinder(size/2, -size/3, -size*3.5, 0, size/3, 20);
+        polys.addCylinder(-size/2, -size/3, -size*3.5, 0, size/3, 20);
         //front
         polys.addCylinder(size/1.5, size, size*3.5, 0, size/4, 20);
         polys.addCylinder(-size/1.5, size, size*3.5, 0, size/4, 20);

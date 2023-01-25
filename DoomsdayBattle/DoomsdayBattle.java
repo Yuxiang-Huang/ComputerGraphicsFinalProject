@@ -40,27 +40,27 @@ public class DoomsdayBattle {
 
         WaterDrop sfp = new WaterDrop(ambient, diffuse, specular);
 
-        //entrance
-        int introFrame = 50; //50
-        for (int i = 0; i < introFrame; i ++){
-            System.out.println(i);
-            s.clearScreen();
-            sfp.y -= ((Screen.YRES + 150) / 2) / introFrame; //150 is the size of sfp
-            sfp.display(s, view, amb, lightPos, lightColor);
-            writer.writeToSequence(s.getimg());
-        }
+        // //entrance
+        // int introFrame = 50; //50
+        // for (int i = 0; i < introFrame; i ++){
+        //     System.out.println(i);
+        //     s.clearScreen();
+        //     sfp.y -= ((Screen.YRES + 150) / 2) / introFrame; //150 is the size of sfp
+        //     sfp.display(s, view, amb, lightPos, lightColor);
+        //     writer.writeToSequence(s.getimg());
+        // }
 
-        sfp.acc = true;
-        sfp.rotateSpeed *= 2;
+        // sfp.acc = true;
+        // sfp.rotateSpeed *= 2;
 
-        introFrame = 7;
-        for (int i = 0; i < introFrame; i ++){
-            System.out.println(i);
-            s.clearScreen();
-            sfp.y -= ((Screen.YRES + 150) / 2) / introFrame;
-            sfp.display(s, view, amb, lightPos, lightColor);
-            writer.writeToSequence(s.getimg());
-        }
+        // introFrame = 7;
+        // for (int i = 0; i < introFrame; i ++){
+        //     System.out.println(i);
+        //     s.clearScreen();
+        //     sfp.y -= ((Screen.YRES + 150) / 2) / introFrame;
+        //     sfp.display(s, view, amb, lightPos, lightColor);
+        //     writer.writeToSequence(s.getimg());
+        // }
 
         //start battle
         sfp.intro = false;
@@ -72,13 +72,18 @@ public class DoomsdayBattle {
         ArrayList<SpaceShip> explode = new ArrayList<>();
         for (int i = 0; i < 4; i ++){
             for (int j = 0; j < 5; j ++){
-                ships.add(new SpaceShip(i, j, ambient, diffuse, specular));
+                ships.add(new SpaceShip(i, j));
             }
         }
 
-        //ships = new ArrayList<>();
+        lightPos.remove(0);
+        lightPos.add(new GfxVector(250, 250, 150));
 
-    //     //animation battle
+        for (SpaceShip ship : ships){
+            ship.display(s, view, amb, lightPos, lightColor);
+        }
+
+        //animation battle
     //     int battleframe = 30;
     //     for (int i = 0; i < battleframe; i ++){
     //     //int i = -1;
@@ -97,7 +102,7 @@ public class DoomsdayBattle {
     //             if (tooClose(ship, ships)){
     //                 tmp.add(ship);
     //             } else{
-    //                 ship.display(s);
+    //                 ship.display(s, view, amb, lightPos, lightColor);
     //             }
     //         }
     //         for (SpaceShip ship : tmp){
@@ -109,39 +114,41 @@ public class DoomsdayBattle {
     //         for (int j = explode.size() - 1; j >= 0 ; j--){
     //             SpaceShip ship = explode.get(j);
     //             if (ship.expand){
-    //                 ship.display(s);
+    //                 ship.display(s, view, amb, lightPos, lightColor);
     //             }
-    //             ship.explode(s, explode);
+    //             ship.explode(s, explode, view, amb, lightPos, lightColor);
     //         }
     //         writer.writeToSequence(s.getimg());
     //     }
 
-        // //move towards viewer
-        // while (sfp.x != Screen.XRES/2 || sfp.y != Screen.YRES/2){
-        //     s.clearScreen();
-        //     sfp.end();
-        //     sfp.display(s);
-        //     writer.writeToSequence(s.getimg());
-        // }
+    //     // //move towards viewer
+    //     // while (sfp.x != Screen.XRES/2 || sfp.y != Screen.YRES/2){
+    //     //     s.clearScreen();
+    //     //     sfp.end();
+    //     //     sfp.display(s);
+    //     //     writer.writeToSequence(s.getimg());
+    //     // }
 
-        //display animation
-        URL url = DoomsdayBattle.class.getResource("DoomsdayBattle.gif");
-        Icon icon = new ImageIcon(url);
-        JLabel label = new JLabel(icon);
-        JFrame f = new JFrame("Animation");
-        f.getContentPane().add(label);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.pack();
-        f.setLocationRelativeTo(null);
-        f.setVisible(true);
-        writer.close();
-        output.close();
+    //     //display animation
+    //     URL url = DoomsdayBattle.class.getResource("DoomsdayBattle.gif");
+    //     Icon icon = new ImageIcon(url);
+    //     JLabel label = new JLabel(icon);
+    //     JFrame f = new JFrame("Animation");
+    //     f.getContentPane().add(label);
+    //     f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    //     f.pack();
+    //     f.setLocationRelativeTo(null);
+    //     f.setVisible(true);
+    //     writer.close();
+    //     output.close();
+
+        s.display();
     }
 
     public static boolean tooClose(SpaceShip ship, ArrayList<SpaceShip> ships){
         for (SpaceShip other : ships){
             if (!ship.equals(other)){
-                if (dist(ship, other) < 75){
+                if (dist(ship, other) < 30){
                     return true;
                 }
             }
