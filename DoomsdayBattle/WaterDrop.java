@@ -5,8 +5,9 @@ public class WaterDrop {
     public double x, y, z;
     int size = 30;
     double theta = 0;
-    public boolean acc = false;
+    public boolean acc = true;
     public boolean intro = true;
+    public boolean end = false;
 
     double direction = 0;
     double rotateSpeed = Math.PI * 2 / 100;
@@ -144,24 +145,38 @@ public class WaterDrop {
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
-        //direction
-        tmp = new Matrix(Matrix.ROTATE, direction, 'Z');
-        tmp.mult(csystems.peek());
-        csystems.pop();
-        csystems.push(tmp.copy());
-
-        //self rotate
-        theta += rotateSpeed;
-        tmp = new Matrix(Matrix.ROTATE, theta, 'Y');
-        tmp.mult(csystems.peek());
-        csystems.pop();
-        csystems.push(tmp.copy());
-
-        //dilate
-        if (intro){
-            tmp = new Matrix(Matrix.SCALE, 5, 5, 5);
+        if (end){ //at viewer
+            tmp = new Matrix(Matrix.ROTATE, -Math.PI/2, 'X');
             tmp.mult(csystems.peek());
+            csystems.pop();
             csystems.push(tmp.copy());
+
+            //self rotate
+            theta += rotateSpeed;
+            tmp = new Matrix(Matrix.ROTATE, theta, 'Y');
+            tmp.mult(csystems.peek());
+            csystems.pop();
+            csystems.push(tmp.copy());
+        } else{
+            //direction
+            tmp = new Matrix(Matrix.ROTATE, direction, 'Z');
+            tmp.mult(csystems.peek());
+            csystems.pop();
+            csystems.push(tmp.copy());
+
+            //self rotate
+            theta += rotateSpeed;
+            tmp = new Matrix(Matrix.ROTATE, theta, 'Y');
+            tmp.mult(csystems.peek());
+            csystems.pop();
+            csystems.push(tmp.copy());
+
+            //dilate
+            if (intro){
+                tmp = new Matrix(Matrix.SCALE, 5, 5, 5);
+                tmp.mult(csystems.peek());
+                csystems.push(tmp.copy());
+            } 
         }
 
         //draw
@@ -177,13 +192,50 @@ public class WaterDrop {
                 expandY = y;
                 expandAngle = direction + Math.PI/2;
             }
-            animateAcc(s, view, amb, lightPos, lightColor);
+            if (end){
+                endAnimateAcc(s, view, amb, lightPos, lightColor);
+            } else{
+                animateAcc(s, view, amb, lightPos, lightColor);
+            }
             if (expand >= 2){
                 expand = 0;
             } else{
                 expand += 0.4;
             }
         }
+    }
+
+    void endAnimateAcc(Screen s, GfxVector view, Color amb, ArrayList<GfxVector> lightPos, Color lightColor){
+        direction += Math.PI/2;
+
+        Matrix transform = new Matrix();
+        transform.ident();
+        Stack<Matrix> csystems = new Stack<Matrix>();
+        Matrix tmp;
+
+        //translate to the center
+        tmp = new Matrix(Matrix.TRANSLATE, expandX, expandY, z);
+        tmp.mult(transform);
+        csystems.push(tmp.copy());
+
+        tmp = new Matrix(Matrix.ROTATE, Math.PI/2, 'X');
+        tmp.mult(csystems.peek());
+        csystems.pop();
+        csystems.push(tmp.copy());
+
+        //dilates
+        tmp = new Matrix(Matrix.SCALE, size / 10, size / 10, size / 10);
+        tmp.mult(csystems.peek());
+        csystems.push(tmp.copy());
+        tmp = new Matrix(Matrix.SCALE, expand, expand, expand);
+        tmp.mult(csystems.peek());
+        csystems.push(tmp.copy());
+
+        //draw
+        PolygonMatrix polys = new PolygonMatrix();
+        polys.addTorus(0, 0, z, 1, 5, 20);
+        polys.mult(csystems.peek());
+        polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular);
     }
 
     void animateAcc(Screen s, GfxVector view, Color amb, ArrayList<GfxVector> lightPos, Color lightColor){
@@ -218,7 +270,7 @@ public class WaterDrop {
             tmp = new Matrix(Matrix.SCALE, 5, 1, 5);
             tmp.mult(csystems.peek());
             csystems.push(tmp.copy());
-        }
+        } 
         tmp = new Matrix(Matrix.SCALE, expand, 1, 1);
         tmp.mult(csystems.peek());
         csystems.push(tmp.copy());

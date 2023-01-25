@@ -76,15 +76,17 @@ public class DoomsdayBattle {
             }
         }
 
+        ships = new ArrayList<SpaceShip>();
+
         lightPos.remove(0);
-        lightPos.add(new GfxVector(250, 250, 150));
+        lightPos.add(new GfxVector(250, 250, 1000));
 
         //animation battle
-        int battleframe = 60;
-        for (int i = 0; i < battleframe; i ++){
-        //int i = -1;
-       // while (ships.size() != 0){
-            //i ++;
+        // int battleframe = 60;
+        // for (int i = 0; i < battleframe; i ++){
+        int i = -1;
+       while (ships.size() != 0){
+            i ++;
             s.clearScreen();
             System.out.println(i);
             sfp.update(ships, explode);
@@ -117,13 +119,25 @@ public class DoomsdayBattle {
             writer.writeToSequence(s.getimg());
         }
 
-        // //move towards viewer
-        // while (sfp.x != Screen.XRES/2 || sfp.y != Screen.YRES/2){
-        //     s.clearScreen();
-        //     sfp.end();
-        //     sfp.display(s);
-        //     writer.writeToSequence(s.getimg());
-        // }
+        //move towards viewer
+        while (sfp.x != Screen.XRES/2 || sfp.y != Screen.YRES/2){
+            s.clearScreen();
+            sfp.end();
+            sfp.display(s, view, amb, lightPos, lightColor);
+            writer.writeToSequence(s.getimg());
+        }
+
+        sfp.end = true;
+        sfp.expandX = 250;
+        sfp.expandY = 250;
+
+        while (sfp.size < 75){
+            s.clearScreen();
+            sfp.size ++;
+            System.out.println(sfp.size);
+            sfp.display(s, view, amb, lightPos, lightColor);
+            writer.writeToSequence(s.getimg());
+        }
 
         //display animation
         URL url = DoomsdayBattle.class.getResource("DoomsdayBattle.gif");
