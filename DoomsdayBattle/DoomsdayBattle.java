@@ -40,27 +40,27 @@ public class DoomsdayBattle {
 
         WaterDrop sfp = new WaterDrop(ambient, diffuse, specular);
 
-        // //entrance
-        // int introFrame = 50; //50
-        // for (int i = 0; i < introFrame; i ++){
-        //     System.out.println(i);
-        //     s.clearScreen();
-        //     sfp.y -= ((Screen.YRES + 150) / 2) / introFrame; //150 is the size of sfp
-        //     sfp.display(s, view, amb, lightPos, lightColor);
-        //     writer.writeToSequence(s.getimg());
-        // }
+    //     //entrance
+    //     int introFrame = 50; //50
+    //     for (int i = 0; i < introFrame; i ++){
+    //         System.out.println(i);
+    //         s.clearScreen();
+    //         sfp.y -= ((Screen.YRES + 150) / 2) / introFrame; //150 is the size of sfp
+    //         sfp.display(s, view, amb, lightPos, lightColor);
+    //         writer.writeToSequence(s.getimg());
+    //     }
 
-        // sfp.acc = true;
-        // sfp.rotateSpeed *= 2;
+    //     sfp.acc = true;
+    //     sfp.rotateSpeed *= 2;
 
-        // introFrame = 7;
-        // for (int i = 0; i < introFrame; i ++){
-        //     System.out.println(i);
-        //     s.clearScreen();
-        //     sfp.y -= ((Screen.YRES + 150) / 2) / introFrame;
-        //     sfp.display(s, view, amb, lightPos, lightColor);
-        //     writer.writeToSequence(s.getimg());
-        // }
+    //     introFrame = 7;
+    //     for (int i = 0; i < introFrame; i ++){
+    //         System.out.println(i);
+    //         s.clearScreen();
+    //         sfp.y -= ((Screen.YRES + 150) / 2) / introFrame;
+    //         sfp.display(s, view, amb, lightPos, lightColor);
+    //         writer.writeToSequence(s.getimg());
+    //     }
 
         //start battle
         sfp.intro = false;
@@ -128,14 +128,12 @@ public class DoomsdayBattle {
         }
 
         sfp.end = true;
-        sfp.expandX = 250;
-        sfp.expandY = 250;
 
-        while (sfp.size < 75){
+        while (sfp.size < 200){
             s.clearScreen();
-            sfp.size ++;
+            sfp.size += 2;
             System.out.println(sfp.size);
-            sfp.display(s, view, amb, lightPos, lightColor);
+            sfp.endDisplay(s, view, amb, lightPos, lightColor);
             writer.writeToSequence(s.getimg());
         }
 

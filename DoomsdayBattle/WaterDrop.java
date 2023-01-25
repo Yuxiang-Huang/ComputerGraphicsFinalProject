@@ -136,6 +136,40 @@ public class WaterDrop {
         return Math.sqrt((sfp.x - ship.x) * (sfp.x - ship.x) + (sfp.y - ship.y) * (sfp.y - ship.y));
     }
 
+    public void endDisplay(Screen s, GfxVector view, Color amb, ArrayList<GfxVector> lightPos, Color lightColor){
+        //translate to the center of the ship
+        Matrix transform = new Matrix();
+        transform.ident();
+        Stack<Matrix> csystems = new Stack<Matrix>();
+        Matrix tmp = new Matrix(Matrix.TRANSLATE, x, y, z);
+        tmp.mult(transform);
+        csystems.push(tmp.copy());
+
+         //at viewer
+        tmp = new Matrix(Matrix.ROTATE, -Math.PI/2, 'X');
+        tmp.mult(csystems.peek());
+        csystems.pop();
+        csystems.push(tmp.copy());
+
+        //self rotate
+        theta += rotateSpeed;
+        tmp = new Matrix(Matrix.ROTATE, theta, 'Y');
+        tmp.mult(csystems.peek());
+        csystems.pop();
+        csystems.push(tmp.copy());
+
+        //dilate
+        tmp = new Matrix(Matrix.SCALE, size / 30.0, size / 30.0, size / 30.0);
+        tmp.mult(csystems.peek());
+        csystems.push(tmp.copy());
+
+        //draw
+        PolygonMatrix polys = new PolygonMatrix();
+        polys.addCurve(0, 0, 0, size, -size, 0, 0, size, 0, Matrix.HERMITE, 20);
+        polys.mult(csystems.peek());
+        polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular);
+    }
+
     public void display(Screen s, GfxVector view, Color amb, ArrayList<GfxVector> lightPos, Color lightColor){
         //translate to the center of the ship
         Matrix transform = new Matrix();
@@ -145,39 +179,25 @@ public class WaterDrop {
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
-        if (end){ //at viewer
-            tmp = new Matrix(Matrix.ROTATE, -Math.PI/2, 'X');
-            tmp.mult(csystems.peek());
-            csystems.pop();
-            csystems.push(tmp.copy());
+        //direction
+        tmp = new Matrix(Matrix.ROTATE, direction, 'Z');
+        tmp.mult(csystems.peek());
+        csystems.pop();
+        csystems.push(tmp.copy());
 
-            //self rotate
-            theta += rotateSpeed;
-            tmp = new Matrix(Matrix.ROTATE, theta, 'Y');
-            tmp.mult(csystems.peek());
-            csystems.pop();
-            csystems.push(tmp.copy());
-        } else{
-            //direction
-            tmp = new Matrix(Matrix.ROTATE, direction, 'Z');
-            tmp.mult(csystems.peek());
-            csystems.pop();
-            csystems.push(tmp.copy());
+        //self rotate
+        theta += rotateSpeed;
+        tmp = new Matrix(Matrix.ROTATE, theta, 'Y');
+        tmp.mult(csystems.peek());
+        csystems.pop();
+        csystems.push(tmp.copy());
 
-            //self rotate
-            theta += rotateSpeed;
-            tmp = new Matrix(Matrix.ROTATE, theta, 'Y');
+        //dilate
+        if (intro){
+            tmp = new Matrix(Matrix.SCALE, 5, 5, 5);
             tmp.mult(csystems.peek());
-            csystems.pop();
             csystems.push(tmp.copy());
-
-            //dilate
-            if (intro){
-                tmp = new Matrix(Matrix.SCALE, 5, 5, 5);
-                tmp.mult(csystems.peek());
-                csystems.push(tmp.copy());
-            } 
-        }
+        } 
 
         //draw
         PolygonMatrix polys = new PolygonMatrix();
@@ -192,50 +212,13 @@ public class WaterDrop {
                 expandY = y;
                 expandAngle = direction + Math.PI/2;
             }
-            if (end){
-                endAnimateAcc(s, view, amb, lightPos, lightColor);
-            } else{
-                animateAcc(s, view, amb, lightPos, lightColor);
-            }
+            animateAcc(s, view, amb, lightPos, lightColor);
             if (expand >= 2){
                 expand = 0;
             } else{
                 expand += 0.4;
             }
         }
-    }
-
-    void endAnimateAcc(Screen s, GfxVector view, Color amb, ArrayList<GfxVector> lightPos, Color lightColor){
-        direction += Math.PI/2;
-
-        Matrix transform = new Matrix();
-        transform.ident();
-        Stack<Matrix> csystems = new Stack<Matrix>();
-        Matrix tmp;
-
-        //translate to the center
-        tmp = new Matrix(Matrix.TRANSLATE, expandX, expandY, z);
-        tmp.mult(transform);
-        csystems.push(tmp.copy());
-
-        tmp = new Matrix(Matrix.ROTATE, Math.PI/2, 'X');
-        tmp.mult(csystems.peek());
-        csystems.pop();
-        csystems.push(tmp.copy());
-
-        //dilates
-        tmp = new Matrix(Matrix.SCALE, size / 10, size / 10, size / 10);
-        tmp.mult(csystems.peek());
-        csystems.push(tmp.copy());
-        tmp = new Matrix(Matrix.SCALE, expand, expand, expand);
-        tmp.mult(csystems.peek());
-        csystems.push(tmp.copy());
-
-        //draw
-        PolygonMatrix polys = new PolygonMatrix();
-        polys.addTorus(0, 0, z, 1, 5, 20);
-        polys.mult(csystems.peek());
-        polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular);
     }
 
     void animateAcc(Screen s, GfxVector view, Color amb, ArrayList<GfxVector> lightPos, Color lightColor){
