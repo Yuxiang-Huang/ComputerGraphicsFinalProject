@@ -1,3 +1,6 @@
+import java.util.*;
+import java.awt.*;
+
 public class Body{
     public double x;
     public double y;
@@ -10,20 +13,20 @@ public class Body{
     double G = 6.67E-11;
     int type;
     int initialV = 3;
-  
-    // public Body (int mass){
-    //   x = Math.random() * 300 + 100;
-    //   y = Math.random() * 300 + 100;
-    //   z = Math.random() * 300 + 100;
-    //   dx = Math.random() * initialV * 2 - initialV;
-    //   dy = Math.random() * initialV * 2 - initialV;
-    //   //dz = Math.random() * initialV * 2 - initialV;
-    //   m = mass;
-    // }
-  
-    public Body (double mass, int type){
+
+    //display
+    public double theta;
+    double zfactor = 500;
+    int[][] texture;
+    double[] ambient, diffuse, specular;
+
+    public Body (double mass, int type, double[] ambient, double[] diffuse, double[] specular, int[][] texture){
       m = mass;
       this.type = type;
+      this.texture = texture;
+      this.ambient = ambient;
+      this.diffuse = diffuse;
+      this.specular = specular;
       double radius = Math.random() * 50 + 150;
       double angle = 0;
   
@@ -104,5 +107,34 @@ public class Body{
         dx += ax * t;
         dy += ay * t;
         dz += az * t;
+    }
+
+    public void display(Screen s, GfxVector view, Color amb, ArrayList<GfxVector> lightPos, Color lightColor, int steps){
+        theta += Math.PI * 2 / 100;
+
+        double factor = 20;
+        if (type == 3){
+          factor = 10;
+        }
+  
+        Matrix transform = new Matrix();
+        transform.ident();
+        Stack<Matrix> csystems = new Stack<Matrix>();
+        Matrix tmp;
+        csystems.push(transform);
+
+        tmp = new Matrix(Matrix.TRANSLATE, x, y, z);
+        tmp.mult(csystems.peek());
+        csystems.push(tmp.copy());
+
+        tmp = new Matrix(Matrix.ROTATE, theta, 'Y');
+        tmp.mult(csystems.peek());
+        csystems.push(tmp.copy());
+
+        PolygonMatrix polys = new PolygonMatrix();
+        polys.addSphere(0, 0, 0, factor * (z + zfactor) / zfactor, steps);
+        polys.mult(csystems.peek());
+        polys.mult(new Matrix(Matrix.ROTATE, Math.PI/6, 'X'));
+        polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular, texture, steps);
     }
   }
