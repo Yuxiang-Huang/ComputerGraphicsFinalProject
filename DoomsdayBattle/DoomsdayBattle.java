@@ -79,70 +79,64 @@ public class DoomsdayBattle {
         lightPos.remove(0);
         lightPos.add(new GfxVector(250, 250, 150));
 
-        for (SpaceShip ship : ships){
-            ship.display(s, view, amb, lightPos, lightColor);
+        //animation battle
+        int battleframe = 60;
+        for (int i = 0; i < battleframe; i ++){
+        //int i = -1;
+       // while (ships.size() != 0){
+            //i ++;
+            s.clearScreen();
+            System.out.println(i);
+            sfp.update(ships, explode);
+            sfp.display(s, view, amb, lightPos, lightColor);
+
+            //remove too close ships and update ships
+            ArrayList<SpaceShip> tmp = new ArrayList<>();
+            for (int j = ships.size() - 1; j >= 0 ; j--){
+                SpaceShip ship = ships.get(j);
+                //check closeness
+                if (tooClose(ship, ships)){
+                    tmp.add(ship);
+                } else{
+                    ship.display(s, view, amb, lightPos, lightColor);
+                }
+            }
+            for (SpaceShip ship : tmp){
+                ships.remove(ship);
+                explode.add(ship);
+            }
+
+            //explosion
+            for (int j = explode.size() - 1; j >= 0 ; j--){
+                SpaceShip ship = explode.get(j);
+                if (ship.expand){
+                    ship.display(s, view, amb, lightPos, lightColor);
+                }
+                ship.explode(s, explode, view, amb, lightPos, lightColor);
+            }
+            writer.writeToSequence(s.getimg());
         }
 
-        //animation battle
-    //     int battleframe = 30;
-    //     for (int i = 0; i < battleframe; i ++){
-    //     //int i = -1;
-    //    // while (ships.size() != 0){
-    //         //i ++;
-    //         s.clearScreen();
-    //         System.out.println(i);
-    //         sfp.update(ships, explode);
-    //         sfp.display(s, view, amb, lightPos, lightColor);
+        // //move towards viewer
+        // while (sfp.x != Screen.XRES/2 || sfp.y != Screen.YRES/2){
+        //     s.clearScreen();
+        //     sfp.end();
+        //     sfp.display(s);
+        //     writer.writeToSequence(s.getimg());
+        // }
 
-    //         //remove too close ships and update ships
-    //         ArrayList<SpaceShip> tmp = new ArrayList<>();
-    //         for (int j = ships.size() - 1; j >= 0 ; j--){
-    //             SpaceShip ship = ships.get(j);
-    //             //check closeness
-    //             if (tooClose(ship, ships)){
-    //                 tmp.add(ship);
-    //             } else{
-    //                 ship.display(s, view, amb, lightPos, lightColor);
-    //             }
-    //         }
-    //         for (SpaceShip ship : tmp){
-    //             ships.remove(ship);
-    //             explode.add(ship);
-    //         }
-
-    //         //explosion
-    //         for (int j = explode.size() - 1; j >= 0 ; j--){
-    //             SpaceShip ship = explode.get(j);
-    //             if (ship.expand){
-    //                 ship.display(s, view, amb, lightPos, lightColor);
-    //             }
-    //             ship.explode(s, explode, view, amb, lightPos, lightColor);
-    //         }
-    //         writer.writeToSequence(s.getimg());
-    //     }
-
-    //     // //move towards viewer
-    //     // while (sfp.x != Screen.XRES/2 || sfp.y != Screen.YRES/2){
-    //     //     s.clearScreen();
-    //     //     sfp.end();
-    //     //     sfp.display(s);
-    //     //     writer.writeToSequence(s.getimg());
-    //     // }
-
-    //     //display animation
-    //     URL url = DoomsdayBattle.class.getResource("DoomsdayBattle.gif");
-    //     Icon icon = new ImageIcon(url);
-    //     JLabel label = new JLabel(icon);
-    //     JFrame f = new JFrame("Animation");
-    //     f.getContentPane().add(label);
-    //     f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    //     f.pack();
-    //     f.setLocationRelativeTo(null);
-    //     f.setVisible(true);
-    //     writer.close();
-    //     output.close();
-
-        s.display();
+        //display animation
+        URL url = DoomsdayBattle.class.getResource("DoomsdayBattle.gif");
+        Icon icon = new ImageIcon(url);
+        JLabel label = new JLabel(icon);
+        JFrame f = new JFrame("Animation");
+        f.getContentPane().add(label);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.pack();
+        f.setLocationRelativeTo(null);
+        f.setVisible(true);
+        writer.close();
+        output.close();
     }
 
     public static boolean tooClose(SpaceShip ship, ArrayList<SpaceShip> ships){

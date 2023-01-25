@@ -1,7 +1,7 @@
 run: DoomsdayBattle.class
 	java DoomsdayBattle
 
-DoomsdayBattle.class: DoomsdayBattle.java Screen.class Matrix.class EdgeMatrix.class PolygonMatrix.class GfxVector.class SpaceShip.class
+DoomsdayBattle.class: DoomsdayBattle.java Screen.class Matrix.class EdgeMatrix.class PolygonMatrix.class GfxVector.class SpaceShip.class WaterDrop.class
 	javac DoomsdayBattle.java
 
 Matrix.class: Matrix.java
@@ -24,6 +24,9 @@ Screen.class: Screen.java
 
 SpaceShip.class: SpaceShip.java
 	javac SpaceShip.java
+
+WaterDrop.class: WaterDrop.java
+	javac WaterDrop.java
 
 clean:
 	rm *.class

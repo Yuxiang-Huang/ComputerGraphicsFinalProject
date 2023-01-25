@@ -33,7 +33,7 @@ public class WaterDrop {
     }
 
     public void update(ArrayList<SpaceShip> ships, ArrayList<SpaceShip> explode){
-        int speed = 25;
+        int speed = 20;
         while (speed > 0){
             //no more targets
             if (ships.size() == 0){
@@ -103,10 +103,8 @@ public class WaterDrop {
                     y = speed * Math.sin(direction) + y;
                     speed = 0;
                 }
-
-                //?
-                direction += Math.PI/2;
             }
+            direction += Math.PI/2;
         }
     }
 

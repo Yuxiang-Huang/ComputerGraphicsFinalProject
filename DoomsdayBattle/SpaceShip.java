@@ -18,7 +18,7 @@ public class SpaceShip {
     double[] ambient, diffuse, specular;
 
     public SpaceShip(int i, int j){
-        x = Screen.XRES * (2 * i + 1) / 10;
+        x = Screen.XRES * (2 * i + 3) / 10;
         y = Screen.YRES * (2 * j + 3) / 14;
         this.ambient = new double[]{0.2, 0.2, 0.2};
         this.diffuse =  new double[]{0.5, 0.5, 0.5};
@@ -26,7 +26,7 @@ public class SpaceShip {
     }
 
     public void forward (){
-        x += Screen.YRES / 12 / 25;
+        x += Screen.YRES / 10 / 25;
     }
 
     public void random (){
