@@ -15,10 +15,14 @@ public class DoomsdayBattle {
     public static void main(String[] args) throws IOException{
         //lighting
         GfxVector view = new GfxVector(0, 0, 1);
-		Color ambient = new Color(50, 50, 50);
+		Color amb = new Color(50, 50, 50);
         ArrayList<GfxVector> lightPos = new ArrayList<>();
-		lightPos.add(new GfxVector(250, 250, 1000));
-		Color lightColor = new Color(181, 101, 29);
+		lightPos.add(new GfxVector(250, 400, 150));
+		Color lightColor = new Color(255, 255, 255);
+        
+        double[] ambient = new double[]{0.23125, 0.23125, 0.23125};
+        double[] diffuse = new double[]{0.2775, 0.2775, 0.2775};
+        double[] specular = new double[]{0.773911, 0.773911, 0.773911};
 
         //csystem
         Screen s = new Screen();
@@ -34,7 +38,7 @@ public class DoomsdayBattle {
         GifSequenceWriter writer =
         new GifSequenceWriter(output, firstImage.getType(), 50, false);
 
-        WaterDrop sfp = new WaterDrop();
+        WaterDrop sfp = new WaterDrop(ambient, diffuse, specular);
 
         //entrance
         int introFrame = 50; //50
@@ -42,7 +46,7 @@ public class DoomsdayBattle {
             System.out.println(i);
             s.clearScreen();
             sfp.y -= (Screen.YRES * 2 / 5) / introFrame;
-            sfp.display(s);
+            sfp.display(s, view, amb, lightPos, lightColor);
             writer.writeToSequence(s.getimg());
         }
 
@@ -54,7 +58,7 @@ public class DoomsdayBattle {
             System.out.println(i);
             s.clearScreen();
             sfp.y -= (Screen.YRES * 3 / 5) / introFrame;
-            sfp.display(s);
+            sfp.display(s, view, amb, lightPos, lightColor);
             writer.writeToSequence(s.getimg());
         }
 
@@ -68,49 +72,49 @@ public class DoomsdayBattle {
         ArrayList<SpaceShip> explode = new ArrayList<>();
         for (int i = 0; i < 4; i ++){
             for (int j = 0; j < 5; j ++){
-                ships.add(new SpaceShip(i, j));
+                ships.add(new SpaceShip(i, j, ambient, diffuse, specular));
             }
         }
 
         //ships = new ArrayList<>();
 
-        //animation battle
-        // int battleframe = 30;
-        // for (int i = 0; i < battleframe; i ++){
-        int i = -1;
-        while (ships.size() != 0){
-            i ++;
-            s.clearScreen();
-            System.out.println(i);
-            sfp.update(ships, explode);
-            sfp.display(s);
+    //     //animation battle
+    //     int battleframe = 30;
+    //     for (int i = 0; i < battleframe; i ++){
+    //     //int i = -1;
+    //    // while (ships.size() != 0){
+    //         //i ++;
+    //         s.clearScreen();
+    //         System.out.println(i);
+    //         sfp.update(ships, explode);
+    //         sfp.display(s, view, amb, lightPos, lightColor);
 
-            //remove too close ships and update ships
-            ArrayList<SpaceShip> tmp = new ArrayList<>();
-            for (int j = ships.size() - 1; j >= 0 ; j--){
-                SpaceShip ship = ships.get(j);
-                //check closeness
-                if (tooClose(ship, ships)){
-                    tmp.add(ship);
-                } else{
-                    ship.display(s);
-                }
-            }
-            for (SpaceShip ship : tmp){
-                ships.remove(ship);
-                explode.add(ship);
-            }
+    //         //remove too close ships and update ships
+    //         ArrayList<SpaceShip> tmp = new ArrayList<>();
+    //         for (int j = ships.size() - 1; j >= 0 ; j--){
+    //             SpaceShip ship = ships.get(j);
+    //             //check closeness
+    //             if (tooClose(ship, ships)){
+    //                 tmp.add(ship);
+    //             } else{
+    //                 ship.display(s);
+    //             }
+    //         }
+    //         for (SpaceShip ship : tmp){
+    //             ships.remove(ship);
+    //             explode.add(ship);
+    //         }
 
-            //explosion
-            for (int j = explode.size() - 1; j >= 0 ; j--){
-                SpaceShip ship = explode.get(j);
-                if (ship.expand){
-                    ship.display(s);
-                }
-                ship.explode(s, explode);
-            }
-            writer.writeToSequence(s.getimg());
-        }
+    //         //explosion
+    //         for (int j = explode.size() - 1; j >= 0 ; j--){
+    //             SpaceShip ship = explode.get(j);
+    //             if (ship.expand){
+    //                 ship.display(s);
+    //             }
+    //             ship.explode(s, explode);
+    //         }
+    //         writer.writeToSequence(s.getimg());
+    //     }
 
         // //move towards viewer
         // while (sfp.x != Screen.XRES/2 || sfp.y != Screen.YRES/2){

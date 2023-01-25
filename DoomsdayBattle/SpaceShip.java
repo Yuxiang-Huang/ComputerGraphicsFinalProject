@@ -1,4 +1,5 @@
 import java.util.*;
+import java.awt.*;
 
 public class SpaceShip {
     public double x, y, z;
@@ -13,9 +14,15 @@ public class SpaceShip {
     public boolean expand = true;
     double scale = 1;
 
-    public SpaceShip(int i, int j){
+    //lighting
+    double[] ambient, diffuse, specular;
+
+    public SpaceShip(int i, int j, double[] ambient, double[] diffuse, double[] specular){
         x = Screen.XRES * (2 * i + 3) / 12;
         y = Screen.YRES * (2 * j + 3) / 14;
+        this.ambient = ambient;
+        this.diffuse = diffuse;
+        this.specular = specular;
     }
 
     public void forward (){
@@ -57,7 +64,7 @@ public class SpaceShip {
         ztheta += Math.PI/2;
     }
 
-    public void display(Screen s){
+    public void display(Screen s, GfxVector view, Color amb, ArrayList<GfxVector> lightPos, Color lightColor){
         //translate to the center of the ship
         Matrix transform = new Matrix();
         transform.ident();
@@ -94,7 +101,7 @@ public class SpaceShip {
 
         //draw
         polys.mult(csystems.peek());
-        polys.drawPolygons(s);
+        polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular);
 
         //other parts
         polys = new PolygonMatrix();
@@ -115,11 +122,11 @@ public class SpaceShip {
 
         //draw
         polys.mult(csystems.peek());
-        polys.drawPolygons(s);
+        polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular);
         csystems.pop();
     }
 
-    public void explode(Screen s, ArrayList<SpaceShip> explode){
+    public void explode(Screen s, ArrayList<SpaceShip> explode, GfxVector view, Color amb, ArrayList<GfxVector> lightPos, Color lightColor){
          //translate to the center of the ship
          Matrix transform = new Matrix();
          transform.ident();
@@ -146,7 +153,7 @@ public class SpaceShip {
  
          //draw
          polys.mult(csystems.peek());
-         polys.drawPolygons(s);
+         polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular);
          csystems.pop();
     }
 }
