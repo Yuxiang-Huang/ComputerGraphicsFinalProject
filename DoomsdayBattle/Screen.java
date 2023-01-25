@@ -81,7 +81,7 @@ public class Screen {
     double t = 0.0;
 
     for(x=x0; x <= x1; x++) {
-      c = tri.calculteLighting(new GfxVector(x, y, z), n0.interpolate(n1, t));
+      c = tri.calculateLighting(new GfxVector(x, y, z), n0.interpolate(n1, t));
       plot(c, x, y, z);
       z+= delta_z;
       t += 1.0/(x1 - x0 + 1);

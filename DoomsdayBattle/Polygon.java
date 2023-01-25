@@ -91,7 +91,7 @@ public class Polygon {
     rSpecular = Arrays.copyOf(sr, 3);
   }//setReflection
 
-  public Color calculteLighting(GfxVector pos, GfxVector normalV) {
+  public Color calculateLighting(GfxVector pos, GfxVector normalV) {
     int[] ambient, diffuse, specular, color;
 
     color = new int[3];

@@ -21,10 +21,15 @@ public class WaterDrop {
     boolean lock0 = true;
     boolean lock1 = true;
 
-    public WaterDrop(){
+    double[] ambient, diffuse, specular;
+
+    public WaterDrop(double[] ambient, double[] diffuse, double[] specular){
         x = Screen.XRES/2;
         y = Screen.YRES;
         z = 0;
+        this.ambient = ambient;
+        this.diffuse = diffuse;
+        this.specular = specular;
     }
 
     public void update(ArrayList<SpaceShip> ships, ArrayList<SpaceShip> explode){
@@ -132,7 +137,7 @@ public class WaterDrop {
         return Math.sqrt((sfp.x - ship.x) * (sfp.x - ship.x) + (sfp.y - ship.y) * (sfp.y - ship.y));
     }
 
-    public void display(Screen s){
+    public void display(Screen s, GfxVector view, Color amb, ArrayList<GfxVector> lightPos, Color lightColor){
         //translate to the center of the ship
         Matrix transform = new Matrix();
         transform.ident();
@@ -165,7 +170,7 @@ public class WaterDrop {
         PolygonMatrix polys = new PolygonMatrix();
         polys.addCurve(0, 0, 0, size, -size, 0, 0, size, 0, Matrix.HERMITE, 20);
         polys.mult(csystems.peek());
-        polys.drawPolygons(s);
+        polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular);
 
         //accelearation animation
         if (acc){
@@ -174,7 +179,7 @@ public class WaterDrop {
                 expandY = y;
                 expandAngle = direction + Math.PI/2;
             }
-            animateAcc(s);
+            animateAcc(s, view, amb, lightPos, lightColor);
             if (expand >= 2){
                 expand = 0;
             } else{
@@ -183,7 +188,7 @@ public class WaterDrop {
         }
     }
 
-    void animateAcc(Screen s){
+    void animateAcc(Screen s, GfxVector view, Color amb, ArrayList<GfxVector> lightPos, Color lightColor){
         direction += Math.PI/2;
 
         Matrix transform = new Matrix();
@@ -224,8 +229,7 @@ public class WaterDrop {
         PolygonMatrix polys = new PolygonMatrix();
         polys.addTorus(0, 0, z, 1, 5, 20);
         polys.mult(csystems.peek());
-        polys.drawPolygons(s);
-
+        polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular);
 
         //lines
         csystems = new Stack<Matrix>();

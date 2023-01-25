@@ -1,13 +1,26 @@
 import java.util.*;
 import java.io.*;
+import java.awt.Color;
 import java.awt.image.*;
+
+import java.awt.*;
+
 import javax.imageio.*;
 import javax.swing.*;
 import javax.imageio.stream.*;
+
 import java.net.URL;
 
 public class DoomsdayBattle {
     public static void main(String[] args) throws IOException{
+        //lighting
+        GfxVector view = new GfxVector(0, 0, 1);
+		Color ambient = new Color(50, 50, 50);
+        ArrayList<GfxVector> lightPos = new ArrayList<>();
+		lightPos.add(new GfxVector(250, 250, 1000));
+		Color lightColor = new Color(181, 101, 29);
+
+        //csystem
         Screen s = new Screen();
         Matrix transform = new Matrix();
         transform.ident();
@@ -108,7 +121,7 @@ public class DoomsdayBattle {
         // }
 
         //display animation
-        URL url = SolarSystem.class.getResource("DoomsdayBattle.gif");
+        URL url = DoomsdayBattle.class.getResource("DoomsdayBattle.gif");
         Icon icon = new ImageIcon(url);
         JLabel label = new JLabel(icon);
         JFrame f = new JFrame("Animation");
