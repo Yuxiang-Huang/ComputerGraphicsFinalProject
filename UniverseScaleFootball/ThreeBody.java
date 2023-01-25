@@ -9,10 +9,10 @@ import javax.imageio.stream.*;
 import java.net.URL;
 
 public class ThreeBody{
-  static double t = 0.001;
+  static double t = 0.01;
   static double mass = 100 * 10E11 * 1;
   static int steps = 20;
-  static double zfactor = 250;
+  static double zfactor = 500;
   public static void main(String[] args) throws Exception {
     //lighting
     GfxVector view = new GfxVector(0, 0, 1);
@@ -26,7 +26,7 @@ public class ThreeBody{
     double[] specular = new double[]{0.5, 0.5, 0.5};
 
     //setup
-    int total = 150;
+    int total = 200;
     Screen s = new Screen();
 
     Body b0 = new Body(mass, 0);
@@ -47,33 +47,26 @@ public class ThreeBody{
     b2.dy = - b0.dy - b1.dy;
     b2.dz = - b0.dz - b1.dz;
 
-    b0.x = 353.64019599912064;
-    b0.y = 300.0;
-b0.z = 6.677188275216096;
-b0.dx = -1.7202084375639939;
+    b0.x = 438.6451133370989;
+b0.y = 300.0;
+b0.z = -84.8073573668477;
+b0.dx = -1.653180856408052;
 b0.dy = 0.0;
-b0.dz = -1.2152444290012316;
+b0.dz = 0.7116483437629637;
 
-b1.x = 129.68845543633537;
+b1.x = 66.34930289571355;
 b1.y = 300.0;
-b1.z = -32.82855693153056;
-b1.dx = 0.30033571559535455;
+b1.z = 188.46920985833225;
+b1.dx = -0.9259356947571256;
 b1.dy = 0.0;
-b1.dz = -1.2988386323344883;
+b1.dz = -3.1695088762338792;
 
-b2.x = 294.9123988652714;
+b2.x = 264.8788330212759;
 b2.y = 300.0;
-b2.z = 34.13472074611616;
-b2.dx = 1.4198727219686393;
+b2.z = 117.27487540472697;
+b2.dx = 2.5791165511651775;
 b2.dy = -0.0;
-b2.dz = 2.51408306133572;
-
-planet.x = 130.3991653757086;
-planet.y = 354.32527354580026;
-planet.z = -42.64864463196982;
-planet.dx = 0.6090451545186659;
-planet.dy = -0.8594548430711981;
-planet.dz = -1.1334269609986407;
+b2.dz = 2.4578605324709155;
 
     bodyInfo(b0, 0);
     bodyInfo(b1, 1);

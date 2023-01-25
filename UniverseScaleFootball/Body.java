@@ -50,7 +50,7 @@ public class Body{
   
       x = Math.cos(angle) * radius + Screen.XRES/2;
       y = Math.sin(angle) * radius + Screen.YRES/2;
-      z = Math.random() * 100 - 50;
+      z = Math.random() * 500 - 250;
 
       if (x > Screen.XRES/2){
         dx = Math.random() * initialV - 1.25 * initialV;
