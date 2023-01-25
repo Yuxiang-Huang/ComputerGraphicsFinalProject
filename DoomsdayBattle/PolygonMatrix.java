@@ -91,28 +91,6 @@ public class PolygonMatrix extends Matrix {
         }
       }
     }
-
-    //tail
-    // for (int longt = longStart + 1; longt < longStop; longt++ ) {
-    //   addPolygon(x1, y1, z0, 
-    //   points.get(points.m.size() - longStop - longt)[0], 
-    //   points.get(points.m.size() - longStop - longt)[1], 
-    //   points.get(points.m.size() - longStop - longt)[2],
-    //   points.get(points.m.size() - longStop - longt - 1)[0], 
-    //   points.get(points.m.size() - longStop - longt - 1)[1], 
-    //   points.get(points.m.size() - longStop - longt - 1)[2]);
-    // }
-
-    // //head
-    // for (int longt = longStart - 1; longt < longStop; longt++ ) {
-    //   addPolygon(x0, y0, z0, 
-    //   points.get(longt + longStop)[0], points.get(longt + longStop)[1], points.get(longt + longStop)[2],
-    //   points.get(longt + 1 + longStop)[0], points.get(longt + 1 + longStop)[1], points.get(longt + 1 + longStop)[2]);
-    // }
-    // addPolygon(x0, y0, z0, 
-    // points.get(longStop)[0], points.get(longStop)[1], points.get(longStop)[2],
-    // points.get(0)[0], points.get(0)[1], points.get(0)[2]
-    // );
   }
 
   private Matrix generateCylinder(double x0, double y0, double y1, double z0,
@@ -523,6 +501,35 @@ public class PolygonMatrix extends Matrix {
         tri.setReflection(ambient, diffuse, specular);
         //tri.calculteLighting(view, amb, lightPos, lightColor);
         tri.scanlineConvert(s);
+        // s.drawLine((int)p0[0], (int)p0[1], (int)p1[0], (int)p1[1], c);
+        // s.drawLine((int)p2[0], (int)p2[1], (int)p1[0], (int)p1[1], c);
+        // s.drawLine((int)p0[0], (int)p0[1], (int)p2[0], (int)p2[1], c);
+      }
+    }//draw lines
+  }//drawPloygons
+
+  public void drawPolygons(Screen s, GfxVector view) {
+    if ( m.size() < 3) {
+      System.out.println("Need at least 3 points to draw a polygon");
+      return;
+    }//not enough points
+
+    for(int point=0; point<m.size()-1; point+=3) {
+      double[] p0 = m.get(point);
+      double[] p1 = m.get(point+1);
+      double[] p2 = m.get(point+2);
+
+      int red = (23 * (point/3+1))%256;
+      int green = (109 * (point/3+1))%256;
+      int blue = (227 * (point/3+1))%256;
+      Color c = new Color(red, green, blue);
+
+      Polygon tri = new Polygon(p0, p1, p2, c);
+
+      double dot = tri.getNormal().dotProduct(view, false);
+
+      if (dot > 0) {
+        tri.scanlineConvertOld(s);
         // s.drawLine((int)p0[0], (int)p0[1], (int)p1[0], (int)p1[1], c);
         // s.drawLine((int)p2[0], (int)p2[1], (int)p1[0], (int)p1[1], c);
         // s.drawLine((int)p0[0], (int)p0[1], (int)p2[0], (int)p2[1], c);

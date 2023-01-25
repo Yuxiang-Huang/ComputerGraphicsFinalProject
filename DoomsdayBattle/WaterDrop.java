@@ -5,7 +5,7 @@ public class WaterDrop {
     public double x, y, z;
     int size = 30;
     double theta = 0;
-    public boolean acc = true;
+    public boolean acc = false;
     public boolean intro = true;
     public boolean end = false;
 

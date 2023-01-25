@@ -40,27 +40,27 @@ public class DoomsdayBattle {
 
         WaterDrop sfp = new WaterDrop(ambient, diffuse, specular);
 
-        //entrance
-        int introFrame = 50; //50
-        for (int i = 0; i < introFrame; i ++){
-            System.out.println(i);
-            s.clearScreen();
-            sfp.y -= ((Screen.YRES + 150) / 2) / introFrame; //150 is the size of sfp
-            sfp.display(s, view, amb, lightPos, lightColor);
-            writer.writeToSequence(s.getimg());
-        }
+        // //entrance
+        // int introFrame = 50; //50
+        // for (int i = 0; i < introFrame; i ++){
+        //     System.out.println(i);
+        //     s.clearScreen();
+        //     sfp.y -= ((Screen.YRES + 150) / 2) / introFrame; //150 is the size of sfp
+        //     sfp.display(s, view, amb, lightPos, lightColor);
+        //     writer.writeToSequence(s.getimg());
+        // }
 
-        sfp.acc = true;
-        sfp.rotateSpeed *= 2;
+        // sfp.acc = true;
+        // sfp.rotateSpeed *= 2;
 
-        introFrame = 7;
-        for (int i = 0; i < introFrame; i ++){
-            System.out.println(i);
-            s.clearScreen();
-            sfp.y -= ((Screen.YRES + 150) / 2) / introFrame;
-            sfp.display(s, view, amb, lightPos, lightColor);
-            writer.writeToSequence(s.getimg());
-        }
+        // introFrame = 7;
+        // for (int i = 0; i < introFrame; i ++){
+        //     System.out.println(i);
+        //     s.clearScreen();
+        //     sfp.y -= ((Screen.YRES + 150) / 2) / introFrame;
+        //     sfp.display(s, view, amb, lightPos, lightColor);
+        //     writer.writeToSequence(s.getimg());
+        // }
 
         //start battle
         sfp.intro = false;
@@ -75,8 +75,6 @@ public class DoomsdayBattle {
                 ships.add(new SpaceShip(i, j));
             }
         }
-
-        ships = new ArrayList<SpaceShip>();
 
         lightPos.remove(0);
         lightPos.add(new GfxVector(250, 250, 1000));
@@ -119,23 +117,37 @@ public class DoomsdayBattle {
             writer.writeToSequence(s.getimg());
         }
 
-        //move towards viewer
-        while (sfp.x != Screen.XRES/2 || sfp.y != Screen.YRES/2){
+        while (explode.size() != 0){
             s.clearScreen();
-            sfp.end();
-            sfp.display(s, view, amb, lightPos, lightColor);
+            //explosion
+            for (int j = explode.size() - 1; j >= 0 ; j--){
+                SpaceShip ship = explode.get(j);
+                if (ship.expand){
+                    ship.display(s, view, amb, lightPos, lightColor);
+                }
+                ship.explode(s, explode, view, amb, lightPos, lightColor);
+            }
             writer.writeToSequence(s.getimg());
         }
 
-        sfp.end = true;
+        // //move towards viewer
+        // while (sfp.x != Screen.XRES/2 || sfp.y != Screen.YRES/2){
+        //     s.clearScreen();
+        //     sfp.end();
+        //     sfp.display(s, view, amb, lightPos, lightColor);
 
-        while (sfp.size < 150){
-            s.clearScreen();
-            sfp.size += 2;
-            System.out.println(sfp.size);
-            sfp.endDisplay(s, view, amb, lightPos, lightColor);
-            writer.writeToSequence(s.getimg());
-        }
+        //     writer.writeToSequence(s.getimg());
+        // }
+
+        // sfp.end = true;
+
+        // while (sfp.size < 150){
+        //     s.clearScreen();
+        //     sfp.size += 2;
+        //     System.out.println(sfp.size);
+        //     sfp.endDisplay(s, view, amb, lightPos, lightColor);
+        //     writer.writeToSequence(s.getimg());
+        // }
 
         //display animation
         URL url = DoomsdayBattle.class.getResource("DoomsdayBattle.gif");
@@ -154,7 +166,7 @@ public class DoomsdayBattle {
     public static boolean tooClose(SpaceShip ship, ArrayList<SpaceShip> ships){
         for (SpaceShip other : ships){
             if (!ship.equals(other)){
-                if (dist(ship, other) < 30){
+                if (dist(ship, other) < 75){
                     return true;
                 }
             }

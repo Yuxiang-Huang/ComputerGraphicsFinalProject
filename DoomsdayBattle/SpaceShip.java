@@ -154,10 +154,7 @@ public class SpaceShip {
  
          //draw
          polys.mult(csystems.peek());
-         polys.drawPolygons(s, view, amb, lightPos, lightColor, 
-         new double[]{0.2, 0.2, 0.2},
-         new double[]{255 * 1.0 / 255, 87 * 1.0 / 255, 51 * 1.0 / 255},
-         new double[]{1.0, 0, 0});
+         polys.drawPolygons(s, view);
          csystems.pop();
     }
 }
