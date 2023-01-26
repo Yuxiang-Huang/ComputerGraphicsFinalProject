@@ -56,6 +56,7 @@ public class LastSunset {
                 Planet p = planets.get(j);
                 p.update();
                 p.display(s, csystems, steps);
+                p.display2D(s, csystems, i);
             }
 
             writer.writeToSequence(s.getimg());

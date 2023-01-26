@@ -14,8 +14,6 @@ public class Planet{
   int[][] rgb;
   ArrayList<Color> planet2D;
 
-  int xlimit;
-
   double selfRotate = 0;
   double selfRotateTime;
 
@@ -38,8 +36,6 @@ public class Planet{
     selfRotate += 2 * Math.PI / selfRotateTime;
     x = Math.cos(theta) * dist;
     y = Math.sin(theta) * dist;
-
-    xlimit ++;
   }
 
   public void display(Screen s, Stack<Matrix> csystems, int steps){
@@ -71,10 +67,25 @@ public class Planet{
 
      //draw
      PolygonMatrix polys = new PolygonMatrix();
-     polys.addSphere(0, 0, 0, size, steps);
+     polys.addSphere(0, 0, 0, size/2, steps);
      polys.mult(csystems.peek());
 
      polys.drawPolygons(s, view, rgb, steps);
      csystems.pop();
+  }
+
+  public void display2D(Screen s, Stack<Matrix> csystems, int limit){
+    Matrix tmp = new Matrix(Matrix.TRANSLATE, x, y, 0);
+    tmp.mult(csystems.peek());
+    csystems.push(tmp.copy());
+
+    for (int i = planet2D.size() - 1; i >= 0; i --){
+      EdgeMatrix edges = new EdgeMatrix();
+      edges.addFilledCircle(0, 0, 0, i + 1);
+      edges.mult(csystems.peek());
+      edges.drawEdges(s, planet2D.get(i));
+    }
+
+    csystems.pop();
   }
 }
