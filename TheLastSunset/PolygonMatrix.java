@@ -361,7 +361,7 @@ public class PolygonMatrix extends Matrix {
 
     // System.out.println(m.size()/3);
 
-    for(int point=0; point<m.size()-1; point+=3) {
+    for(int point=m.size()-3; point>= 0; point-=3) {
       double[] p0 = m.get(point);
       double[] p1 = m.get(point+1);
       double[] p2 = m.get(point+2);
@@ -372,7 +372,7 @@ public class PolygonMatrix extends Matrix {
         colCounter ++;
       }
 
-      Color c = new Color(rgb[(int)rowCounter]
+      Color c = new Color(rgb[rgb.length - (int)rowCounter - 1]
       [Math.min(colCounter, rgb[0].length - 1)]);
 
       Polygon tri = new Polygon(p0, p1, p2, c);

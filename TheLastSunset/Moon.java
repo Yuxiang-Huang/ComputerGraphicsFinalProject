@@ -66,8 +66,8 @@ public class Moon extends Planet{
         if (limit > (x + Screen.XRES / 2 + size + EarthX)){
             displaySize -= 1.5; 
         } else{
-            theta += 2 * Math.PI / revTime;
-            selfRotate += 2 * Math.PI / selfRotateTime;
+            theta -= 2 * Math.PI / revTime;
+            selfRotate -= 2 * Math.PI / selfRotateTime;
             x = Math.cos(theta) * dist;
             y = Math.sin(theta) * dist;
         }
