@@ -10,7 +10,7 @@ import java.net.URL;
 public class ThreeBody{
   static double t = 0.01;
   static double mass = 100 * 10E11 * 1;
-  static int steps = 20;
+  static int steps = 100;
   public static void main(String[] args) throws Exception {
     //lighting
     GfxVector view = new GfxVector(0, 0, 1);
@@ -23,18 +23,19 @@ public class ThreeBody{
     double[] specular = new double[]{0.5, 0.5, 0.5};
 
     //setup
-    int total = 325; //325
+    int total = 325;
     Screen s = new Screen();
 
     int[][] sunRGB = createRGBMap("sun.jpg", steps);
     int[][] planetRGB = createRGBMap("planet.jpg", steps);
-    int[][] frozen = createRGBMap("frozen.png", steps);
+    int[][] normal = createRGBMap("planet.jpg", steps);
+    int[][] frozen = createRGBMap("frozen.jpg", steps);
     int[][] fire = createRGBMap("fire.jpg", steps);
 
-    Body b0 = new Body(mass, 0, ambient, diffuse, specular, sunRGB);
-    Body b1 = new Body(mass, 1, ambient, diffuse, specular, sunRGB);
-    Body b2 = new Body(mass, 2, ambient, diffuse, specular, sunRGB);
-    Body planet = new Body(10E7, 3, ambient, diffuse, specular, planetRGB);
+    Body b0 = new Body(mass, 0, ambient, diffuse, specular, sunRGB, true);
+    Body b1 = new Body(mass, 1, ambient, diffuse, specular, sunRGB, true);
+    Body b2 = new Body(mass, 2, ambient, diffuse, specular, sunRGB, true);
+    Body planet = new Body(10E7, 3, ambient, diffuse, specular, planetRGB, false);
 
     ArrayList<Body> bodies = new ArrayList<>(); 
     bodies.add(b0);
@@ -91,19 +92,16 @@ public class ThreeBody{
     
         s.clearScreen();
 
-        if (i == 150){
-          bodyInfo(b0, 0);
-    bodyInfo(b1, 1);
-    bodyInfo(b2, 2);
-    bodyInfo(planet);
+        if (i >= 280){
+          switchTexture(planet, normal, (i - 280) * 8);
+        } else if (i >= 270){
+          switchTexture2(planet, fire, (i - 270) * 8);
+        } else if (i >= 245){
+          switchTexture2(planet, normal, (i - 245) * 2);
+        } else if (i >= 190){
+          planet.useTexture = true;
+          switchTexture(planet, frozen, (i - 190));
         }
-
-        // if (i == 190){
-        //   planet.texture = frozen;
-        // }
-        // else if (i == 270){
-        //   planet.texture = fire;
-        // }
 
         lightPos = new ArrayList<>();
         lightPos.add(new GfxVector(250, 250, 1000));
@@ -183,5 +181,25 @@ public class ThreeBody{
         }
     }
     return rgb;
+  }
+
+  public static void switchTexture(Body b, int[][] newTexture, int x){
+    for (int i = 0; i < b.texture.length; i ++){
+      if (i < x || (b.texture.length - i) < x){
+        for (int j = 0; j < b.texture[i].length; j ++){
+          b.texture[i][j] = newTexture[i][j];
+        }
+      }
+    }
+  }
+
+  public static void switchTexture2(Body b, int[][] newTexture, int x){
+    for (int i = 0; i < b.texture.length; i ++){
+      if (Math.abs(i - b.texture.length / 2) < x){
+        for (int j = 0; j < b.texture[i].length; j ++){
+          b.texture[i][j] = newTexture[i][j];
+        }
+      }
+    }
   }
 }

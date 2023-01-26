@@ -15,18 +15,20 @@ public class Body{
     int initialV = 3;
 
     //display
-    public double theta;
+    public boolean useTexture;
+    double theta;
     double zfactor = 500;
     int[][] texture;
     double[] ambient, diffuse, specular;
 
-    public Body (double mass, int type, double[] ambient, double[] diffuse, double[] specular, int[][] texture){
+    public Body (double mass, int type, double[] ambient, double[] diffuse, double[] specular, int[][] texture, boolean useTexture){
       m = mass;
       this.type = type;
       this.texture = texture;
       this.ambient = ambient;
       this.diffuse = diffuse;
       this.specular = specular;
+      this.useTexture = useTexture;
       double radius = Math.random() * 50 + 150;
       double angle = 0;
   
@@ -145,10 +147,10 @@ public class Body{
         PolygonMatrix polys = new PolygonMatrix();
         polys.addSphere(0, 0, 0, factor * (z + zfactor) / zfactor, steps);
         polys.mult(csystems.peek());
-        if (type == 3){
-          polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular, texture, steps);
-        } else{
+        if (useTexture){
           polys.drawPolygons(s, view, texture, steps);
+        } else{
+          polys.drawPolygons(s, view, amb, lightPos, lightColor, ambient, diffuse, specular, texture, steps);
         }
     }
   }
