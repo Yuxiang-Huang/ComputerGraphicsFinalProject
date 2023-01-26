@@ -10,6 +10,28 @@ public class Earth extends Planet{
         this.moon = moon;
     }
 
+    @Override
+    public void update(int limit){
+        if (limit > (x + Screen.XRES / 2 - size)){ //release moon
+            if (moon.orbit){
+                moon.orbit = false;
+                //calculate tangential velocity
+                double speed = moon.dist * 2 * Math.PI / revTime;
+                moon.dx = -speed * Math.sin(moon.theta);
+                moon.dy = speed * Math.cos(moon.theta);
+            }
+        }
+
+        if (limit > (x + Screen.XRES / 2 + size)){
+          displaySize -= 1.5; 
+        } else{
+          theta -= 2 * Math.PI / revTime;
+          selfRotate -= 2 * Math.PI / selfRotateTime;
+          x = Math.cos(theta) * dist;
+          y = Math.sin(theta) * dist;
+        }
+      }
+
     @Override 
     public void display(Screen s, Stack<Matrix> csystems, int steps, int limit){
         super.display(s, csystems, steps, limit);

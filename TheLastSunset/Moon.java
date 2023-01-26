@@ -68,8 +68,13 @@ public class Moon extends Planet{
         } else{
             theta -= 2 * Math.PI / revTime;
             selfRotate -= 2 * Math.PI / selfRotateTime;
-            x = Math.cos(theta) * dist;
-            y = Math.sin(theta) * dist;
+            if (orbit){
+                x = Math.cos(theta) * dist;
+                y = Math.sin(theta) * dist;
+            } else{                
+                x += dx;
+                y += dy;
+            }
         }
     }
 }

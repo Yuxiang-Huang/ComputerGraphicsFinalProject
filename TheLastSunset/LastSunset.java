@@ -19,7 +19,7 @@ public class LastSunset {
         ImageOutputStream output =
         new FileImageOutputStream(new File("LastSunset.gif"));
         GifSequenceWriter writer =
-        new GifSequenceWriter(output, firstImage.getType(), 100, false);
+        new GifSequenceWriter(output, firstImage.getType(), 50, false);
 
         //variables
         int steps = 100;
