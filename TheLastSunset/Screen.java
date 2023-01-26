@@ -164,6 +164,98 @@ public class Screen {
     }//end octants 2 and 7
   }//drawLine
 
+  public void drawLineCircularlimit(int x0, int y0, int x1, int y1, Color c, double cx, double cy, double r){
+    int x, y, d, A, B;
+    double z = 0;
+    //swap points if going right -> left
+    int xt, yt;
+    if (x0 > x1) {
+      xt = x0;
+      yt = y0;
+      x0 = x1;
+      y0 = y1;
+      x1 = xt;
+      y1 = yt;
+    }
+
+    x = x0;
+    y = y0;
+    A = 2 * (y1 - y0);
+    B = -2 * (x1 - x0);
+
+    //octants 1 and 8
+    if ( Math.abs(x1 - x0) >= Math.abs(y1 - y0) ) {
+
+      //octant 1
+      if ( A > 0 ) {
+
+        d = A + B/2;
+        while ( x < x1 ) {
+          plotCircularLimit(c, x, y, z, cx, cy, r);
+          if ( d > 0 ) {
+            y+= 1;
+            d+= B;
+          }
+          x++;
+          d+= A;
+        } //end octant 1 while
+        plotCircularLimit(c, x1, y1, z, cx, cy, r);
+      } //end octant 1
+
+      //octant 8
+      else {
+        d = A - B/2;
+
+        while ( x < x1 ) {
+          plotCircularLimit(c, x, y, z, cx, cy, r);
+          if ( d < 0 ) {
+            y-= 1;
+            d-= B;
+          }
+          x++;
+          d+= A;
+        } //end octant 8 while
+        plotCircularLimit(c, x1, y1, z, cx, cy, r);
+      } //end octant 8
+    }//end octants 1 and 8
+
+    //octants 2 and 7
+    else {
+
+      //octant 2
+      if ( A > 0 ) {
+        d = A/2 + B;
+
+        while ( y < y1 ) {
+          plotCircularLimit(c, x, y, z, cx, cy, r);
+          if ( d < 0 ) {
+            x+= 1;
+            d+= A;
+          }
+          y++;
+          d+= B;
+        } //end octant 2 while
+        plotCircularLimit(c, x1, y1, z, cx, cy, r);
+      } //end octant 2
+
+      //octant 7
+      else {
+        d = A/2 - B;
+
+        while ( y > y1 ) {
+          plotCircularLimit(c, x, y, z, cx, cy, r);
+          if ( d > 0 ) {
+            x+= 1;
+            d+= A;
+          }
+          y--;
+          d-= B;
+        } //end octant 7 while
+        plotCircularLimit(c, x1, y1, z, cx, cy, r);
+      } //end octant 7
+    }//end octants 2 and 7
+  }//drawLine
+
   public void plot(Color c, int x, int y, double z) {
     int newy = width - 1 - y;
     if (x >= 0 && x < width && newy >= 0 && newy < height){
@@ -182,6 +274,18 @@ public class Screen {
       if ((int) (z * 1000) >= (int) (zbuffer[x][newy] * 1000)){
         img.setRGB(x, newy, c.getRGB());
         zbuffer[x][newy] = z;
+      }
+    }
+  }//plot with limit
+
+  public void plotCircularLimit(Color c, int x, int y, double z, double cx, double cy, double r) {
+    int newy = width - 1 - y;
+    if (x >= 0 && x < width && newy >= 0 && newy < height ) {
+      if (r > 0 && (cx - x) * (cx - x) + (cy - y) * (cy - y) <= r * r){ // circular limit
+        if ((int) (z * 1000) >= (int) (zbuffer[x][newy] * 1000)){
+          img.setRGB(x, newy, c.getRGB());
+          zbuffer[x][newy] = z;
+        }
       }
     }
   }//plot with limit

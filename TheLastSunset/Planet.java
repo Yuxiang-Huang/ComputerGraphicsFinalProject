@@ -83,7 +83,8 @@ public class Planet{
       EdgeMatrix edges = new EdgeMatrix();
       edges.addFilledCircle(0, 0, 0, i + 1);
       edges.mult(csystems.peek());
-      edges.drawEdges(s, planet2D.get(i));
+      edges.drawEdgesCircularLimit(s, planet2D.get(i), (x + Screen.XRES/2), (y + Screen.YRES/2), 
+      limit - (x + Screen.XRES/2));
     }
 
     csystems.pop();
