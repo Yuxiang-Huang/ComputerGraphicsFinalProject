@@ -1,8 +1,8 @@
-run: SolarSystem2D.class
-	java SolarSystem2D
+run: Test.class
+	java Test
 
-SolarSystem2D.class: SolarSystem2D.java Screen.class Matrix.class EdgeMatrix.class PolygonMatrix.class GfxVector.class Planet.class
-	javac SolarSystem2D.java
+Test.class: Test.java Screen.class Matrix.class EdgeMatrix.class PolygonMatrix.class GfxVector.class Planet.class
+	javac Test.java
 
 Matrix.class: Matrix.java
 	javac Matrix.java
