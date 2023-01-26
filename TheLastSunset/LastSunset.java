@@ -28,7 +28,7 @@ public class LastSunset {
         int[][] background = createRGBMap("background.jpg", Screen.XRES);
         ArrayList<Planet> planets = new ArrayList<Planet>();
         Planet Sun = new Planet(radius * 1.75, 0, 100, 50, new Color (255, 255, 0), 
-        createRGBMap("sun.jpg", steps), 0, sun2D());
+        createRGBMap("earth.jpg", steps), 0, sun2D());
         planets.add(Sun);
 
         //set up the world at the center
@@ -39,7 +39,7 @@ public class LastSunset {
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
-        for (int i = 200; i < 350; i ++){
+        for (int i = 175; i < 350; i += 1){
             System.out.println(i);
 
             s.clearScreen();;

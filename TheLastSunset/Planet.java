@@ -42,7 +42,7 @@ public class Planet{
     y = Math.sin(theta) * dist;
 
     if (limit > (x + 250 + size)){
-      displaySize -= 1.5;
+      displaySize -= 1.5; 
     }
   }
 
@@ -74,12 +74,14 @@ public class Planet{
      csystems.push(tmp.copy());
 
      //draw
+     int diminish = Math.max(0, (int) ((limit - (x + Screen.XRES/2 - size)) / 3 / size * steps));
+
      PolygonMatrix polys = new PolygonMatrix();
      polys.addSphere(0, 0, 0, displaySize, steps, 
-     Math.min(steps, Math.max(0, (int) ((limit - (x + Screen.XRES/2 - size)) / 3 / size * steps)))); //diminishing sphere
+     Math.min(steps, diminish));
      polys.mult(csystems.peek());
 
-     polys.drawPolygons(s, view, rgb, Math.min(steps, steps - (int) ((limit - (x + Screen.XRES/2 - size)) / 3 / size * steps)));
+     polys.drawPolygons(s, view, rgb, Math.min(steps, steps - diminish));
      csystems.pop();
   }
 

@@ -367,7 +367,7 @@ public class PolygonMatrix extends Matrix {
       double[] p2 = m.get(point+2);
 
       rowCounter += 0.5;
-      if (rowCounter == steps-1){
+      if (rowCounter == steps){
         rowCounter = 0;
         colCounter ++;
       }
