@@ -53,38 +53,22 @@ public class Screen {
 
   }//clearScreen
 
-  public void drawScanline(int x0, double z0, GfxVector n0, int x1, double z1, GfxVector n1, int y, Polygon tri) {
-
-    int tx;
-    double tz;
-    GfxVector tn;
-    //swap if needed to assure left->right drawing
+  public void drawScanline(int x0, double z0, int x1, double z1, int y, Color c) {
     if (x0 > x1) {
-      tx = x0;
-      tz = z0;
-      tn = n0;
+      int xt = x0;
       x0 = x1;
+      x1 = xt;
+      double zt = z0;
       z0 = z1;
-      n0 = n1;
-      x1 = tx;
-      z1 = tz;
-      n1 = tn;
+      z1 = zt;
     }
 
-    double delta_z;
-    delta_z = (x1 - x0) != 0 ? (z1 - z0) / (x1 - x0 + 1) : 0;
+    double dz = (z1 - z0) / (x1 - x0);
 
-    int x;
-    double z = z0;
-
-    Color c;
-    double t = 0.0;
-
-    for(x=x0; x <= x1; x++) {
-      c = tri.calculteLighting(new GfxVector(x, y, z), n0.interpolate(n1, t));
-      plot(c, x, y, z);
-      z+= delta_z;
-      t += 1.0/(x1 - x0 + 1);
+    while (x0 <= x1){
+      plot(c, x0, y, z0);
+      z0 += dz;
+      x0 ++;
     }
   }
 
@@ -188,6 +172,18 @@ public class Screen {
       zbuffer[x][newy] = z;
     }
   }//plot
+
+  public void plot(Color c, int x, int y, double z, int xLowerLimit, int xUpperLimit) {
+    int newy = width - 1 - y;
+    if (x >= xLowerLimit && x <= xUpperLimit && x >= 0 && x < width && newy >= 0 && newy < height ) {
+              // System.out.println(zbuffer[x][y]);
+              // System.out.println(z >= zbuffer[x][y]);
+      if ((int) (z * 1000) >= (int) (zbuffer[x][newy] * 1000)){
+        img.setRGB(x, newy, c.getRGB());
+        zbuffer[x][newy] = z;
+      }
+    }
+  }//plot with limit
 
   public void savePpm(String filename) {
     String ppmFile = "P3\n";

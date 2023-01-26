@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class EdgeMatrix extends Matrix {
 
-  public void addCricle(double cx, double cy, double cz,
+  public void addCircle(double cx, double cy, double cz,
                         double r, double step) {
     double x0, y0, x1, y1, t;
 
@@ -20,6 +20,16 @@ public class EdgeMatrix extends Matrix {
     }
   }//addCircle
 
+  public void addFilledCircle(double cx, double cy, double cz,
+  double r) {
+    for(int y = (int) (cy - r); y <= (int) (cy + r); y++){
+      for(int x = (int) (cx - r); x <=(int) (cx + r); x++){
+        if((x - cx)*(x - cx)+(y - cy)*(y - cy) <= r*r){
+          addEdge(x, y, cz, x, y, cz);
+        }
+      }
+    }
+  }
 
   public void addCurve( double x0, double y0,
                          double x1, double y1,
@@ -64,6 +74,4 @@ public class EdgeMatrix extends Matrix {
       s.drawLine((int)p0[0], (int)p0[1], (int)p1[0], (int)p1[1], c);
     }//draw lines
   }//drawEdges
-
-
 }//class EdgeMatrix

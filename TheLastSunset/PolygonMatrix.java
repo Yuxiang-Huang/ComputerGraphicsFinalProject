@@ -2,7 +2,136 @@ import java.util.*;
 import java.awt.*;
 
 public class PolygonMatrix extends Matrix {
+  private Matrix generateCylinder(double x0, double y0, double y1, double z0,
+  double r, int steps ) {
+    Matrix points = new Matrix();
+    double x, y, z;
 
+    y = Math.min(y0, y1);
+    double dy = Math.abs(y1 - y0) / steps;
+
+    //for y value of points on line
+    for (double h = 0; h < steps; h ++) {
+      //draw a circle
+      for(int circle = 0; circle < steps; circle++){
+        double circ = (double)circle / steps;
+
+        x = r * Math.cos(Math.PI * 2 * circ) + x0;
+        z = r * Math.sin(Math.PI * 2 * circ) + z0;
+        
+        points.addColumn(x, y, z);
+      }
+      y += dy;
+    }
+    return points;
+  }
+
+  public void addCylinder( double x0, double y0, double y1, double z0,
+  double r, int steps ) {
+
+    Matrix points = generateCylinder(x0, y0, y1, z0, r, steps);
+
+    int p0, p1, p2, p3, lat, longt;
+    int latStop, longStop, latStart, longStart;
+    latStart = 0;
+    latStop = steps;
+    longStart = 0;
+    longStop = steps;
+
+
+    for ( lat = latStart; lat < latStop; lat++ ) {
+      for ( longt = longStart; longt < longStop; longt++ ) {
+
+        p0 = lat * steps + longt;
+        if (longt == steps - 1)
+          p1 = p0 - longt;
+        else
+          p1 = p0 + 1;
+        p2 = (p1 + steps) % (steps * steps);
+        p3 = (p0 + steps) % (steps * steps);
+
+        double[] point0 = points.get(p0);
+        double[] point1 = points.get(p1);
+        double[] point2 = points.get(p2);
+        double[] point3 = points.get(p3);
+
+        addPolygon(point0[0], point0[1], point0[2],
+                   point3[0], point3[1], point3[2],
+                   point2[0], point2[1], point2[2]);
+        addPolygon(point0[0], point0[1], point0[2],
+                   point2[0], point2[1], point2[2],
+                   point1[0], point1[1], point1[2]);
+
+      }
+    }
+  }
+
+  private Matrix generateCone(double x0, double y0, double y1, double z0,
+  double r, int steps ) {
+    Matrix points = new Matrix();
+    double x, y, z;
+
+    y = Math.min(y0, y1);
+    double dy = Math.abs(y1 - y0) / steps;
+    double dr = r / steps;
+
+    //for y value of points on line
+    for (double h = 0; h < steps; h ++) {
+      //draw a circle
+      for(int circle = 0; circle < steps; circle++){
+        double circ = (double)circle / steps;
+
+        x = r * Math.cos(Math.PI * 2 * circ) + x0;
+        z = r * Math.sin(Math.PI * 2 * circ) + z0;
+        
+        points.addColumn(x, y, z);
+      }
+      y += dy;
+      r -= dr;
+    }
+    return points;
+  }
+
+  public void addCone( double x0, double y0, double y1, double z0,
+  double r, int steps ) {
+
+    Matrix points = generateCone(x0, y0, y1, z0, r, steps);
+
+    int p0, p1, p2, p3, lat, longt;
+    int latStop, longStop, latStart, longStart;
+    latStart = 0;
+    latStop = steps;
+    longStart = 0;
+    longStop = steps;
+
+
+    for ( lat = latStart; lat < latStop; lat++ ) {
+      for ( longt = longStart; longt < longStop; longt++ ) {
+
+        p0 = lat * steps + longt;
+        if (longt == steps - 1)
+          p1 = p0 - longt;
+        else
+          p1 = p0 + 1;
+        p2 = (p1 + steps) % (steps * steps);
+        p3 = (p0 + steps) % (steps * steps);
+
+        double[] point0 = points.get(p0);
+        double[] point1 = points.get(p1);
+        double[] point2 = points.get(p2);
+        double[] point3 = points.get(p3);
+
+        addPolygon(point0[0], point0[1], point0[2],
+                   point3[0], point3[1], point3[2],
+                   point2[0], point2[1], point2[2]);
+        addPolygon(point0[0], point0[1], point0[2],
+                   point2[0], point2[1], point2[2],
+                   point1[0], point1[1], point1[2]);
+
+      }
+    }
+  }
+  
   public void addBox( double x, double y, double z,
                        double width, double height, double depth ) {
     double x0, y0, z0, x1, y1, z1;
@@ -185,102 +314,39 @@ public class PolygonMatrix extends Matrix {
     m.add(col2);
   }//addColumn
 
-  public void drawPolygons(Screen s, GfxVector view, Color amb, ArrayList<GfxVector> lightPos, Color lightColor, 
-  double[] ambient, double[] diffuse, double[] specular) {
+  public void drawPolygons(Screen s, GfxVector view, int[][] rgb, int steps) {
     if ( m.size() < 3) {
       System.out.println("Need at least 3 points to draw a polygon");
       return;
     }//not enough points
 
-    HashMap<String, ArrayList<GfxVector>> vertexFaceNormals = new HashMap<String, ArrayList<GfxVector>>();
-    HashMap<String, GfxVector> vertexNormals = new HashMap<String, GfxVector>();
+    double rowCounter = 0;
+    int colCounter = 0;
+
+    // System.out.println(rgb.length);
+    // System.out.println(rgb[0].length);
+
+    // System.out.println(m.size()/3);
 
     for(int point=0; point<m.size()-1; point+=3) {
       double[] p0 = m.get(point);
       double[] p1 = m.get(point+1);
       double[] p2 = m.get(point+2);
 
-      Polygon tri = new Polygon(p0, p1, p2);
-
-      int[] pp0, pp1, pp2;
-      pp0 = new int[3];
-      pp1 = new int[3];
-      pp2 = new int[3];
-      String[] points = new String[3];
-      for (int i = 0; i < 3; i++) {
-        pp0[i] = (int) p0[i];
-        pp1[i] = (int) p1[i];
-        pp2[i] = (int) p2[i];
-      }
-      points[0] = Arrays.toString(pp0);
-      points[1] = Arrays.toString(pp1);
-      points[2] = Arrays.toString(pp2);
-
-      
-
-      for (int i = 0; i < 3; i++) {
-        if (vertexFaceNormals.containsKey(points[i])) {
-          ArrayList<GfxVector> temp = vertexFaceNormals.get(points[i]);
-          GfxVector norm = tri.getNormal().getNormalized();
-
-          boolean duplicate = false;
-          for (int j = 0; j < temp.size(); j++) {
-            if (temp.get(j).equals(norm)) {
-              duplicate = true;
-            }
-          }
-
-          if (!duplicate) {
-            temp.add(tri.getNormal().getNormalized());
-            vertexFaceNormals.put(points[i], temp);
-          } else {
-            //System.out.println("same face");
-          }
-        } else {
-          ArrayList<GfxVector> temp = new ArrayList<GfxVector>();
-          temp.add(tri.getNormal().getNormalized());
-          vertexFaceNormals.put(points[i], temp);
-        }
-      }
-    }
-    //System.out.println(vertexFaceNormals.toString());
-
-    vertexFaceNormals.forEach((key, value) -> {
-      double[] avgDir = new double[3];
-
-      for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < value.size(); j++) {
-          avgDir[i] += value.get(j).getComponent(i);
-        }
+      rowCounter += 0.5;
+      if (rowCounter == steps-1){
+        rowCounter = 0;
+        colCounter ++;
       }
 
-      avgDir[0] /= value.size();
-      avgDir[1] /= value.size();
-      avgDir[2] /= value.size();
+      Color c = new Color(rgb[(int)rowCounter]
+      [Math.min(colCounter, rgb[0].length - 1)]);
 
-      vertexNormals.put(key, new GfxVector(avgDir[0], avgDir[1], avgDir[2]).getNormalized());
-    });
-
-    //System.out.println(vertexNormals.toString());
-
-    for(int point=0; point<m.size()-1; point+=3) {
-      double[] p0 = m.get(point);
-      double[] p1 = m.get(point+1);
-      double[] p2 = m.get(point+2);
-
-      int red = (23 * (point/3))%256;
-      int green = (109 * (point/3))%256;
-      int blue = (227 * (point/3))%256;
-      Color c = new Color(red, green, blue);
-
-      Polygon tri = new Polygon(p0, p1, p2, c, vertexNormals, view, amb, lightPos, lightColor);
+      Polygon tri = new Polygon(p0, p1, p2, c);
       double dot = tri.getNormal().dotProduct(view, false);
 
       if (dot > 0) {
-
-        tri.setReflection(ambient, diffuse, specular);
-        //tri.calculteLighting(view, amb, lightPos, lightColor);
-        tri.scanlineConvert(s);
+        tri.scanlineConvertOld(s);
         // s.drawLine((int)p0[0], (int)p0[1], (int)p1[0], (int)p1[1], c);
         // s.drawLine((int)p2[0], (int)p2[1], (int)p1[0], (int)p1[1], c);
         // s.drawLine((int)p0[0], (int)p0[1], (int)p2[0], (int)p2[1], c);
