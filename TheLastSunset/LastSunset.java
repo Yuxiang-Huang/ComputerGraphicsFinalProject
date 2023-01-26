@@ -30,6 +30,7 @@ public class LastSunset {
         //theta
         double marsTheta = Math.PI * 5 / 4;
         double mercuryTheta = -Math.PI * 2 / 5;
+        double venusTheta = Math.PI * 3 / 4;
 
         int[][] background = createRGBMap("background.jpg", Screen.XRES);
         ArrayList<Planet> planets = new ArrayList<Planet>();
@@ -44,6 +45,10 @@ public class LastSunset {
         Planet Mercury = new Planet(radius * 0.383, dist * 0.39, year * 0.25, day * 3, new Color (0, 0, 255), 
         createRGBMap("mercury.jpg", steps), mercuryTheta, mercury2D(radius * 0.383 * scale2D));
         planets.add(Mercury);
+
+        Planet Venus = new Planet(radius * 0.949, dist * 0.72, year * 0.6, day * 2, new Color (150, 75, 0), 
+        createRGBMap("venus.jpg", steps), venusTheta, venus2D(radius * 0.949 * scale2D));
+        planets.add(Venus);
 
         //set up the world at the center
         Matrix transform = new Matrix();
@@ -113,6 +118,28 @@ public class LastSunset {
                 s.plot(new Color (background[j][i]), i, j, -1.0/0);    
             }
         }
+    }
+
+    public static ArrayList<Color> venus2D(double PlanetRadius){
+        double r, g, b;
+        ArrayList<Color> PlanetColor = new ArrayList<>();
+        double bound1 = 0.55;
+        for (int i = 0; i < PlanetRadius; i ++){
+            if (i < PlanetRadius * bound1){
+                double factor = i / (PlanetRadius * bound1);
+                r = 255 + (242 - 255) * factor;
+                g = 128 + (89 - 128) * factor;
+                b = 43 + (57 - 43) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            }  else{
+                double factor = (i - PlanetRadius * bound1) / (PlanetRadius * (1 - bound1));
+                r = 200 + (130 - 200) * factor;
+                g = 90 + (120 - 90) * factor;
+                b = 70 + (100 - 70) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            }
+        }
+        return PlanetColor;
     }
 
     public static ArrayList<Color> sun2D (double PlanetRadius){
