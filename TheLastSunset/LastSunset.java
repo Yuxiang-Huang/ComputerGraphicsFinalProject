@@ -32,7 +32,7 @@ public class LastSunset {
         double mercuryTheta = -Math.PI * 2 / 5;
         double venusTheta = Math.PI * 3 / 4;
         double earthTheta = Math.PI / 4;
-        double moonTheta = 0;
+        double moonTheta = Math.PI;
 
         int[][] background = createRGBMap("background.jpg", Screen.XRES);
         ArrayList<Planet> planets = new ArrayList<Planet>();
@@ -67,7 +67,7 @@ public class LastSunset {
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
-        for (int i = 175; i < 200; i ++){
+        for (int i = 300; i < 375; i ++){
             System.out.println(i);
 
             s.clearScreen();;

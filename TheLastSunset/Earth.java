@@ -21,7 +21,11 @@ public class Earth extends Planet{
         csystems.pop();
         csystems.push(tmp.copy());
 
-        moon.display(s, csystems, steps, limit);
+        moon.update(limit, x);
+        if (moon.displaySize > 0){
+            moon.display(s, csystems, steps, limit, x);
+        }
+        moon.display2D(s, csystems, limit, x);
 
         csystems.pop();
     }

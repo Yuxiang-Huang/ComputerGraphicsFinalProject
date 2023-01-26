@@ -36,7 +36,7 @@ public class Planet{
   }
 
   public void update(int limit){
-    if (limit > (x + 250 + size)){
+    if (limit > (x + Screen.XRES / 2 + size)){
       displaySize -= 1.5; 
     } else{
       theta += 2 * Math.PI / revTime;
