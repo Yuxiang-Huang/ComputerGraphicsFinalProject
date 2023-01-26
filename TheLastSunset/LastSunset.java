@@ -7,7 +7,7 @@ import javax.swing.*;
 import javax.imageio.stream.*;
 import java.net.URL;
 
-public class Test {
+public class LastSunset {
     static int radius = 25;;
     public static void main(String[] args) throws Exception{
         Screen s = new Screen();
@@ -15,7 +15,7 @@ public class Test {
         //start gif
         BufferedImage firstImage = s.getimg();
         ImageOutputStream output =
-        new FileImageOutputStream(new File("LastSunSet.gif"));
+        new FileImageOutputStream(new File("LastSunset.gif"));
         GifSequenceWriter writer =
         new GifSequenceWriter(output, firstImage.getType(), 100, false);
 
@@ -28,7 +28,7 @@ public class Test {
         int[][] background = createRGBMap("background.jpg", Screen.XRES);
         ArrayList<Planet> planets = new ArrayList<Planet>();
         Planet Sun = new Planet(radius * 1.75, 0, 100, 50, new Color (255, 255, 0), 
-        createRGBMap("sun.jpg", steps), 0);
+        createRGBMap("sun.jpg", steps), 0, sun2D());
         planets.add(Sun);
 
         //set up the world at the center
@@ -46,26 +46,24 @@ public class Test {
 
             drawBackground(s, background, i);
 
-            //update
-            for (int j = 0; j < planets.size(); j ++){
-                Planet p = planets.get(j);
-                p.update();
-            }
-
             //rotate
             tmp = new Matrix(Matrix.ROTATE, -Math.PI/5, 'X');
             tmp.mult(csystems.peek());
             csystems.push(tmp.copy());
 
+            //update and display
             for (int j = 0; j < planets.size(); j ++){
-                planets.get(j).display(s, csystems, steps);
+                Planet p = planets.get(j);
+                p.update();
+                p.display(s, csystems, steps);
             }
+
             writer.writeToSequence(s.getimg());
             csystems.pop();
         }
 
         //display animation
-        URL url = Test.class.getResource("LastSunSet.gif");
+        URL url = LastSunset.class.getResource("LastSunset.gif");
         Icon icon = new ImageIcon(url);
         JLabel label = new JLabel(icon);
         JFrame f = new JFrame("Animation");

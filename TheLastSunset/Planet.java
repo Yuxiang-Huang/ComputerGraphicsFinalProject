@@ -12,11 +12,15 @@ public class Planet{
   double y;
   Color c;
   int[][] rgb;
+  ArrayList<Color> planet2D;
+
+  int xlimit;
 
   double selfRotate = 0;
   double selfRotateTime;
 
-  public Planet(double size, double dist, double revTime, double selfRotateTime, Color c, int[][] rgb, double theta){
+  public Planet(double size, double dist, double revTime, double selfRotateTime, Color c, int[][] rgb, double theta,
+  ArrayList<Color> planet2D){
     this.size = size;
     this.dist = dist;
     this.revTime = revTime;
@@ -26,6 +30,7 @@ public class Planet{
     x = Math.cos(theta) * dist;
     y = Math.sin(theta) * dist;
     this.rgb = rgb;
+    this.planet2D = planet2D;
   }
 
   public void update(){
@@ -33,6 +38,8 @@ public class Planet{
     selfRotate += 2 * Math.PI / selfRotateTime;
     x = Math.cos(theta) * dist;
     y = Math.sin(theta) * dist;
+
+    xlimit ++;
   }
 
   public void display(Screen s, Stack<Matrix> csystems, int steps){

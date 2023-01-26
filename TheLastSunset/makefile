@@ -1,8 +1,8 @@
-run: Test.class
-	java Test
+run: LastSunset.class
+	java LastSunset
 
-Test.class: Test.java Screen.class Matrix.class EdgeMatrix.class PolygonMatrix.class GfxVector.class Planet.class
-	javac Test.java
+LastSunset.class: LastSunset.java Screen.class Matrix.class EdgeMatrix.class PolygonMatrix.class GfxVector.class Planet.class
+	javac LastSunset.java
 
 Matrix.class: Matrix.java
 	javac Matrix.java
