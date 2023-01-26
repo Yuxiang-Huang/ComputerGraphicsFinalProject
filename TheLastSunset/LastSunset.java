@@ -4,14 +4,13 @@ import java.awt.*;
 import java.awt.image.*;
 import javax.imageio.*;
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicSliderUI.ScrollListener;
 import javax.imageio.stream.*;
 import java.net.URL;
 
 public class LastSunset {
     static int radius = 25;;
     static double scale2D = 1.5;
-    static int steps = 20;
+    static int steps = 200;
     public static void main(String[] args) throws Exception{
         Screen s = new Screen();
 
@@ -25,7 +24,7 @@ public class LastSunset {
         //variables
         int dist = 200;
         double year = 2000;
-        int day = 30;
+        double day = year / 36.5;
 
         //theta
         double marsTheta = Math.PI / 2;
@@ -38,15 +37,15 @@ public class LastSunset {
         int[][] background = createRGBMap("background.jpg", Screen.XRES);
         ArrayList<Planet> planets = new ArrayList<Planet>();
 
-        Planet Mars = new Planet("Mars", radius * 0.532, dist * 1.52, year * 2, day * 1.03,
+        Planet Mars = new Planet("Mars", radius * 0.532, dist * 1.52, year * 1.882, day * 1.04,
         createRGBMap("mars.jpg", steps), marsTheta, mars2D(radius * 0.532 * scale2D));
         planets.add(Mars);
 
-        Planet Mercury = new Planet("Mercuary", radius * 0.383, dist * 0.39, year * 0.25, day * 3, 
+        Planet Mercury = new Planet("Mercuary", radius * 0.383, dist * 0.39, year * 0.241, day * 5.8, 
         createRGBMap("mercury.jpg", steps), mercuryTheta, mercury2D(radius * 0.383 * scale2D));
         planets.add(Mercury);
 
-        Venus Venus = new Venus("Venus", radius * 0.949, dist * 0.72, year * 0.6, day * 2,
+        Venus Venus = new Venus("Venus", radius * 0.949, dist * 0.72, year * 0.616, day * 24.3,
         createRGBMap("venus.jpg", steps), venusTheta, venus2D(radius * 0.949 * scale2D));
         planets.add(Venus);
 
@@ -57,7 +56,7 @@ public class LastSunset {
         createRGBMap("earth.jpg", steps), earthTheta, Earth2D(radius * scale2D), Moon);
         planets.add(Earth);
 
-        Sun Sun = new Sun("Sun", radius * 1.6, 0, 100, 50, 
+        Sun Sun = new Sun("Sun", radius * 1.6, 0, 1, day * 2.7, 
         createRGBMap("sun.jpg", steps), 0, sun2D(radius * 1.6 * scale2D), Earth);
         planets.add(Sun);
 
