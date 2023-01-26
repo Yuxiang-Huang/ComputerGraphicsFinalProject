@@ -39,7 +39,7 @@ public class LastSunset {
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
-        for (int i = 200; i < 300; i ++){
+        for (int i = 225; i < 350; i ++){
             System.out.println(i);
 
             s.clearScreen();;
@@ -54,8 +54,10 @@ public class LastSunset {
             //update and display
             for (int j = 0; j < planets.size(); j ++){
                 Planet p = planets.get(j);
-                p.update();
-                p.display(s, csystems, steps);
+                p.update(i);
+                if (p.displaySize > 0){
+                    p.display(s, csystems, steps);
+                }
                 p.display2D(s, csystems, i);
             }
 
@@ -101,7 +103,7 @@ public class LastSunset {
 
     public static ArrayList<Color> sun2D (){
         double r, g, b;
-        double PlanetRadius = radius * 1.75;
+        double PlanetRadius = radius * 1.75 * 1.5;
         ArrayList<Color> PlanetColor = new ArrayList<>();
         for (int i = 0; i < PlanetRadius; i ++){
             if (i < PlanetRadius * 0.45){

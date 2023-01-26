@@ -17,6 +17,8 @@ public class Planet{
   double selfRotate = 0;
   double selfRotateTime;
 
+  double displaySize;
+
   public Planet(double size, double dist, double revTime, double selfRotateTime, Color c, int[][] rgb, double theta,
   ArrayList<Color> planet2D){
     this.size = size;
@@ -29,13 +31,19 @@ public class Planet{
     y = Math.sin(theta) * dist;
     this.rgb = rgb;
     this.planet2D = planet2D;
+
+    displaySize = size;
   }
 
-  public void update(){
+  public void update(int limit){
     theta += 2 * Math.PI / revTime;
     selfRotate += 2 * Math.PI / selfRotateTime;
     x = Math.cos(theta) * dist;
     y = Math.sin(theta) * dist;
+
+    if (limit > (x + 250)){
+      displaySize --;
+    }
   }
 
   public void display(Screen s, Stack<Matrix> csystems, int steps){
@@ -67,7 +75,7 @@ public class Planet{
 
      //draw
      PolygonMatrix polys = new PolygonMatrix();
-     polys.addSphere(0, 0, 0, size/2, steps);
+     polys.addSphere(0, 0, 0, displaySize, steps);
      polys.mult(csystems.peek());
 
      polys.drawPolygons(s, view, rgb, steps);
@@ -84,7 +92,7 @@ public class Planet{
       edges.addFilledCircle(0, 0, 0, i + 1);
       edges.mult(csystems.peek());
       edges.drawEdgesCircularLimit(s, planet2D.get(i), (x + Screen.XRES/2), (y + Screen.YRES/2), 
-      limit - (x + Screen.XRES/2));
+      limit - (x + Screen.XRES/2) + size);
     }
 
     csystems.pop();
