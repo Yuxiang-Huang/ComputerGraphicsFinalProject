@@ -8,7 +8,7 @@ import javax.imageio.stream.*;
 import java.net.URL;
 
 public class Test {
-    static GfxVector view = new GfxVector(0, 0, 1);
+    static int radius = 25;;
     public static void main(String[] args) throws Exception{
         Screen s = new Screen();
 
@@ -22,13 +22,13 @@ public class Test {
         //variables
         int steps = 20;
         int dist = 300;
-        int radius = 25;
         double year = 60;
         int day = 30;
 
         int[][] background = createRGBMap("background.jpg", Screen.XRES);
         ArrayList<Planet> planets = new ArrayList<Planet>();
-        Planet Sun = new Planet(radius * 1.75, 0, 100, 50, new Color (255, 255, 0), createRGBMap("sun.jpg", steps), 0);
+        Planet Sun = new Planet(radius * 1.75, 0, 100, 50, new Color (255, 255, 0), 
+        createRGBMap("sun.jpg", steps), 0);
         planets.add(Sun);
 
         //set up the world at the center
@@ -58,47 +58,7 @@ public class Test {
             csystems.push(tmp.copy());
 
             for (int j = 0; j < planets.size(); j ++){
-                Planet p = planets.get(j);
-
-                //draw the orbit in the rotated world
-                EdgeMatrix edges = new EdgeMatrix();
-                edges.addCircle(0, 0, 0, p.dist, 0.01);
-                edges.mult(csystems.peek());
-                edges.drawEdges(s, p.c);
-
-                csystems.push(csystems.peek().copy());
-
-                //translate
-                tmp = new Matrix(Matrix.TRANSLATE, p.x, p.y, 0);
-                tmp.mult(csystems.peek());
-                csystems.pop();
-                csystems.push(tmp.copy());
-
-                //self rotate
-                tmp = new Matrix(Matrix.ROTATE, p.selfRotate, 'Z');
-                tmp.mult(csystems.peek());
-                csystems.pop();
-                csystems.push(tmp.copy());
-
-                // //rotate
-                // tmp = new Matrix(Matrix.ROTATE, Math.PI/4, 'X');
-                // tmp.mult(csystems.peek());
-                // csystems.pop();
-                // csystems.push(tmp.copy());
-
-                //fix
-                tmp = new Matrix(Matrix.ROTATE, Math.PI/2, 'Y');
-                tmp.mult(csystems.peek());
-                csystems.pop();
-                csystems.push(tmp.copy());
-
-                //draw
-                PolygonMatrix polys = new PolygonMatrix();
-                polys.addSphere(0, 0, 0, p.size, steps);
-                polys.mult(csystems.peek());
-
-                polys.drawPolygons(s, view, p.rgb, steps);
-                csystems.pop();
+                planets.get(j).display(s, csystems, steps);
             }
             writer.writeToSequence(s.getimg());
             csystems.pop();
@@ -138,5 +98,33 @@ public class Test {
                 s.plot(new Color (background[j][i]), i, j, -1.0/0);    
             }
         }
+    }
+
+    public static ArrayList<Color> sun2D (){
+        double r, g, b;
+        double PlanetRadius = radius * 1.75;
+        ArrayList<Color> PlanetColor = new ArrayList<>();
+        for (int i = 0; i < PlanetRadius; i ++){
+            if (i < PlanetRadius * 0.45){
+                double factor = i / (PlanetRadius * 0.45);
+                r = 255;
+                g = 245 + (228 - 245) * factor;
+                b = 200 + (100 - 200) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            } else if (i < PlanetRadius * 0.77){
+                double factor = (i - PlanetRadius * 0.45) / (PlanetRadius * (0.77 - 0.45));;
+                r = 255;
+                g = 200 + (100 - 299) * factor;
+                b = 53;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            } else{
+                double factor = (i - PlanetRadius * 0.77) / (PlanetRadius * (1 - 0.77));
+                r = 254 + (232 - 254) * factor;
+                g = 215 + (67 - 215) * factor;
+                b = 52 + (17 - 52) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            }
+        }
+        return PlanetColor;
     }
 }

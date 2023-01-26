@@ -1,6 +1,9 @@
 import java.awt.*;
+import java.util.*;
 
 public class Planet{
+  static GfxVector view = new GfxVector(0, 0, 1);
+
   double size;
   double dist;
   double revTime;
@@ -30,5 +33,41 @@ public class Planet{
     selfRotate += 2 * Math.PI / selfRotateTime;
     x = Math.cos(theta) * dist;
     y = Math.sin(theta) * dist;
+  }
+
+  public void display(Screen s, Stack<Matrix> csystems, int steps){
+     //draw the orbit in the rotated world
+     EdgeMatrix edges = new EdgeMatrix();
+     edges.addCircle(0, 0, 0, dist, 0.01);
+     edges.mult(csystems.peek());
+     edges.drawEdges(s, c);
+
+     csystems.push(csystems.peek().copy());
+
+     //translate
+     Matrix tmp = new Matrix(Matrix.TRANSLATE, x, y, 0);
+     tmp.mult(csystems.peek());
+     csystems.pop();
+     csystems.push(tmp.copy());
+
+     //self rotate
+     tmp = new Matrix(Matrix.ROTATE, selfRotate, 'Z');
+     tmp.mult(csystems.peek());
+     csystems.pop();
+     csystems.push(tmp.copy());
+
+     //fix
+     tmp = new Matrix(Matrix.ROTATE, Math.PI/2, 'Y');
+     tmp.mult(csystems.peek());
+     csystems.pop();
+     csystems.push(tmp.copy());
+
+     //draw
+     PolygonMatrix polys = new PolygonMatrix();
+     polys.addSphere(0, 0, 0, size, steps);
+     polys.mult(csystems.peek());
+
+     polys.drawPolygons(s, view, rgb, steps);
+     csystems.pop();
   }
 }
