@@ -20,7 +20,7 @@ public class LastSunset {
         new GifSequenceWriter(output, firstImage.getType(), 100, false);
 
         //variables
-        int steps = 20;
+        int steps = 100;
         int dist = 300;
         double year = 60;
         int day = 30;

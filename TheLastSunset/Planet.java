@@ -76,10 +76,10 @@ public class Planet{
      //draw
      PolygonMatrix polys = new PolygonMatrix();
      polys.addSphere(0, 0, 0, displaySize, steps, 
-     Math.min(steps, (int) ((limit - (x + Screen.XRES/2 - size)) / 3 / size * steps))); //diminishing sphere
+     Math.min(steps, Math.max(0, (int) ((limit - (x + Screen.XRES/2 - size)) / 3 / size * steps)))); //diminishing sphere
      polys.mult(csystems.peek());
 
-     polys.drawPolygons(s, view, rgb, steps);
+     polys.drawPolygons(s, view, rgb, Math.min(steps, steps - (int) ((limit - (x + Screen.XRES/2 - size)) / 3 / size * steps)));
      csystems.pop();
   }
 
