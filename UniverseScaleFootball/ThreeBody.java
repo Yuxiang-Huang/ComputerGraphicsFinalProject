@@ -8,6 +8,7 @@ import javax.imageio.stream.*;
 import java.net.URL;
 
 public class ThreeBody{
+  static int total = 325;
   static double t = 0.01;
   static double mass = 100 * 10E11 * 1;
   static int steps = 100;
@@ -23,8 +24,35 @@ public class ThreeBody{
     double[] specular = new double[]{0.5, 0.5, 0.5};
 
     //setup
-    int total = 325;
     Screen s = new Screen();
+
+    BufferedImage firstImage = s.getimg();
+
+    ImageOutputStream output =
+      new FileImageOutputStream(new File("ThreeBodySystem.gif"));
+    GifSequenceWriter writer =
+      new GifSequenceWriter(output, firstImage.getType(), 40, false);
+
+    animate(s, writer, view, amb, lightPos, lightColor, ambient, diffuse, specular, 1);
+    animate(s, writer, view, amb, lightPos, lightColor, ambient, diffuse, specular, 2);
+
+    //animation
+    URL url = ThreeBody.class.getResource("ThreeBodySystem.gif");
+    Icon icon = new ImageIcon(url);
+    JLabel label = new JLabel(icon);
+    JFrame f = new JFrame("Animation");
+    f.getContentPane().add(label);
+    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    f.pack();
+    f.setLocationRelativeTo(null);
+    f.setVisible(true);
+    writer.close();
+    output.close();
+  }
+
+  public static void animate(Screen s, GifSequenceWriter writer,
+  GfxVector view, Color amb, ArrayList<GfxVector> lightPos, Color lightColor,
+  double[] ambient, double[] diffuse, double[] specular, int type) throws Exception {
 
     int[][] sunRGB = createRGBMap("sun.jpg", steps);
     int[][] planetRGB = createRGBMap("planet.jpg", steps);
@@ -80,27 +108,21 @@ public class ThreeBody{
     // bodyInfo(b2, 2);
     // bodyInfo(planet);
 
-    BufferedImage firstImage = s.getimg();
 
-    ImageOutputStream output =
-      new FileImageOutputStream(new File("ThreeBodySystem.gif"));
-    GifSequenceWriter writer =
-      new GifSequenceWriter(output, firstImage.getType(), 40, false);
-
-    for (int i = 0; i < total; i ++){
+    for (int i = 0; i < type * total; i ++){
         System.out.println(i);
     
         s.clearScreen();
 
-        if (i >= 280){
-          switchTexture(planet, normal, (i - 280) * 8);
-        } else if (i >= 270){
-          switchTexture2(planet, fire, (i - 270) * 8);
-        } else if (i >= 245){
-          switchTexture2(planet, normal, (i - 245) * 2);
-        } else if (i >= 190){
+        if (i >= 280 * type){
+          switchTexture(planet, normal, (i - 280 * type) * 8 / type);
+        } else if (i >= 270 * type){
+          switchTexture2(planet, fire, (i - 270 * type) * 8 / type);
+        } else if (i >= 245 * type){
+          switchTexture2(planet, normal, (i - 245 * type) * 2 / type);
+        } else if (i >= 200 * type){
           planet.useTexture = true;
-          switchTexture(planet, frozen, (i - 190));
+          switchTexture(planet, frozen, (i - 200 * type) / type);
         }
 
         lightPos = new ArrayList<>();
@@ -114,7 +136,7 @@ public class ThreeBody{
         }
 
         //change velocity
-        for (int j = 0; j < 1 / t; j ++){
+        for (int j = 0; j < 1.0 / type / t; j ++){
           b0.attract(b1, t);
           b0.attract(b2, t);
           b0.attract(planet, t);
@@ -134,19 +156,6 @@ public class ThreeBody{
 
         writer.writeToSequence(s.getimg());
     }
-
-    //animation
-    URL url = ThreeBody.class.getResource("ThreeBodySystem.gif");
-    Icon icon = new ImageIcon(url);
-    JLabel label = new JLabel(icon);
-    JFrame f = new JFrame("Animation");
-    f.getContentPane().add(label);
-    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    f.pack();
-    f.setLocationRelativeTo(null);
-    f.setVisible(true);
-    writer.close();
-    output.close();
   }
 
   public static void bodyInfo(Body b, int i){
