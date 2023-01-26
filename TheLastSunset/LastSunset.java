@@ -50,7 +50,7 @@ public class LastSunset {
         createRGBMap("venus.jpg", steps), venusTheta, venus2D(radius * 0.949 * scale2D));
         planets.add(Venus);
 
-        Planet Earth = new Planet("Earth", radius, dist, year, day, 
+        Earth Earth = new Earth("Earth", radius, dist, year, day, 
         createRGBMap("earth.jpg", steps), earthTheta, drawEarth(radius * scale2D));
         planets.add(Earth);
 
@@ -62,7 +62,7 @@ public class LastSunset {
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
-        for (int i = 250; i < 300; i ++){
+        for (int i = 375; i < 450; i ++){
             System.out.println(i);
 
             s.clearScreen();;

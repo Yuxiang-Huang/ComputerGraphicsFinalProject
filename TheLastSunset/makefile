@@ -1,7 +1,7 @@
 run: LastSunset.class
 	java LastSunset
 
-LastSunset.class: LastSunset.java Screen.class Matrix.class EdgeMatrix.class PolygonMatrix.class GfxVector.class Planet.class
+LastSunset.class: LastSunset.java Screen.class Matrix.class EdgeMatrix.class PolygonMatrix.class GfxVector.class Planet.class Venus.class Earth.class
 	javac LastSunset.java
 
 Matrix.class: Matrix.java
@@ -24,6 +24,12 @@ Screen.class: Screen.java
 
 Planet.class: Planet.java
 	javac Planet.java
+
+Venus.class: Venus.java
+	javac Venus.java
+	
+Earth.class: Earth.java
+	javac Earth.java
 
 clean:
 	rm *.class

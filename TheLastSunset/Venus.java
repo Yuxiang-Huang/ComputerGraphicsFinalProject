@@ -10,15 +10,13 @@ public class Venus extends Planet{
   ArrayList<Color> planet2D){
     super(name, size, dist, revTime, selfRotateTime, rgb, theta, planet2D);
     //random snowflakes for Venus
-    if (name.equals("Venus")){
-      double phi = 0;
+    double phi = 0;
 
-      while (phi < Math.PI * 2 - Math.PI / 10){
-        venusSnowflakes.add(phi);
-        phi += Math.random() * Math.PI / 10 + Math.PI / 10;
+    while (phi < Math.PI * 2 - Math.PI / 10){
+    venusSnowflakes.add(phi);
+    phi += Math.random() * Math.PI / 10 + Math.PI / 10;
 
-        venusRandomAngle.add(Math.random() * 2 * Math.PI);
-      }
+    venusRandomAngle.add(Math.random() * 2 * Math.PI);
     }
   }
 
