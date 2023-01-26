@@ -9,6 +9,7 @@ public class WaterDrop {
     public boolean intro = true;
     public boolean end = false;
 
+    public int maxSpeed = 15;
     double direction = 0;
     double rotateSpeed = Math.PI * 2 / 100;
 
@@ -34,7 +35,7 @@ public class WaterDrop {
     }
 
     public void update(ArrayList<SpaceShip> ships, ArrayList<SpaceShip> explode){
-        int speed = 20;
+        int speed = maxSpeed;
         while (speed > 0){
             //no more targets
             if (ships.size() == 0){
@@ -42,6 +43,7 @@ public class WaterDrop {
             } 
             //special movements
             if (ships.size() == 15 && lock0){
+                maxSpeed = 20;
                 //end of first col
                 direction = - Math.PI/2;
                 double distance = y;
@@ -110,7 +112,7 @@ public class WaterDrop {
     }
 
     public void end(){
-        int speed = 25;
+        int speed = 15;
         while (speed > 0){
             //direction
             double targetx = Screen.XRES/2;
@@ -145,7 +147,7 @@ public class WaterDrop {
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
-         //at viewer
+        //at viewer
         tmp = new Matrix(Matrix.ROTATE, -Math.PI/2, 'X');
         tmp.mult(csystems.peek());
         csystems.pop();

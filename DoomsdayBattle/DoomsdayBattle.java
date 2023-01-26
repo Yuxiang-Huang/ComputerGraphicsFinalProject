@@ -79,7 +79,7 @@ public class DoomsdayBattle {
             }
         }
 
-        lightPos.remove(0);
+        lightPos = new ArrayList<>();
         lightPos.add(new GfxVector(250, 250, 1000));
 
         //animation battle
@@ -120,11 +120,27 @@ public class DoomsdayBattle {
             writer.writeToSequence(s.getimg());
         }
 
-        while (explode.size() != 0){
-            System.out.println(explode.size());
+        // while (explode.size() != 0){
+        //     System.out.println(explode.size());
 
+        //     s.clearScreen();
+        //     //explosion
+        //     for (int j = explode.size() - 1; j >= 0 ; j--){
+        //         SpaceShip ship = explode.get(j);
+        //         if (ship.expand){
+        //             ship.display(s, view, amb, lightPos, lightColor);
+        //         }
+        //         ship.explode(s, explode, view, amb, lightPos, lightColor, explosion);
+        //     }
+        //     writer.writeToSequence(s.getimg());
+        // }
+
+        //move towards viewer
+        while (sfp.x != Screen.XRES/2 || sfp.y != Screen.YRES/2){
             s.clearScreen();
-            //explosion
+            sfp.end();
+            sfp.display(s, view, amb, lightPos, lightColor);
+
             for (int j = explode.size() - 1; j >= 0 ; j--){
                 SpaceShip ship = explode.get(j);
                 if (ship.expand){
@@ -132,14 +148,6 @@ public class DoomsdayBattle {
                 }
                 ship.explode(s, explode, view, amb, lightPos, lightColor, explosion);
             }
-            writer.writeToSequence(s.getimg());
-        }
-
-        //move towards viewer
-        while (sfp.x != Screen.XRES/2 || sfp.y != Screen.YRES/2){
-            s.clearScreen();
-            sfp.end();
-            sfp.display(s, view, amb, lightPos, lightColor);
 
             writer.writeToSequence(s.getimg());
         }
@@ -171,7 +179,7 @@ public class DoomsdayBattle {
     public static boolean tooClose(SpaceShip ship, ArrayList<SpaceShip> ships){
         for (SpaceShip other : ships){
             if (!ship.equals(other)){
-                if (dist(ship, other) < 75){
+                if (dist(ship, other) < 30){
                     return true;
                 }
             }
