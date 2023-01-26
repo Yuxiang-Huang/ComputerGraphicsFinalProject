@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.image.*;
 import javax.imageio.*;
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicSliderUI.ScrollListener;
 import javax.imageio.stream.*;
 import java.net.URL;
 
@@ -31,6 +32,7 @@ public class LastSunset {
         double mercuryTheta = -Math.PI * 2 / 5;
         double venusTheta = Math.PI * 3 / 4;
         double earthTheta = Math.PI / 4;
+        double moonTheta = 0;
 
         int[][] background = createRGBMap("background.jpg", Screen.XRES);
         ArrayList<Planet> planets = new ArrayList<Planet>();
@@ -50,8 +52,11 @@ public class LastSunset {
         createRGBMap("venus.jpg", steps), venusTheta, venus2D(radius * 0.949 * scale2D));
         planets.add(Venus);
 
+        Moon Moon = new Moon("Moon", radius * 0.25, radius + 15, year / 3, year / 3,
+        createRGBMap("moon.jpg", steps), moonTheta, moon2D(radius * 0.25 * scale2D));
+
         Earth Earth = new Earth("Earth", radius, dist, year, day, 
-        createRGBMap("earth.jpg", steps), earthTheta, drawEarth(radius * scale2D));
+        createRGBMap("earth.jpg", steps), earthTheta, Earth2D(radius * scale2D), Moon);
         planets.add(Earth);
 
         //set up the world at the center
@@ -62,7 +67,7 @@ public class LastSunset {
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
-        for (int i = 375; i < 450; i ++){
+        for (int i = 175; i < 200; i ++){
             System.out.println(i);
 
             s.clearScreen();;
@@ -124,7 +129,37 @@ public class LastSunset {
         }
     }
 
-    public static ArrayList<Color> drawEarth(double PlanetRadius){
+    public static ArrayList<Color> moon2D(double PlanetRadius){
+        double r, g, b;
+        ArrayList<Color> PlanetColor = new ArrayList<>();
+        double bound1 = 0.2;
+        double bound2 = 0.55;
+        for (int i = 0; i < PlanetRadius; i ++){
+            if (i < PlanetRadius * bound1){
+                double factor = i / (PlanetRadius * bound1);
+                r = 254 + (253 - 254) * factor;
+                g = 253 + (243 - 253) * factor;
+                b = 217 + (93 - 217) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            } else if (i < PlanetRadius * bound2){
+                double factor = (i - PlanetRadius * bound1) / (PlanetRadius * (bound2 - bound1));;
+                r = 213 + (129 - 213) * factor;
+                g = 170 + (37 - 170) * factor;
+                b = 93 + (4 - 93) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            } else{
+                double factor = (i - PlanetRadius * bound2) / (PlanetRadius * (1 - bound2));
+                r = 98 + (128 - 98) * factor;
+                g = 37 + (27 - 37) * factor;
+                b = 4;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            }
+        }
+
+        return PlanetColor;
+    }
+
+    public static ArrayList<Color> Earth2D(double PlanetRadius){
         //2D
         double r, g, b;
         ArrayList<Color> PlanetColor = new ArrayList<>();

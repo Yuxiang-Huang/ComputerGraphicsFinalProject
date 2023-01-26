@@ -2,10 +2,28 @@ import java.awt.*;
 import java.util.*;
 
 public class Earth extends Planet{
+    Moon moon;
 
     public Earth(String name, double size, double dist, double revTime, double selfRotateTime, int[][] rgb, double theta,
-  ArrayList<Color> planet2D){
+  ArrayList<Color> planet2D, Moon moon){
         super(name, size, dist, revTime, selfRotateTime, rgb, theta, planet2D);
+        this.moon = moon;
+    }
+
+    @Override 
+    public void display(Screen s, Stack<Matrix> csystems, int steps, int limit){
+        super.display(s, csystems, steps, limit);
+        csystems.push(csystems.peek().copy());
+
+        //translate
+        Matrix tmp = new Matrix(Matrix.TRANSLATE, x, y, 0);
+        tmp.mult(csystems.peek());
+        csystems.pop();
+        csystems.push(tmp.copy());
+
+        moon.display(s, csystems, steps, limit);
+
+        csystems.pop();
     }
 
     @Override
