@@ -74,7 +74,7 @@ public class EdgeMatrix extends Matrix {
     }//draw lines
   }//drawEdges
 
-  public void drawEdgesCircularLimit(Screen s, Color c, double x, double y, double limit) {
+  public void drawEdgesCircularLimit(Screen s, Color c, double x, double y, double limit, Matrix transform, Matrix checkMatrix) {
     if ( m.size() < 2) {
       System.out.println("Need at least 2 edges to draw a line");
       return;
@@ -83,7 +83,7 @@ public class EdgeMatrix extends Matrix {
     for(int point=0; point<m.size()-1; point+=2) {
       double[] p0 = m.get(point);
       double[] p1 = m.get(point+1);
-      s.drawLineCircularlimit((int)p0[0], (int)p0[1], (int)p1[0], (int)p1[1], c, x, y, limit);
+      s.drawLineCircularlimit((int)p0[0], (int)p0[1], (int)p1[0], (int)p1[1], c, x, y, limit, transform, checkMatrix);
     }//draw lines
   }//drawEdges
 }//class EdgeMatrix

@@ -164,7 +164,7 @@ public class Screen {
     }//end octants 2 and 7
   }//drawLine
 
-  public void drawLineCircularlimit(int x0, int y0, int x1, int y1, Color c, double cx, double cy, double r){
+  public void drawLineCircularlimit(int x0, int y0, int x1, int y1, Color c, double cx, double cy, double r, Matrix transform, Matrix checkMatrix){
     int x, y, d, A, B;
     double z = 0;
     //swap points if going right -> left
@@ -191,7 +191,7 @@ public class Screen {
 
         d = A + B/2;
         while ( x < x1 ) {
-          plotCircularLimit(c, x, y, z, cx, cy, r);
+          plotCircularLimit(c, x, y, z, cx, cy, r, transform, checkMatrix);
           if ( d > 0 ) {
             y+= 1;
             d+= B;
@@ -199,7 +199,7 @@ public class Screen {
           x++;
           d+= A;
         } //end octant 1 while
-        plotCircularLimit(c, x1, y1, z, cx, cy, r);
+        plotCircularLimit(c, x1, y1, z, cx, cy, r, transform, checkMatrix);
       } //end octant 1
 
       //octant 8
@@ -207,7 +207,7 @@ public class Screen {
         d = A - B/2;
 
         while ( x < x1 ) {
-          plotCircularLimit(c, x, y, z, cx, cy, r);
+          plotCircularLimit(c, x, y, z, cx, cy, r, transform, checkMatrix);
           if ( d < 0 ) {
             y-= 1;
             d-= B;
@@ -215,7 +215,7 @@ public class Screen {
           x++;
           d+= A;
         } //end octant 8 while
-        plotCircularLimit(c, x1, y1, z, cx, cy, r);
+        plotCircularLimit(c, x1, y1, z, cx, cy, r, transform, checkMatrix);
       } //end octant 8
     }//end octants 1 and 8
 
@@ -227,7 +227,7 @@ public class Screen {
         d = A/2 + B;
 
         while ( y < y1 ) {
-          plotCircularLimit(c, x, y, z, cx, cy, r);
+          plotCircularLimit(c, x, y, z, cx, cy, r, transform, checkMatrix);
           if ( d < 0 ) {
             x+= 1;
             d+= A;
@@ -235,7 +235,7 @@ public class Screen {
           y++;
           d+= B;
         } //end octant 2 while
-        plotCircularLimit(c, x1, y1, z, cx, cy, r);
+        plotCircularLimit(c, x1, y1, z, cx, cy, r, transform, checkMatrix);
       } //end octant 2
 
       //octant 7
@@ -243,7 +243,7 @@ public class Screen {
         d = A/2 - B;
 
         while ( y > y1 ) {
-          plotCircularLimit(c, x, y, z, cx, cy, r);
+          plotCircularLimit(c, x, y, z, cx, cy, r, transform, checkMatrix);
           if ( d > 0 ) {
             x+= 1;
             d+= A;
@@ -251,7 +251,7 @@ public class Screen {
           y--;
           d-= B;
         } //end octant 7 while
-        plotCircularLimit(c, x1, y1, z, cx, cy, r);
+        plotCircularLimit(c, x1, y1, z, cx, cy, r, transform, checkMatrix);
       } //end octant 7
     }//end octants 2 and 7
   }//drawLine
@@ -278,10 +278,23 @@ public class Screen {
     }
   }//plot with limit
 
-  public void plotCircularLimit(Color c, int x, int y, double z, double cx, double cy, double r) {
-    int newy = width - 1 - y;
-    if (x >= 0 && x < width && newy >= 0 && newy < height ) {
-      if (r > 0 && (cx - x) * (cx - x) + (cy - y) * (cy - y) <= r * r){ // circular limit
+  public void plotCircularLimit(Color c, int x, int y, double z, double cx, double cy, double r, Matrix transform, Matrix checkMatrix) {
+    Matrix curr = new Matrix();
+    curr.m.add(new double[]{x, y, z, 1});
+    curr.mult(checkMatrix);
+    int newy = (int) curr.m.get(0)[1];
+    int newx = (int) curr.m.get(0)[0];
+
+    if (r > 0 && (cx - newx) * (cx - newx) + (cy - newy) * (cy - newy) <= r * r){ // circular limit
+      //transform here
+      curr = new Matrix();
+      curr.m.add(new double[]{x, y, z, 1});
+      curr.mult(transform);
+      newy = width - 1 - (int) curr.m.get(0)[1];
+      x = (int) curr.m.get(0)[0];
+      z = (int) curr.m.get(0)[2];
+
+      if (x >= 0 && x < width && newy >= 0 && newy < height ) {
         if ((int) (z * 1000) >= (int) (zbuffer[x][newy] * 1000)){
           img.setRGB(x, newy, c.getRGB());
           zbuffer[x][newy] = z;
