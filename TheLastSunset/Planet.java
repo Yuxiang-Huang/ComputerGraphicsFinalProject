@@ -114,7 +114,6 @@ public class Planet{
 
   public void drawSnowFlakesVenus(Screen s, Stack<Matrix> csystems, int length, int limit){        
     //translate to the center of the planet
-
     for (double phi : venusSnowflakes){
         EdgeMatrix edges = new EdgeMatrix();
         //translate to the center of this snowflake
@@ -134,9 +133,17 @@ public class Planet{
             edges.addEdge(0, 0, 0, length * Math.cos(alpha), length * Math.sin(alpha), 0);
         }
 
-        Matrix checkMatrix = new Matrix(Matrix.TRANSLATE, currLen * Math.cos(phi), currLen * Math.sin(phi), 0);
+        //check matrix exclude the rotate by x
+        Matrix checkMatrix = new Matrix(Matrix.TRANSLATE, x, y, 0);
+        tmp = new Matrix(Matrix.TRANSLATE, currLen * Math.cos(phi), currLen * Math.sin(phi), 0);
+        tmp.mult(checkMatrix);
+        checkMatrix = tmp.copy();
+        //rotate
+        tmp = new Matrix(Matrix.ROTATE, phi, 'Z');
+        tmp.mult(checkMatrix);
+        checkMatrix = tmp.copy();
 
-        edges.drawEdgesCircularLimit(s, new Color (255, 255, 0), 0, 0, 
+        edges.drawEdgesCircularLimit(s, new Color (255, 255, 0), x, y, 
         limit - (x + Screen.XRES/2), csystems.peek(), checkMatrix);
         
         csystems.pop();
