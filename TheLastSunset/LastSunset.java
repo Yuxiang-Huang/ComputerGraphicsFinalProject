@@ -21,15 +21,24 @@ public class LastSunset {
 
         //variables
         int steps = 100;
-        int dist = 300;
-        double year = 60;
+        int dist = 200;
+        double year = 6000;
         int day = 30;
+
+        double scale2D = 1.5;
+
+        //theta
+        double marsTheta = Math.PI * 5 / 4;
 
         int[][] background = createRGBMap("background.jpg", Screen.XRES);
         ArrayList<Planet> planets = new ArrayList<Planet>();
         Planet Sun = new Planet(radius * 1.75, 0, 100, 50, new Color (255, 255, 0), 
-        createRGBMap("earth.jpg", steps), 0, sun2D());
+        createRGBMap("sun.jpg", steps), 0, sun2D(radius * 1.75 * scale2D));
         planets.add(Sun);
+
+        Planet Mars = new Planet(radius * 0.532, dist * 1.52, year * 2, day * 1.03, new Color (255, 0, 0), 
+        createRGBMap("mars.jpg", steps), marsTheta, mars2D(radius * 0.532 * scale2D));
+        planets.add(Mars);
 
         //set up the world at the center
         Matrix transform = new Matrix();
@@ -39,7 +48,7 @@ public class LastSunset {
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
-        for (int i = 175; i < 350; i += 1){
+        for (int i = 0; i < 100; i += 1){
             System.out.println(i);
 
             s.clearScreen();;
@@ -101,9 +110,8 @@ public class LastSunset {
         }
     }
 
-    public static ArrayList<Color> sun2D (){
+    public static ArrayList<Color> sun2D (double PlanetRadius){
         double r, g, b;
-        double PlanetRadius = radius * 1.75 * 1.5;
         ArrayList<Color> PlanetColor = new ArrayList<>();
         for (int i = 0; i < PlanetRadius; i ++){
             if (i < PlanetRadius * 0.45){
@@ -126,6 +134,36 @@ public class LastSunset {
                 PlanetColor.add(new Color ((int)r, (int)g, (int)b));
             }
         }
+        return PlanetColor;
+    }
+
+    public static ArrayList<Color> mars2D(double PlanetRadius){
+        double r, g, b;
+        ArrayList<Color> PlanetColor = new ArrayList<>();
+        double bound1 = 0.45;
+        double bound2 = 0.8;
+        for (int i = 0; i < PlanetRadius; i ++){
+            if (i < PlanetRadius * bound1){
+                double factor = i / (PlanetRadius * bound1);
+                r = 231 + (227 - 231) * factor;
+                g = 175 + (169 - 175) * factor;
+                b = 13 + (31 - 13) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            } else if (i < PlanetRadius * bound2){
+                double factor = (i - PlanetRadius * bound1) / (PlanetRadius * (bound2 - bound1));;
+                r = 213 + (129 - 213) * factor;
+                g = 170 + (37 - 170) * factor;
+                b = 93 + (4 - 93) * factor;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            } else{
+                double factor = (i - PlanetRadius * bound2) / (PlanetRadius * (1 - bound2));
+                r = 98 + (128 - 98) * factor;
+                g = 37 + (27 - 37) * factor;
+                b = 4;
+                PlanetColor.add(new Color ((int)r, (int)g, (int)b));
+            }
+        }
+
         return PlanetColor;
     }
 }

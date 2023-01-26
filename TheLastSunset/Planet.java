@@ -36,23 +36,17 @@ public class Planet{
   }
 
   public void update(int limit){
-    theta += 2 * Math.PI / revTime;
-    selfRotate += 2 * Math.PI / selfRotateTime;
-    x = Math.cos(theta) * dist;
-    y = Math.sin(theta) * dist;
-
     if (limit > (x + 250 + size)){
-      displaySize -= 1.5; 
+      displaySize -= 1.5 * 10; 
+    } else{
+      theta += 2 * Math.PI / revTime;
+      selfRotate += 2 * Math.PI / selfRotateTime;
+      x = Math.cos(theta) * dist;
+      y = Math.sin(theta) * dist;
     }
   }
 
   public void display(Screen s, Stack<Matrix> csystems, int steps, int limit){
-     //draw the orbit in the rotated world
-     EdgeMatrix edges = new EdgeMatrix();
-     edges.addCircle(0, 0, 0, dist, 0.01);
-     edges.mult(csystems.peek());
-     edges.drawEdges(s, c);
-
      csystems.push(csystems.peek().copy());
 
      //translate
