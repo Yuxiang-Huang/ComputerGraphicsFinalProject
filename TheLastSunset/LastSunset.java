@@ -24,15 +24,16 @@ public class LastSunset {
         //variables
         int steps = 100;
         int dist = 200;
-        double year = 6000;
+        double year = 2000;
         int day = 30;
 
         //theta
         double marsTheta = Math.PI * 5 / 4;
         double mercuryTheta = -Math.PI * 2 / 5;
-        double venusTheta = Math.PI * 3 / 4;
-        double earthTheta = Math.PI / 4;
-        double moonTheta = Math.PI;
+        double venusTheta = Math.PI / 4;
+
+        double earthTheta = Math.PI * 9 / 10;
+        double moonTheta = Math.PI * 6/5;
 
         int[][] background = createRGBMap("background.jpg", Screen.XRES);
         ArrayList<Planet> planets = new ArrayList<Planet>();
@@ -52,7 +53,7 @@ public class LastSunset {
         createRGBMap("venus.jpg", steps), venusTheta, venus2D(radius * 0.949 * scale2D));
         planets.add(Venus);
 
-        Moon Moon = new Moon("Moon", radius * 0.25, radius + 15, year / 3, year / 3,
+        Moon Moon = new Moon("Moon", radius * 0.25, radius + 15, year / 12, year / 12,
         createRGBMap("moon.jpg", steps), moonTheta, moon2D(radius * 0.25 * scale2D));
 
         Earth Earth = new Earth("Earth", radius, dist, year, day, 
@@ -67,7 +68,7 @@ public class LastSunset {
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
-        for (int i = 375; i < 450; i ++){
+        for (int i = 0; i < 150; i ++){
             System.out.println(i);
 
             s.clearScreen();;
