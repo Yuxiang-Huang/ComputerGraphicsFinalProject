@@ -20,8 +20,7 @@ public class EdgeMatrix extends Matrix {
     }
   }//addCircle
 
-  public void addFilledCircle(double cx, double cy, double cz,
-  double r) {
+  public void addFilledCircle(double cx, double cy, double cz, double r) {
     for(int y = (int) (cy - r); y <= (int) (cy + r); y++){
       for(int x = (int) (cx - r); x <=(int) (cx + r); x++){
         if((x - cx)*(x - cx)+(y - cy)*(y - cy) <= r*r){

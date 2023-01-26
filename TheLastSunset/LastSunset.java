@@ -39,7 +39,7 @@ public class LastSunset {
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
-        for (int i = 225; i < 350; i ++){
+        for (int i = 250; i < 350; i ++){
             System.out.println(i);
 
             s.clearScreen();;

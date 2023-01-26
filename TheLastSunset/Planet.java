@@ -41,8 +41,8 @@ public class Planet{
     x = Math.cos(theta) * dist;
     y = Math.sin(theta) * dist;
 
-    if (limit > (x + 250)){
-      displaySize --;
+    if (limit > (x + 250 + size)){
+      displaySize -= 1.5;
     }
   }
 
@@ -88,11 +88,12 @@ public class Planet{
     csystems.push(tmp.copy());
 
     for (int i = planet2D.size() - 1; i >= 0; i --){
-      EdgeMatrix edges = new EdgeMatrix();
-      edges.addFilledCircle(0, 0, 0, i + 1);
-      edges.mult(csystems.peek());
-      edges.drawEdgesCircularLimit(s, planet2D.get(i), (x + Screen.XRES/2), (y + Screen.YRES/2), 
-      limit - (x + Screen.XRES/2) + size);
+      if (i + 1 < limit - (x + Screen.XRES/2)){ //circular limit
+        EdgeMatrix edges = new EdgeMatrix();
+        edges.addFilledCircle(0, 0, 0, i + 1);
+        edges.mult(csystems.peek());
+        edges.drawEdges(s, planet2D.get(i));
+      }
     }
 
     csystems.pop();
