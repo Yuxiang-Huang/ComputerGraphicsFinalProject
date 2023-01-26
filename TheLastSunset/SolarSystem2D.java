@@ -3,8 +3,6 @@ import java.io.*;
 import java.awt.*;
 import java.awt.image.*;
 import javax.imageio.*;
-import javax.sql.rowset.spi.XmlReader;
-import javax.swing.text.AttributeSet.ColorAttribute;
 
 public class SolarSystem2D {
     static GfxVector view = new GfxVector(0, 0, 1);
@@ -12,14 +10,14 @@ public class SolarSystem2D {
         Screen s = new Screen();
 
         //variables
-        int dist = 300;
-        int radius = 25 * 2;
+        int dist = 200;
+        int radius = 25;
 
         //set up the world at the center
         Matrix transform = new Matrix();
         transform.ident();
         Stack<Matrix> csystems = new Stack<Matrix>();
-        Matrix tmp = new Matrix(Matrix.TRANSLATE, 400, 400, 250);
+        Matrix tmp = new Matrix(Matrix.TRANSLATE, 250, 250, 250);
         tmp.mult(transform);
         csystems.push(tmp.copy());
 

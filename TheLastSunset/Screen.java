@@ -166,10 +166,11 @@ public class Screen {
 
   public void plot(Color c, int x, int y, double z) {
     int newy = width - 1 - y;
-    if (x >= 0 && x < width && newy >= 0 && newy < height &&
-        z > zbuffer[x][newy]) {
-      img.setRGB(x, newy, c.getRGB());
-      zbuffer[x][newy] = z;
+    if (x >= 0 && x < width && newy >= 0 && newy < height){
+      if ((int) (z * 1000) >= (int) (zbuffer[x][newy] * 1000)){
+        img.setRGB(x, newy, c.getRGB());
+        zbuffer[x][newy] = z;
+      }
     }
   }//plot
 
