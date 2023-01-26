@@ -46,7 +46,7 @@ public class Planet{
     }
   }
 
-  public void display(Screen s, Stack<Matrix> csystems, int steps){
+  public void display(Screen s, Stack<Matrix> csystems, int steps, int limit){
      //draw the orbit in the rotated world
      EdgeMatrix edges = new EdgeMatrix();
      edges.addCircle(0, 0, 0, dist, 0.01);
@@ -75,7 +75,8 @@ public class Planet{
 
      //draw
      PolygonMatrix polys = new PolygonMatrix();
-     polys.addSphere(0, 0, 0, displaySize, steps);
+     polys.addSphere(0, 0, 0, displaySize, steps, 
+     Math.min(steps, (int) ((limit - (x + Screen.XRES/2 - size)) / 3 / size * steps))); //diminishing sphere
      polys.mult(csystems.peek());
 
      polys.drawPolygons(s, view, rgb, steps);

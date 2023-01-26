@@ -231,6 +231,39 @@ public class PolygonMatrix extends Matrix {
     return points;
   }//generateSphere
 
+  public void addSphere( double cx, double cy, double cz,
+                         double r, int steps, int longStart) {
+
+    Matrix points = generateSphere(cx, cy, cz, r, steps);
+    int p0, p1, p2, p3, lat, longt;
+    int latStop, latStart, longStop;
+    latStart = 0;
+    latStop = steps;
+    longStop = steps;
+
+    for ( lat = latStart; lat < latStop; lat++ ) {
+      for ( longt = longStart; longt < longStop; longt++ ) {
+
+        p0 = lat * (steps+1) + longt;
+        p1 = p0 + 1;
+        p2 = (p1 + steps) % (steps * (steps+1));
+        p3 = (p0 + steps) % (steps * (steps+1));
+        double[] point0 = points.get(p0);
+        double[] point1 = points.get(p1);
+        double[] point2 = points.get(p2);
+        double[] point3 = points.get(p3);
+
+        addPolygon(point0[0], point0[1], point0[2],
+                   point1[0], point1[1], point1[2],
+                   point2[0], point2[1], point2[2]);
+        addPolygon(point0[0], point0[1], point0[2],
+                   point2[0], point2[1], point2[2],
+                   point3[0], point3[1], point3[2]);
+
+      }
+    }
+  }//addSphere
+
   public void addTorus( double cx, double cy, double cz,
                         double r0, double r1, int steps ) {
 

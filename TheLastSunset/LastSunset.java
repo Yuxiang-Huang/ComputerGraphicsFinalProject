@@ -39,7 +39,7 @@ public class LastSunset {
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
-        for (int i = 250; i < 350; i ++){
+        for (int i = 200; i < 350; i ++){
             System.out.println(i);
 
             s.clearScreen();;
@@ -56,7 +56,7 @@ public class LastSunset {
                 Planet p = planets.get(j);
                 p.update(i);
                 if (p.displaySize > 0){
-                    p.display(s, csystems, steps);
+                    p.display(s, csystems, steps, i);
                 }
                 p.display2D(s, csystems, i);
             }
