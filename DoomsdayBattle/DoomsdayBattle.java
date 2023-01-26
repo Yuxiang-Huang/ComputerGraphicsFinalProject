@@ -12,6 +12,7 @@ import javax.imageio.stream.*;
 import java.net.URL;
 
 public class DoomsdayBattle {
+    static int steps = 100;
     public static void main(String[] args) throws IOException{
         //lighting
         GfxVector view = new GfxVector(0, 0, 1);
@@ -23,6 +24,8 @@ public class DoomsdayBattle {
         double[] ambient = new double[]{0.23125, 0.23125, 0.23125};
         double[] diffuse = new double[]{0.2775, 0.2775, 0.2775};
         double[] specular = new double[]{0.773911, 0.773911, 0.773911};
+
+        int[][] explosion = createTexture("explosion.jpg", steps);
 
         //csystem
         Screen s = new Screen();
@@ -40,27 +43,27 @@ public class DoomsdayBattle {
 
         WaterDrop sfp = new WaterDrop(ambient, diffuse, specular);
 
-        // //entrance
-        // int introFrame = 50; //50
-        // for (int i = 0; i < introFrame; i ++){
-        //     System.out.println(i);
-        //     s.clearScreen();
-        //     sfp.y -= ((Screen.YRES + 150) / 2) / introFrame; //150 is the size of sfp
-        //     sfp.display(s, view, amb, lightPos, lightColor);
-        //     writer.writeToSequence(s.getimg());
-        // }
+        //entrance
+        int introFrame = 50; //50
+        for (int i = 0; i < introFrame; i ++){
+            System.out.println(i);
+            s.clearScreen();
+            sfp.y -= ((Screen.YRES + 150) / 2) / introFrame; //150 is the size of sfp
+            sfp.display(s, view, amb, lightPos, lightColor);
+            writer.writeToSequence(s.getimg());
+        }
 
-        // sfp.acc = true;
-        // sfp.rotateSpeed *= 2;
+        sfp.acc = true;
+        sfp.rotateSpeed *= 2;
 
-        // introFrame = 7;
-        // for (int i = 0; i < introFrame; i ++){
-        //     System.out.println(i);
-        //     s.clearScreen();
-        //     sfp.y -= ((Screen.YRES + 150) / 2) / introFrame;
-        //     sfp.display(s, view, amb, lightPos, lightColor);
-        //     writer.writeToSequence(s.getimg());
-        // }
+        introFrame = 7;
+        for (int i = 0; i < introFrame; i ++){
+            System.out.println(i);
+            s.clearScreen();
+            sfp.y -= ((Screen.YRES + 150) / 2) / introFrame;
+            sfp.display(s, view, amb, lightPos, lightColor);
+            writer.writeToSequence(s.getimg());
+        }
 
         //start battle
         sfp.intro = false;
@@ -83,7 +86,7 @@ public class DoomsdayBattle {
         // int battleframe = 60;
         // for (int i = 0; i < battleframe; i ++){
         int i = -1;
-       while (ships.size() != 0){
+        while (ships.size() != 0){
             i ++;
             s.clearScreen();
             System.out.println(i);
@@ -112,12 +115,14 @@ public class DoomsdayBattle {
                 if (ship.expand){
                     ship.display(s, view, amb, lightPos, lightColor);
                 }
-                ship.explode(s, explode, view, amb, lightPos, lightColor);
+                ship.explode(s, explode, view, amb, lightPos, lightColor, explosion);
             }
             writer.writeToSequence(s.getimg());
         }
 
         while (explode.size() != 0){
+            System.out.println(explode.size());
+
             s.clearScreen();
             //explosion
             for (int j = explode.size() - 1; j >= 0 ; j--){
@@ -125,29 +130,29 @@ public class DoomsdayBattle {
                 if (ship.expand){
                     ship.display(s, view, amb, lightPos, lightColor);
                 }
-                ship.explode(s, explode, view, amb, lightPos, lightColor);
+                ship.explode(s, explode, view, amb, lightPos, lightColor, explosion);
             }
             writer.writeToSequence(s.getimg());
         }
 
-        // //move towards viewer
-        // while (sfp.x != Screen.XRES/2 || sfp.y != Screen.YRES/2){
-        //     s.clearScreen();
-        //     sfp.end();
-        //     sfp.display(s, view, amb, lightPos, lightColor);
+        //move towards viewer
+        while (sfp.x != Screen.XRES/2 || sfp.y != Screen.YRES/2){
+            s.clearScreen();
+            sfp.end();
+            sfp.display(s, view, amb, lightPos, lightColor);
 
-        //     writer.writeToSequence(s.getimg());
-        // }
+            writer.writeToSequence(s.getimg());
+        }
 
-        // sfp.end = true;
+        sfp.end = true;
 
-        // while (sfp.size < 150){
-        //     s.clearScreen();
-        //     sfp.size += 2;
-        //     System.out.println(sfp.size);
-        //     sfp.endDisplay(s, view, amb, lightPos, lightColor);
-        //     writer.writeToSequence(s.getimg());
-        // }
+        while (sfp.size < 150){
+            s.clearScreen();
+            sfp.size += 2;
+            System.out.println(sfp.size);
+            sfp.endDisplay(s, view, amb, lightPos, lightColor);
+            writer.writeToSequence(s.getimg());
+        }
 
         //display animation
         URL url = DoomsdayBattle.class.getResource("DoomsdayBattle.gif");
@@ -177,5 +182,19 @@ public class DoomsdayBattle {
     public static double dist(SpaceShip ship, SpaceShip other){
         return Math.sqrt((other.x - ship.x) * (other.x - ship.x) + (other.y - ship.y) * (other.y - ship.y)); 
     }
+
+    public static int[][] createTexture(String name, int steps) throws IOException{
+        File file = new File(name);
+        BufferedImage image = ImageIO.read(file);
+    
+        int[][] rgb = new int[steps][steps];
+    
+        for (int i = 0; i < steps; i ++) {
+            for (int j = 0; j < steps; j ++) {
+                rgb[j][i] = image.getRGB(i * image.getWidth() / steps, (steps - j - 1) * image.getHeight() / steps);
+            }
+        }
+        return rgb;
+      }
 }
 

@@ -127,7 +127,8 @@ public class SpaceShip {
         csystems.pop();
     }
 
-    public void explode(Screen s, ArrayList<SpaceShip> explode, GfxVector view, Color amb, ArrayList<GfxVector> lightPos, Color lightColor){
+    public void explode(Screen s, ArrayList<SpaceShip> explode, GfxVector view, Color amb, ArrayList<GfxVector> lightPos, 
+    Color lightColor, int[][] texture){
          //translate to the center of the ship
          Matrix transform = new Matrix();
          transform.ident();
@@ -137,7 +138,7 @@ public class SpaceShip {
          csystems.push(tmp.copy());
 
         PolygonMatrix polys = new PolygonMatrix();
-        polys.addSphere(0, 0, 0, scale * size * 2, 20);
+        polys.addSphere(0, 0, 0, scale * size * 2, DoomsdayBattle.steps);
 
         //expand or contract
         if (expand){
@@ -154,7 +155,7 @@ public class SpaceShip {
  
          //draw
          polys.mult(csystems.peek());
-         polys.drawPolygons(s, view);
+         polys.drawPolygons(s, view, texture, DoomsdayBattle.steps);
          csystems.pop();
     }
 }

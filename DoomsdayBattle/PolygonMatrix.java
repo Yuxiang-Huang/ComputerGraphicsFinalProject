@@ -508,24 +508,144 @@ public class PolygonMatrix extends Matrix {
     }//draw lines
   }//drawPloygons
 
-  public void drawPolygons(Screen s, GfxVector view) {
+  public void drawPolygons(Screen s, GfxVector view, Color amb, ArrayList<GfxVector> lightPos, Color lightColor, 
+  double[] ambient, double[] diffuse, double[] specular, int[][] texture, int steps) {
     if ( m.size() < 3) {
       System.out.println("Need at least 3 points to draw a polygon");
       return;
     }//not enough points
+
+    HashMap<String, ArrayList<GfxVector>> vertexFaceNormals = new HashMap<String, ArrayList<GfxVector>>();
+    HashMap<String, GfxVector> vertexNormals = new HashMap<String, GfxVector>();
 
     for(int point=0; point<m.size()-1; point+=3) {
       double[] p0 = m.get(point);
       double[] p1 = m.get(point+1);
       double[] p2 = m.get(point+2);
 
-      int red = (23 * (point/3+1))%256;
-      int green = (109 * (point/3+1))%256;
-      int blue = (227 * (point/3+1))%256;
-      Color c = new Color(red, green, blue);
+      Polygon tri = new Polygon(p0, p1, p2);
+
+      int[] pp0, pp1, pp2;
+      pp0 = new int[3];
+      pp1 = new int[3];
+      pp2 = new int[3];
+      String[] points = new String[3];
+      for (int i = 0; i < 3; i++) {
+        pp0[i] = (int) p0[i];
+        pp1[i] = (int) p1[i];
+        pp2[i] = (int) p2[i];
+      }
+      points[0] = Arrays.toString(pp0);
+      points[1] = Arrays.toString(pp1);
+      points[2] = Arrays.toString(pp2);
+
+      for (int i = 0; i < 3; i++) {
+        if (vertexFaceNormals.containsKey(points[i])) {
+          ArrayList<GfxVector> temp = vertexFaceNormals.get(points[i]);
+          GfxVector norm = tri.getNormal().getNormalized();
+
+          boolean duplicate = false;
+          for (int j = 0; j < temp.size(); j++) {
+            if (temp.get(j).equals(norm)) {
+              duplicate = true;
+            }
+          }
+
+          if (!duplicate) {
+            temp.add(tri.getNormal().getNormalized());
+            vertexFaceNormals.put(points[i], temp);
+          } else {
+            //System.out.println("same face");
+          }
+        } else {
+          ArrayList<GfxVector> temp = new ArrayList<GfxVector>();
+          temp.add(tri.getNormal().getNormalized());
+          vertexFaceNormals.put(points[i], temp);
+        }
+      }
+    }
+    //System.out.println(vertexFaceNormals.toString());
+
+    vertexFaceNormals.forEach((key, value) -> {
+      double[] avgDir = new double[3];
+
+      for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < value.size(); j++) {
+          avgDir[i] += value.get(j).getComponent(i);
+        }
+      }
+
+      avgDir[0] /= value.size();
+      avgDir[1] /= value.size();
+      avgDir[2] /= value.size();
+
+      vertexNormals.put(key, new GfxVector(avgDir[0], avgDir[1], avgDir[2]).getNormalized());
+    });
+
+    //System.out.println(vertexNormals.toString());
+
+    //texture
+    double rowCounter = 0;
+    int colCounter = 0;
+
+    for(int point=0; point<m.size()-1; point+=3) {
+      double[] p0 = m.get(point);
+      double[] p1 = m.get(point+1);
+      double[] p2 = m.get(point+2);
+
+      rowCounter += 0.5;
+      if (rowCounter == steps-1){
+        rowCounter = 0;
+        colCounter ++;
+      }
+
+      Color c = new Color(texture[(int)rowCounter]
+      [Math.min(colCounter, texture[0].length - 1)]);
+
+      Polygon tri = new Polygon(p0, p1, p2, c, vertexNormals, view, amb, lightPos, c);
+      double dot = tri.getNormal().dotProduct(view, false);
+
+      if (dot > 0) {
+
+        tri.setReflection(ambient, diffuse, specular);
+        //tri.calculteLighting(view, amb, lightPos, lightColor);
+        tri.scanlineConvert(s);
+        // s.drawLine((int)p0[0], (int)p0[1], (int)p1[0], (int)p1[1], c);
+        // s.drawLine((int)p2[0], (int)p2[1], (int)p1[0], (int)p1[1], c);
+        // s.drawLine((int)p0[0], (int)p0[1], (int)p2[0], (int)p2[1], c);
+      }
+    }//draw lines
+  }//drawPloygons
+
+  public void drawPolygons(Screen s, GfxVector view, int[][] rgb, int steps) {
+    if ( m.size() < 3) {
+      System.out.println("Need at least 3 points to draw a polygon");
+      return;
+    }//not enough points
+
+    double rowCounter = 0;
+    int colCounter = 0;
+
+    // System.out.println(rgb.length);
+    // System.out.println(rgb[0].length);
+
+    // System.out.println(m.size()/3);
+
+    for(int point=0; point<m.size()-1; point+=3) {
+      double[] p0 = m.get(point);
+      double[] p1 = m.get(point+1);
+      double[] p2 = m.get(point+2);
+
+      rowCounter += 0.5;
+      if (rowCounter == steps-1){
+        rowCounter = 0;
+        colCounter ++;
+      }
+
+      Color c = new Color(rgb[(int)rowCounter]
+      [Math.min(colCounter, rgb[0].length - 1)]);
 
       Polygon tri = new Polygon(p0, p1, p2, c);
-
       double dot = tri.getNormal().dotProduct(view, false);
 
       if (dot > 0) {
@@ -536,5 +656,4 @@ public class PolygonMatrix extends Matrix {
       }
     }//draw lines
   }//drawPloygons
-
 }//class PolygonMatrix
