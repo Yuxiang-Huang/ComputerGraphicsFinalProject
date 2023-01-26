@@ -16,9 +16,12 @@ public class Earth extends Planet{
             if (moon.orbit){
                 moon.orbit = false;
                 //calculate tangential velocity
-                double speed = moon.dist * 2 * Math.PI / revTime;
-                moon.dx = -speed * Math.sin(moon.theta);
-                moon.dy = speed * Math.cos(moon.theta);
+                System.out.println(moon.theta);
+                double speed = moon.dist * 2 * Math.PI / revTime * 4;
+                moon.dx = speed * Math.sin(moon.theta);
+                moon.dy = -speed * Math.cos(moon.theta);
+                System.out.println(moon.dx);
+                System.out.println(moon.dy);
             }
         }
 
@@ -31,26 +34,6 @@ public class Earth extends Planet{
           y = Math.sin(theta) * dist;
         }
       }
-
-    @Override 
-    public void display(Screen s, Stack<Matrix> csystems, int steps, int limit){
-        super.display(s, csystems, steps, limit);
-        csystems.push(csystems.peek().copy());
-
-        //translate
-        Matrix tmp = new Matrix(Matrix.TRANSLATE, x, y, 0);
-        tmp.mult(csystems.peek());
-        csystems.pop();
-        csystems.push(tmp.copy());
-
-        moon.update(limit, x);
-        if (moon.displaySize > 0){
-            moon.display(s, csystems, steps, limit, x);
-        }
-        moon.display2D(s, csystems, limit, x);
-
-        csystems.pop();
-    }
 
     @Override
     public void display2D(Screen s, Stack<Matrix> csystems, int limit){
@@ -67,6 +50,23 @@ public class Earth extends Planet{
             }
         }
         drawSnowFlakesEarth(s, csystems, 5, limit);
+
+        csystems.pop();
+
+        //for moon
+        csystems.push(csystems.peek().copy());
+
+        //translate
+        tmp = new Matrix(Matrix.TRANSLATE, x, y, 0);
+        tmp.mult(csystems.peek());
+        csystems.pop();
+        csystems.push(tmp.copy());
+
+        moon.update(limit, x);
+        if (moon.displaySize > 0){
+            moon.display(s, csystems, LastSunset.steps, limit, x);
+        }
+        moon.display2D(s, csystems, limit, x);
 
         csystems.pop();
     }

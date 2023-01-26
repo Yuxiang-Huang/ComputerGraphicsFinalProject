@@ -11,6 +11,7 @@ import java.net.URL;
 public class LastSunset {
     static int radius = 25;;
     static double scale2D = 1.5;
+    static int steps = 100;
     public static void main(String[] args) throws Exception{
         Screen s = new Screen();
 
@@ -22,7 +23,6 @@ public class LastSunset {
         new GifSequenceWriter(output, firstImage.getType(), 50, false);
 
         //variables
-        int steps = 100;
         int dist = 200;
         double year = 2000;
         int day = 30;
@@ -33,7 +33,7 @@ public class LastSunset {
         double venusTheta = Math.PI / 4;
 
         double earthTheta = Math.PI * 9 / 10;
-        double moonTheta = Math.PI * 6/5;
+        double moonTheta = Math.PI * 8/7;
 
         int[][] background = createRGBMap("background.jpg", Screen.XRES);
         ArrayList<Planet> planets = new ArrayList<Planet>();
