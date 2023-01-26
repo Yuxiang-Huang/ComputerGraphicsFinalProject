@@ -16,12 +16,9 @@ public class Earth extends Planet{
             if (moon.orbit){
                 moon.orbit = false;
                 //calculate tangential velocity
-                System.out.println(moon.theta);
                 double speed = moon.dist * 2 * Math.PI / revTime * 4;
                 moon.dx = speed * Math.sin(moon.theta);
                 moon.dy = -speed * Math.cos(moon.theta);
-                System.out.println(moon.dx);
-                System.out.println(moon.dy);
             }
         }
 

@@ -11,7 +11,7 @@ import java.net.URL;
 public class LastSunset {
     static int radius = 25;;
     static double scale2D = 1.5;
-    static int steps = 100;
+    static int steps = 20;
     public static void main(String[] args) throws Exception{
         Screen s = new Screen();
 
@@ -20,7 +20,7 @@ public class LastSunset {
         ImageOutputStream output =
         new FileImageOutputStream(new File("LastSunset.gif"));
         GifSequenceWriter writer =
-        new GifSequenceWriter(output, firstImage.getType(), 50, false);
+        new GifSequenceWriter(output, firstImage.getType(), 20, false);
 
         //variables
         int dist = 200;
@@ -28,7 +28,7 @@ public class LastSunset {
         int day = 30;
 
         //theta
-        double marsTheta = Math.PI * 5 / 4;
+        double marsTheta = Math.PI / 2;
         double mercuryTheta = -Math.PI * 2 / 5;
         double venusTheta = Math.PI / 4;
 
@@ -68,7 +68,7 @@ public class LastSunset {
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
-        for (int i = 0; i < 150; i ++){
+        for (int i = 0; i < 500; i ++){
             System.out.println(i);
 
             s.clearScreen();;
@@ -134,7 +134,7 @@ public class LastSunset {
         double r, g, b;
         ArrayList<Color> PlanetColor = new ArrayList<>();
         double bound1 = 0.2;
-        double bound2 = 0.55;
+        double bound2 = 0.75;
         for (int i = 0; i < PlanetRadius; i ++){
             if (i < PlanetRadius * bound1){
                 double factor = i / (PlanetRadius * bound1);
@@ -144,15 +144,15 @@ public class LastSunset {
                 PlanetColor.add(new Color ((int)r, (int)g, (int)b));
             } else if (i < PlanetRadius * bound2){
                 double factor = (i - PlanetRadius * bound1) / (PlanetRadius * (bound2 - bound1));;
-                r = 213 + (129 - 213) * factor;
-                g = 170 + (37 - 170) * factor;
-                b = 93 + (4 - 93) * factor;
+                r = 255 + (160 - 255) * factor;
+                g = 202 + (72 - 202) * factor;
+                b = 0 + (43 - 0) * factor;
                 PlanetColor.add(new Color ((int)r, (int)g, (int)b));
             } else{
                 double factor = (i - PlanetRadius * bound2) / (PlanetRadius * (1 - bound2));
-                r = 98 + (128 - 98) * factor;
-                g = 37 + (27 - 37) * factor;
-                b = 4;
+                r = 118 + (85 - 118) * factor;
+                g = 58 + (75 - 57) * factor;
+                b = 47 + (76 - 47) * factor;
                 PlanetColor.add(new Color ((int)r, (int)g, (int)b));
             }
         }
