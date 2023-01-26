@@ -3,6 +3,7 @@ import java.util.*;
 
 public class Earth extends Planet{
     Moon moon;
+    double sunlight;
 
     public Earth(String name, double size, double dist, double revTime, double selfRotateTime, int[][] rgb, double theta,
   ArrayList<Color> planet2D, Moon moon){
@@ -101,7 +102,7 @@ public class Earth extends Planet{
             checkMatrix = tmp.copy();
 
             edges.drawEdgesCircularLimit(s, new Color (255, 255, 255), x, y, 
-            limit - (x + Screen.XRES/2), csystems.peek(), checkMatrix);
+            Math.min(limit - (x + Screen.XRES/2), currLen + length) - sunlight, csystems.peek(), checkMatrix);
             
             csystems.pop();
         }

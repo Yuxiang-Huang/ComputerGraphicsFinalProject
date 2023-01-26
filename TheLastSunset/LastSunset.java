@@ -20,7 +20,7 @@ public class LastSunset {
         ImageOutputStream output =
         new FileImageOutputStream(new File("LastSunset.gif"));
         GifSequenceWriter writer =
-        new GifSequenceWriter(output, firstImage.getType(), 20, false);
+        new GifSequenceWriter(output, firstImage.getType(), 100, false);
 
         //variables
         int dist = 200;
@@ -37,9 +37,6 @@ public class LastSunset {
 
         int[][] background = createRGBMap("background.jpg", Screen.XRES);
         ArrayList<Planet> planets = new ArrayList<Planet>();
-        Planet Sun = new Planet("Sun", radius * 1.6, 0, 100, 50, 
-        createRGBMap("sun.jpg", steps), 0, sun2D(radius * 1.6 * scale2D));
-        planets.add(Sun);
 
         Planet Mars = new Planet("Mars", radius * 0.532, dist * 1.52, year * 2, day * 1.03,
         createRGBMap("mars.jpg", steps), marsTheta, mars2D(radius * 0.532 * scale2D));
@@ -59,6 +56,10 @@ public class LastSunset {
         Earth Earth = new Earth("Earth", radius, dist, year, day, 
         createRGBMap("earth.jpg", steps), earthTheta, Earth2D(radius * scale2D), Moon);
         planets.add(Earth);
+
+        Sun Sun = new Sun("Sun", radius * 1.6, 0, 100, 50, 
+        createRGBMap("sun.jpg", steps), 0, sun2D(radius * 1.6 * scale2D), Earth);
+        planets.add(Sun);
 
         //set up the world at the center
         Matrix transform = new Matrix();
