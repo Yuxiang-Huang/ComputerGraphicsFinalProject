@@ -9,6 +9,7 @@ import java.net.URL;
 
 public class LastSunset {
     static int radius = 25;;
+    static double scale2D = 1.5;
     public static void main(String[] args) throws Exception{
         Screen s = new Screen();
 
@@ -25,8 +26,6 @@ public class LastSunset {
         double year = 6000;
         int day = 30;
 
-        double scale2D = 1.5;
-
         //theta
         double marsTheta = Math.PI * 5 / 4;
         double mercuryTheta = -Math.PI * 2 / 5;
@@ -34,19 +33,19 @@ public class LastSunset {
 
         int[][] background = createRGBMap("background.jpg", Screen.XRES);
         ArrayList<Planet> planets = new ArrayList<Planet>();
-        Planet Sun = new Planet(radius * 1.6, 0, 100, 50, new Color (255, 255, 0), 
+        Planet Sun = new Planet("Sun", radius * 1.6, 0, 100, 50, 
         createRGBMap("sun.jpg", steps), 0, sun2D(radius * 1.6 * scale2D));
         planets.add(Sun);
 
-        Planet Mars = new Planet(radius * 0.532, dist * 1.52, year * 2, day * 1.03, new Color (255, 0, 0), 
+        Planet Mars = new Planet("Mars", radius * 0.532, dist * 1.52, year * 2, day * 1.03,
         createRGBMap("mars.jpg", steps), marsTheta, mars2D(radius * 0.532 * scale2D));
         planets.add(Mars);
 
-        Planet Mercury = new Planet(radius * 0.383, dist * 0.39, year * 0.25, day * 3, new Color (0, 0, 255), 
+        Planet Mercury = new Planet("Mercuary", radius * 0.383, dist * 0.39, year * 0.25, day * 3, 
         createRGBMap("mercury.jpg", steps), mercuryTheta, mercury2D(radius * 0.383 * scale2D));
         planets.add(Mercury);
 
-        Planet Venus = new Planet(radius * 0.949, dist * 0.72, year * 0.6, day * 2, new Color (150, 75, 0), 
+        Planet Venus = new Planet("Venus", radius * 0.949, dist * 0.72, year * 0.6, day * 2,
         createRGBMap("venus.jpg", steps), venusTheta, venus2D(radius * 0.949 * scale2D));
         planets.add(Venus);
 
@@ -58,7 +57,7 @@ public class LastSunset {
         tmp.mult(transform);
         csystems.push(tmp.copy());
 
-        for (int i = 10; i < 500; i += 10){
+        for (int i = 100; i < 200; i ++){
             System.out.println(i);
 
             s.clearScreen();;

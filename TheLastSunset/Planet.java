@@ -4,13 +4,13 @@ import java.util.*;
 public class Planet{
   static GfxVector view = new GfxVector(0, 0, 1);
 
+  String name;
   double size;
   double dist;
   double revTime;
   double theta;
   double x;
   double y;
-  Color c;
   int[][] rgb;
   ArrayList<Color> planet2D;
 
@@ -19,13 +19,15 @@ public class Planet{
 
   double displaySize;
 
-  public Planet(double size, double dist, double revTime, double selfRotateTime, Color c, int[][] rgb, double theta,
+  ArrayList<Double> venusSnowflakes = new ArrayList<>();
+
+  public Planet(String name, double size, double dist, double revTime, double selfRotateTime, int[][] rgb, double theta,
   ArrayList<Color> planet2D){
+    this.name = name;
     this.size = size;
     this.dist = dist;
     this.revTime = revTime;
     this.selfRotateTime = selfRotateTime;
-    this.c = c;
     this.theta = theta;
     x = Math.cos(theta) * dist;
     y = Math.sin(theta) * dist;
@@ -33,11 +35,21 @@ public class Planet{
     this.planet2D = planet2D;
 
     displaySize = size;
+
+    //random snowflakes for Venus
+    if (name.equals("Venus")){
+      double phi = 0;
+
+      while (phi < Math.PI * 2 - Math.PI / 10){
+        venusSnowflakes.add(phi);
+        phi += Math.random() * Math.PI / 10 + Math.PI / 10;
+      }
+    }
   }
 
   public void update(int limit){
     if (limit > (x + 250 + size)){
-      displaySize -= 1.5 * 10; 
+      displaySize -= 1.5; 
     } else{
       theta += 2 * Math.PI / revTime;
       selfRotate += 2 * Math.PI / selfRotateTime;
@@ -93,6 +105,39 @@ public class Planet{
       }
     }
 
+    if (name.equals("Venus")){
+      drawSnowFlakesVenus(s, csystems, 10, limit);
+    }
+
     csystems.pop();
+  }
+
+  public void drawSnowFlakesVenus(Screen s, Stack<Matrix> csystems, int length, int limit){        
+    //translate to the center of the planet
+    for (double phi : venusSnowflakes){
+        EdgeMatrix edges = new EdgeMatrix();
+        //translate to the center of this snowflake
+        double currLen = size * LastSunset.scale2D + length;
+        Matrix tmp = new Matrix(Matrix.TRANSLATE, currLen * Math.cos(phi), currLen * Math.sin(phi), 0);
+        tmp.mult(csystems.peek());
+        csystems.push(tmp.copy());
+        //rotate
+        tmp = new Matrix(Matrix.ROTATE, phi, 'Z');
+        tmp.mult(csystems.peek());
+        csystems.pop();
+        csystems.push(tmp.copy());
+
+        //draw 6 edges
+        for (int j = 0; j < 6; j ++){
+            double alpha = Math.PI * 2 * j / 6;
+            edges.addEdge(0, 0, 0, length * Math.cos(alpha), length * Math.sin(alpha), 0);
+        }
+
+        edges.mult(csystems.peek());
+        edges.drawEdgesCircularLimit(s, new Color (255, 255, 0), x + Screen.XRES/2, y + Screen.YRES/2, 
+        limit - (x + Screen.XRES/2));
+        
+        csystems.pop();
+      }
   }
 }
